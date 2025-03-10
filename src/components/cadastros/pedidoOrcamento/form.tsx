@@ -283,10 +283,10 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
     let results
     
     if (tipo === 'codigo') {
-      results = await serviceFicha.findFichasPedido('', query);
+      results = await serviceFicha.findFichasPedido('', query, 'Encerrada');
     }
     else {
-      results = await serviceFicha.findFichasPedido(query, '');
+      results = await serviceFicha.findFichasPedido(query, '',  'Encerrada');
     }
     
     return results
@@ -317,7 +317,7 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
   }, [formik.values.ordemServicoManutencao]);
 
   const handleSearchOrdemServMnt = async (query: string) => {
-    const results = await serviceOrdemMnt.findOrdemServMntPedido(query); // Substitua com sua função de busca
+    const results = await serviceOrdemMnt.findOrdemServMntPedido(query, 'Encerrada'); // Substitua com sua função de busca
     return results
       .filter((item) => item.id !== undefined && item.id !== null)
       .map((item) => ({

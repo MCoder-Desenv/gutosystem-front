@@ -45,6 +45,8 @@ export const UsuariosForm: React.FC<UsuariosFormProps> = ({ onSubmit, usuarios }
   const service = useUsuarioService();
   const serviceFuncao = useFuncoesService();
   const { role } = usePermissao();
+  const [selecionarTodosCadastrar, setSelecionarTodosCadastrar] = useState(false);
+  const [selecionarTodosConsultar, setSelecionarTodosConsultar] = useState(false);
 
   const roleOptions = [
     ...(role === "ROLE_MASTER_FULL" ? [{ label: "MASTER FULL", value: "ROLE_MASTER_FULL", className: "role-MasterFull" }] : []),
@@ -100,6 +102,19 @@ export const UsuariosForm: React.FC<UsuariosFormProps> = ({ onSubmit, usuarios }
                 podeConsultar: false,
             }))
     ]);
+  };
+
+  const toggleSelecionarTodos = (campo: "podeCadastrar" | "podeConsultar", valor: boolean) => {
+    setSelecionarTodosCadastrar(campo === "podeCadastrar" ? valor : selecionarTodosCadastrar);
+    setSelecionarTodosConsultar(campo === "podeConsultar" ? valor : selecionarTodosConsultar);
+  
+    formik.setFieldValue(
+      "usuariosFuncoes",
+      (formik.values.usuariosFuncoes || []).map((item) => ({
+        ...item,
+        [campo]: valor,
+      }))
+    );
   };
 
   const redefinirSenha = (user: Usuarios) => {
@@ -213,6 +228,30 @@ export const UsuariosForm: React.FC<UsuariosFormProps> = ({ onSubmit, usuarios }
             onClick={() => redefinirSenha(formik.values || usuarios)}
         />
         </div>
+        <br/>
+        <div className="columns">
+          <div className="column is-half">
+            <label className="checkbox">
+              <input
+                type="checkbox"
+                checked={selecionarTodosCadastrar}
+                onChange={(e) => toggleSelecionarTodos("podeCadastrar", e.target.checked)}
+              />
+              Selecionar todos - Pode Cadastrar 
+            </label>
+          </div>
+          <div className="column is-half">
+            <label className="checkbox">
+              <input
+                type="checkbox"
+                checked={selecionarTodosConsultar}
+                onChange={(e) => toggleSelecionarTodos("podeConsultar", e.target.checked)}
+              />
+              Selecionar todos - Pode Consultar
+            </label>
+          </div>
+        </div>
+
         <br/>   
         <GridComponent<UsuarioFuncao>
             parentColumns={[

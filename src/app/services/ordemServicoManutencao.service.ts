@@ -29,8 +29,8 @@ export const useOrdemServicoManutencaoService = () => {
     }
 
     //Para usar no relatorio,é o mesmo caminho da acima OBS: CUIDADO AO ALTERAR
-    const findOrdemServMntPedido = async (numero: string = '') : Promise<OrdemServicoManutencaoDto[]> =>{
-        const url = `${resourceURL}/ordemMntPedidoPorNumeroList?numero=${numero}`
+    const findOrdemServMntPedido = async (numero: string = '', status: string = '') : Promise<OrdemServicoManutencaoDto[]> =>{
+        const url = `${resourceURL}/ordemMntPedidoPorNumeroList?numero=${numero}&status=${status}`
         const response: AxiosResponse<OrdemServicoManutencaoDto[]> = await httpClient.get(url);
         return response.data
     }

@@ -68,10 +68,10 @@ export const RelatoriosFichaOrcamento: React.FC = () => {
         let results
     
         if (tipo === 'codigo') {
-            results = await service.findFichasPedido('', query);
+            results = await service.findFichasRelatorio('', query);
         }
         else {
-            results = await service.findFichasPedido(query, '');
+            results = await service.findFichasRelatorio(query, '');
         }
     
         return results

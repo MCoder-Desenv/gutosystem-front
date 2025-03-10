@@ -94,8 +94,8 @@ export const useFichaOrcamentoService = () => {
         };
 
     // Método para buscar fichas sem paginação OBS: CUIDADO AO REMOVER O CAMINHO fichasPedido
-    const findFichasPedido = async (nomeCliente: string = '', codigo: string = ''): Promise<FichaOrcamentoDto[]> => {
-        const url = `${resourceURL}/fichasPedido?nomeCliente=${nomeCliente}&codigo=${codigo}`;
+    const findFichasPedido = async (nomeCliente: string = '', codigo: string = '', status: string = ''): Promise<FichaOrcamentoDto[]> => {
+        const url = `${resourceURL}/fichasPedido?nomeCliente=${nomeCliente}&codigo=${codigo}&status=${status}`;
         const response: AxiosResponse<FichaOrcamentoDto[]> = await httpClient.get(url);
         return response.data;
     };

@@ -238,7 +238,7 @@ export const OrdemServicoManutencaoForm: React.FC<OrdemServicoManutencaoFormProp
       }, [formik.values.pedidoOrcamento]);
     
       const handleSearchPedido = async (query: string) => {
-        const results = await servicePedido.findPedidosAutoComplete(query);
+        const results = await servicePedido.findPedidosAutoComplete(query, 'Encerrada');
         return results
           .filter((item) => item.id !== undefined && item.id !== null)
           .map((item) => ({

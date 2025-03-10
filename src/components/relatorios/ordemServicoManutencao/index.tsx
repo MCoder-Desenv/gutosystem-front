@@ -64,7 +64,7 @@ export const RelatoriosOrdemServicoManutencao: React.FC = () => {
     }, [formik.values.ordemMnt]);
 
     const handleSearchOrdemServMnt = async (query: string) => {
-        const results = await service.findOrdemServMntPedido(query); // Substitua com sua função de busca
+        const results = await service.findOrdemServMntRelatorio(query); // Substitua com sua função de busca
         return results
           .filter((item) => item.id !== undefined && item.id !== null)
           .map((item) => ({

@@ -69,7 +69,7 @@ export const RelatoriosPedidoOrcamento: React.FC = () => {
     }, [formik.values.pedido]);
         
     const handleSearchPedido = async (query: string) => {
-        const results = await service.findPedidosAutoComplete(query);
+        const results = await service.findPedidosAutoCompleteRelatorio(query);
         return results
           .filter((item) => item.id !== undefined && item.id !== null)
           .map((item) => ({

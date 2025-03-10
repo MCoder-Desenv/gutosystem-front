@@ -28,7 +28,13 @@ export const usePedidoOrcamentoService = () => {
         return response.data
     }
 
-    const findPedidosAutoComplete = async (identificador: string = '') : Promise<PedidoOrcamentoDto[]> =>{
+    const findPedidosAutoComplete = async (identificador: string = '', status: string = '') : Promise<PedidoOrcamentoDto[]> =>{
+        const url = `${resourceURL}/pedidoPorIdentificador?identificador=${identificador}&status=${status}`
+        const response: AxiosResponse<PedidoOrcamentoDto[]> = await httpClient.get(url);
+        return response.data
+    }
+
+    const findPedidosAutoCompleteRelatorio = async (identificador: string = '') : Promise<PedidoOrcamentoDto[]> =>{
         const url = `${resourceURL}/pedidoPorIdentificador?identificador=${identificador}`
         const response: AxiosResponse<PedidoOrcamentoDto[]> = await httpClient.get(url);
         return response.data
@@ -81,6 +87,7 @@ export const usePedidoOrcamentoService = () => {
         carregarPedido,
         findPedidos,
         findPedidosAutoComplete,
+        findPedidosAutoCompleteRelatorio,
         gerarRelatorioInformacaoComplementar,
         gerarRelatorioPedidoOrcamento,
         findPedidoCodigo
