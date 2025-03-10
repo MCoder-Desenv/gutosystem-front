@@ -1,3 +1,3 @@
-import { VisualizaPerfil } from '@/components'
+import { VisualizaPerfil } from '../../components';
 
 export default VisualizaPerfil

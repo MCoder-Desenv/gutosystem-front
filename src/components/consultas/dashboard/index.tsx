@@ -1,15 +1,15 @@
 "use client"
 import { useState, useEffect } from "react";
 import { Chart } from "primereact/chart";
-import { useDashboardService } from "@/app/services";
-import { Layout } from "@/components/layout";
-import { MESES } from "@/app/util/meses";
-import { usePermissao } from "@/app/hooks/usePermissoes";
+import { useDashboardService } from "../../../app/services";
+import { Layout } from "../../../components/layout";
+import { MESES } from "../../../app/util/meses";
+import { usePermissao } from "../../../app/hooks/usePermissoes";
 import React from "react";
-import { Input } from "@/components/common";
+import { Input } from "../../../components/common";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
-import { DashboardTotaPorDia, DashboardTotaPorMesStatus } from "@/app/models/dashboard";
+import { DashboardTotaPorDia, DashboardTotaPorMesStatus } from "../../../app/models/dashboard";
 
 const Dashboard = () => {
   const dashboardService = useDashboardService();

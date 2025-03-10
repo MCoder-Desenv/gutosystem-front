@@ -1,11 +1,11 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useRouter } from "next/navigation";
-import { ButtonType } from "@/components/common/button";
-import { usePermissao } from "@/app/hooks/usePermissoes";
-import { Input } from "@/components/common"
-import { Categoria } from "@/app/models/categorias";
-import { formatDateToBackend } from "@/app/util/formatData";
+import { ButtonType } from "../../common/button";
+import { usePermissao } from "../../../app/hooks/usePermissoes";
+import { Input } from "../../common/input"
+import { Categoria } from "../../../app/models/categorias";
+import { formatDateToBackend } from "../../../app/util/formatData";
 import { Dropdown } from "primereact/dropdown";
 
 interface CategoriasFormProps {

@@ -1,3 +1,3 @@
-import { ListagemCategorias } from "@/components";
+import { ListagemCategorias } from '../../../components';
 
 export default ListagemCategorias

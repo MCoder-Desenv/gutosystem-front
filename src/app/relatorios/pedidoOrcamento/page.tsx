@@ -1,3 +1,3 @@
-import { RelatoriosPedidoOrcamento } from "@/components";
+import { RelatoriosPedidoOrcamento } from '../../../components';
 
 export default RelatoriosPedidoOrcamento

@@ -1,19 +1,19 @@
 'use client';
-import { Terceiro, TerceirosCaracteristicas, TerceirosEnderecos } from '@/app/models/terceiros';
-import { Input, InputCPF } from '@/components';
+import { Terceiro, TerceirosCaracteristicas, TerceirosEnderecos } from '../../../app/models/terceiros';
+import { Input, InputCPF } from '../../../components';
 import { Checkbox } from 'primereact/checkbox'; // Importando o Checkbox do PrimeReact
 import { useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
 import * as Yup from 'yup';
 import { useEffect, useRef, useState } from 'react';
-import { buscarCEP } from '@/app/services/cep.service';
-import { deleteFromArray, updateArray } from '@/app/util/common';
-import { TiposCaracteristicas } from '@/app/models/tiposCaracteristicas';
-import { useTerceiroService, useTipoCaracteristicaService } from '@/app/services';
+import { buscarCEP } from '../../../app/services/cep.service';
+import { deleteFromArray, updateArray } from '../../../app/util/common';
+import { TiposCaracteristicas } from '../../../app/models/tiposCaracteristicas';
+import { useTerceiroService, useTipoCaracteristicaService } from '../../../app/services';
 import VMasker from 'vanilla-masker';
-import { ButtonType } from '@/components/common/button';
-import { usePermissao } from '@/app/hooks/usePermissoes';
-import { formatDateToBackend } from '@/app/util/formatData';
+import { ButtonType } from '../../../components/common/button';
+import { usePermissao } from '../../../app/hooks/usePermissoes';
+import { formatDateToBackend } from '../../../app/util/formatData';
 import { Dropdown } from 'primereact/dropdown';
 
 

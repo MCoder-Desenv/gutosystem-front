@@ -1,3 +1,3 @@
-import { CadastroFichaOrcamento } from "@/components"; 
+import { CadastroFichaOrcamento } from '../../../components';
 
 export default CadastroFichaOrcamento

@@ -1,12 +1,12 @@
-import { CategoriaProduto, Produto } from "@/app/models/produtos";
+import { CategoriaProduto, Produto } from "../../../app/models/produtos";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useCategoriaService } from "@/app/services";
+import { useCategoriaService } from "../../../app/services";
 import { useRouter } from "next/navigation";
-import { SelectGenerico } from "@/components/common/selectGenerico";
-import { ButtonType } from "@/components/common/button";
+import { SelectGenerico } from "../../../components/common/selectGenerico";
+import { ButtonType } from "../../../components/common/button";
 import { useEffect, useMemo, useState } from "react";
-import { usePermissao } from "@/app/hooks/usePermissoes";
+import { usePermissao } from "../../../app/hooks/usePermissoes";
 import { Dropdown } from "primereact/dropdown";
 
 interface ProdutosFormProps {

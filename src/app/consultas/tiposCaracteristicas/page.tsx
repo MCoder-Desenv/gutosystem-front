@@ -1,3 +1,3 @@
-import { ListagemTiposCaracteristicas } from "@/components";
+import { ListagemTiposCaracteristicas } from '../../../components';
 
 export default ListagemTiposCaracteristicas

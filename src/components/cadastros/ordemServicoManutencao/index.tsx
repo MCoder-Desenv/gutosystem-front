@@ -1,11 +1,11 @@
 'use client'
-import { Layout } from "@/components/layout"
+import { Layout } from "../../../components/layout"
 import { OrdemServicoManutencaoForm } from "./form"
 import { useEffect, useRef, useState } from "react";
-import { OrdemServicoManutencao } from '@/app/models/ordemServicoManutencao'
-import { useOrdemServicoManutencaoService } from "@/app/services";
+import { OrdemServicoManutencao } from '../../../app/models/ordemServicoManutencao'
+import { useOrdemServicoManutencaoService } from "../../../app/services";
 import { useSearchParams } from "next/navigation"
-import { ModalCard } from "@/components/common/modal";
+import { ModalCard } from "../../../components/common/modal";
 
 export const CadastroOrdemServicoManutencao: React.FC = () => {
 

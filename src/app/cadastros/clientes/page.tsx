@@ -1,3 +1,3 @@
-import { CadastroClientes } from "@/components"; 
+import { CadastroClientes } from '../../../components';
 
 export default CadastroClientes

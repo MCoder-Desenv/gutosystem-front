@@ -1,15 +1,15 @@
 "use client";
-import { Layout } from "@/components/layout";
+import { Layout } from "../../layout";
 import { useFormik } from "formik";
 import { useState } from "react";
-import { useUsuarioService } from "@/app/services";
+import { useUsuarioService } from "../../../app/services";
 import { useRouter } from "next/navigation";
-import { CategoriaProduto } from "@/app/models/produtos";
-import { ButtonType } from "@/components/common/button";
-import { ModalCard } from "@/components/common/modal";
-import TabelaDinamica, { Column } from "@/components/common/tabelaDinamica";
-import { UsuarioProjection, Usuarios } from "@/app/models/usuarios";
-import { usePermissao } from "@/app/hooks/usePermissoes";
+import { CategoriaProduto } from "../../../app/models/produtos";
+import { ButtonType } from "../../../components/common/button";
+import { ModalCard } from "../../../components/common/modal";
+import TabelaDinamica, { Column } from "../../common/tabelaDinamica";
+import { UsuarioProjection, Usuarios } from "../../../app/models/usuarios";
+import { usePermissao } from "../../../app/hooks/usePermissoes";
 
 interface ConsultaUsuariosForm {
   nome?: string;

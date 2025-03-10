@@ -1,3 +1,3 @@
-import { ListagemClientes } from '@/components'
+import { ListagemClientes } from '../../../components';
 
 export default ListagemClientes;

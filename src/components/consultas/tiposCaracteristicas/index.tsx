@@ -1,15 +1,15 @@
 "use client";
-import { Layout } from "@/components/layout";
-import { Input } from "@/components/common";
+import { Layout } from "../../layout";
+import { Input } from "../../common";
 import { useFormik } from "formik";
 import { useState } from "react";
-import { useTipoCaracteristicaService } from "@/app/services";
+import { useTipoCaracteristicaService } from "../../../app/services";
 import { useRouter } from "next/navigation";
-import { TiposCaracteristicas } from "@/app/models/tiposCaracteristicas";
-import { ModalCard } from "@/components/common/modal";
-import { ButtonType } from "@/components/common/button";
-import TabelaDinamica, { Column } from "@/components/common/tabelaDinamica";
-import { usePermissao } from "@/app/hooks/usePermissoes";
+import { TiposCaracteristicas } from "../../../app/models/tiposCaracteristicas";
+import { ModalCard } from "../../common/modal";
+import { ButtonType } from "../../common/button";
+import TabelaDinamica, { Column } from "../../common/tabelaDinamica";
+import { usePermissao } from "../../../app/hooks/usePermissoes";
 
 interface ConsultaTipoCaracteristicaForm {
   nome?: string;

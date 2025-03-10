@@ -1,3 +1,3 @@
-import { ListagemOrdemServicoManutencao } from '@/components'
+import { ListagemOrdemServicoManutencao } from '../../../components';
 
 export default ListagemOrdemServicoManutencao;

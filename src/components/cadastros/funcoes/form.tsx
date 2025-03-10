@@ -1,9 +1,9 @@
 "use client";
-import { Funcao } from "@/app/models/funcoes";
+import { Funcao } from "../../../app/models/funcoes";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { ButtonType } from "@/components/common/button";
-import GridComponent from "@/components/common/GridComponent";
+import { ButtonType } from "../../../components/common/button";
+import GridComponent from "../../common/GridComponent";
 
 interface FuncaoFormProps {
   funcoes: Funcao[];

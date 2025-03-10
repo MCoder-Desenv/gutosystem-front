@@ -1,16 +1,16 @@
 "use client";
-import { Layout } from "@/components/layout";
-import { Input } from "@/components/common";
+import { Layout } from "../../layout";
+import { Input } from "../../common";
 import { useFormik } from "formik";
 import { useState } from "react";
-import { Fornecedores, FornecedorDto } from "@/app/models/terceiros";
-import { useTerceiroService } from "@/app/services";
+import { Fornecedores, FornecedorDto } from "../../../app/models/terceiros";
+import { useTerceiroService } from "../../../app/services";
 import { useRouter } from "next/navigation";
-import { ButtonType } from "@/components/common/button";
+import { ButtonType } from "../../common/button";
 import React from "react";
-import { ModalCard } from "@/components/common/modal";
-import TabelaDinamica, { Column } from "@/components/common/tabelaDinamica";
-import { usePermissao } from "@/app/hooks/usePermissoes";
+import { ModalCard } from "../../common/modal";
+import TabelaDinamica, { Column } from "../../common/tabelaDinamica";
+import { usePermissao } from "../../../app/hooks/usePermissoes";
 
 interface ConsultaFornecedoresForm {
   nome?: string;

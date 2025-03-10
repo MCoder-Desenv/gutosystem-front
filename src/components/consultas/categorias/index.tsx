@@ -1,15 +1,15 @@
 "use client";
-import { Layout } from "@/components/layout";
-import { Input } from "@/components/common";
+import { Layout } from "../../../components/layout";
+import { Input } from "../../../components/common";
 import { useFormik } from "formik";
 import { useState } from "react";
-import { useCategoriaService } from "@/app/services";
+import { useCategoriaService } from "../../../app/services";
 import { useRouter } from "next/navigation";
-import { Categoria } from "@/app/models/categorias";
-import { ButtonType } from "@/components/common/button";
-import { ModalCard } from "@/components/common/modal";
-import TabelaDinamica, { Column } from "@/components/common/tabelaDinamica";
-import { usePermissao } from "@/app/hooks/usePermissoes";
+import { Categoria } from "../../../app/models/categorias";
+import { ButtonType } from "../../../components/common/button";
+import { ModalCard } from "../../../components/common/modal";
+import TabelaDinamica, { Column } from "../../../components/common/tabelaDinamica";
+import { usePermissao } from "../../../app/hooks/usePermissoes";
 
 interface ConsultaCategoriasForm {
   nome?: string;

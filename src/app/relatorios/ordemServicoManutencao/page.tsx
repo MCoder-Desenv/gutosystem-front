@@ -1,3 +1,3 @@
-import { RelatoriosOrdemServicoManutencao } from "@/components";
+import { RelatoriosOrdemServicoManutencao } from '../../../components';
 
 export default RelatoriosOrdemServicoManutencao

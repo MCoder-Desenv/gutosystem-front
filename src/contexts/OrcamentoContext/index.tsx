@@ -1,5 +1,5 @@
 'use client'
-import { TerceiroFichaOrcamento } from '@/app/models/terceiros';
+import { TerceiroFichaOrcamento } from '../../app/models/terceiros';
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 // Definir o tipo de dados que serão armazenados no contexto

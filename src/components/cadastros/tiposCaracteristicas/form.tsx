@@ -1,12 +1,12 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useRouter } from "next/navigation";
-import { ButtonType } from "@/components/common/button";
-import { usePermissao } from "@/app/hooks/usePermissoes";
-import { TiposCaracteristicas } from "@/app/models/tiposCaracteristicas";
-import { Input } from "@/components/common";
+import { ButtonType } from "../../../components/common/button";
+import { usePermissao } from "../../../app/hooks/usePermissoes";
+import { TiposCaracteristicas } from "../../../app/models/tiposCaracteristicas";
+import { Input } from "../../../components/common";
 import { Checkbox } from "primereact/checkbox";
-import { formatDateTimeToBackendToDate } from "@/app/util/formatData";
+import { formatDateTimeToBackendToDate } from "../../../app/util/formatData";
 
 interface TiposCaracteristicasFormProps {
   tipCar: TiposCaracteristicas;

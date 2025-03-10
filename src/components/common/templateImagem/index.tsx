@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { ArquivoFicha } from "@/app/models/fichaOrcamento";
+import { ArquivoFicha } from "../../../app/models/fichaOrcamento";
 
 interface TemplateImagemProps {
     arquivo: ArquivoFicha;

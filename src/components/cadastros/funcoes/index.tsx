@@ -1,10 +1,10 @@
 'use client'
-import { Layout } from "@/components/layout"
+import { Layout } from "../../../components/layout"
 import { FuncoesForm } from "./form"
 import { useEffect, useState } from "react";
-import { useFuncoesService } from "@/app/services";
-import { ModalCard } from "@/components/common/modal";
-import { Funcao } from "@/app/models/funcoes";
+import { useFuncoesService } from "../../../app/services";
+import { ModalCard } from "../../../components/common/modal";
+import { Funcao } from "../../../app/models/funcoes";
 
 export const CadastroFuncoes: React.FC = () => {
     const service = useFuncoesService();

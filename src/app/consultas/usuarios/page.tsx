@@ -1,3 +1,3 @@
-import { ListagemUsuarios } from '@/components'
+import { ListagemUsuarios } from '../../../components';
 
 export default ListagemUsuarios;

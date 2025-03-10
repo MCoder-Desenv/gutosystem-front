@@ -1,18 +1,18 @@
 "use client";
-import { Layout } from "@/components/layout";
-import { Input } from "@/components/common";
+import { Layout } from "../../layout";
+import { Input } from "../../common";
 import { useFormik } from "formik";
 import { useState } from "react";
-import { useOrdemServicoManutencaoService, useTerceiroService } from "@/app/services";
+import { useOrdemServicoManutencaoService, useTerceiroService } from "../../../app/services";
 import { useRouter } from "next/navigation";
 import { AutoComplete } from "primereact/autocomplete";
-import { TerceiroOrdemServicoManutencao } from "@/app/models/terceiros";
-import { formatDateToBackend } from "@/app/util/formatData";
-import { OrdemServicoManutencaoDto } from "@/app/models/ordemServicoManutencao";
-import { ButtonType } from "@/components/common/button";
-import { ModalCard } from "@/components/common/modal";
-import TabelaDinamica, { Column } from "@/components/common/tabelaDinamica";
-import { usePermissao } from "@/app/hooks/usePermissoes";
+import { TerceiroOrdemServicoManutencao } from "../../../app/models/terceiros";
+import { formatDateToBackend } from "../../../app/util/formatData";
+import { OrdemServicoManutencaoDto } from "../../../app/models/ordemServicoManutencao";
+import { ButtonType } from "../../common/button";
+import { ModalCard } from "../../common/modal";
+import TabelaDinamica, { Column } from "../../common/tabelaDinamica";
+import { usePermissao } from "../../../app/hooks/usePermissoes";
 
 interface ConsultaPedidoOrcamentoForm {
   tipoFiltro: string;

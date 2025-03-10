@@ -1,11 +1,11 @@
 'use client'
-import { Layout } from "@/components/layout"
+import { Layout } from "../../layout"
 import { CategoriaForm } from "./form"
 import { useEffect, useRef, useState } from "react";
-import { useCategoriaService } from "@/app/services";
+import { useCategoriaService } from "../../../app/services";
 import { useSearchParams } from "next/navigation"
-import { ModalCard } from "@/components/common/modal";
-import { Categoria } from "@/app/models/categorias";
+import { ModalCard } from "../../common/modal";
+import { Categoria } from "../../../app/models/categorias";
 
 export const CadastroCategorias: React.FC = () => {
 

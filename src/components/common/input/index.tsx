@@ -1,4 +1,4 @@
-import { formatReal } from "@/app/util/money";
+import { formatReal } from "../../../app/util/money";
 import { ChangeEvent, InputHTMLAttributes, ReactNode } from "react";
 import { FormatUtils } from "@4us-dev/utils";
 

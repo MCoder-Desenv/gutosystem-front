@@ -1,11 +1,11 @@
 'use client'
-import { Layout } from "@/components/layout"
+import { Layout } from "../../../components/layout"
 import { ClienteForm } from "./form"
 import { useEffect, useRef, useState } from "react";
-import { Terceiro } from '@/app/models/terceiros'
-import { useTerceiroService } from "@/app/services";
+import { Terceiro } from '../../../app/models/terceiros'
+import { useTerceiroService } from "../../../app/services";
 import { useSearchParams } from "next/navigation"
-import { ModalCard } from "@/components/common/modal";
+import { ModalCard } from "../../../components/common/modal";
 
 export const CadastroClientes: React.FC = () => {
 

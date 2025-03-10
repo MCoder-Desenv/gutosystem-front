@@ -1,9 +1,9 @@
 'use client';
-import { ArquivoFicha, FichaOrcamento } from '@/app/models/fichaOrcamento';
-import { ClienteFichaDto, TerceiroFichaOrcamento, TerceirosCaracteristicasDescricao, TerceirosEnderecosClienteDto } from '@/app/models/terceiros';
-import { useTerceiroCaracteristicaService, useTerceiroService, useTerceiroEnderecoService, useFichaOrcamentoService, useMediaService } from '@/app/services';
-import { Input } from '@/components';
-import { useOrcamentoContext } from '@/contexts/OrcamentoContext';
+import { ArquivoFicha, FichaOrcamento } from '../../../app/models/fichaOrcamento';
+import { ClienteFichaDto, TerceiroFichaOrcamento, TerceirosCaracteristicasDescricao, TerceirosEnderecosClienteDto } from '../../../app/models/terceiros';
+import { useTerceiroCaracteristicaService, useTerceiroService, useTerceiroEnderecoService, useFichaOrcamentoService, useMediaService } from '../../../app/services';
+import { Input } from '../../../components';
+import { useOrcamentoContext } from '../../../contexts/OrcamentoContext';
 import { useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
 import { Dropdown } from 'primereact/dropdown';
@@ -11,13 +11,13 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import * as Yup from 'yup';
 import { Galleria } from 'primereact/galleria';
 import { v4 as uuidv4 } from 'uuid';
-import { ButtonType } from '@/components/common/button';
-import { ModalCard } from '@/components/common/modal';
-import { AutoCompleteGenerico } from '@/components/common';
-import SelectList from '@/components/common/selectList';
-import TabelaDinamica, { Column } from '@/components/common/tabelaDinamica';
-import { usePermissao } from '@/app/hooks/usePermissoes';
-import { TemplateImagem } from '@/components/common/templateImagem';
+import { ButtonType } from '../../../components/common/button';
+import { ModalCard } from '../../../components/common/modal';
+import { AutoCompleteGenerico } from '../../../components/common';
+import SelectList from '../../../components/common/selectList';
+import TabelaDinamica, { Column } from '../../../components/common/tabelaDinamica';
+import { usePermissao } from '../../../app/hooks/usePermissoes';
+import { TemplateImagem } from '../../../components/common/templateImagem';
 import styles from './ficha.module.css';
 
 interface FichaOrcamentoFormProps {

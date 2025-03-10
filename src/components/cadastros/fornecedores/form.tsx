@@ -1,10 +1,10 @@
 'use client';
-import { Terceiro, TerceirosCaracteristicas, TerceirosEnderecos } from '@/app/models/terceiros';
-import { useTerceiroService, useTipoCaracteristicaService } from '@/app/services';
-import { buscarCEP } from '@/app/services/cep.service';
-import { deleteFromArray, updateArray } from '@/app/util/common';
-import { formatDateToBackend } from '@/app/util/formatData';
-import { Input, InputCNPJ, InputCPF } from '@/components';
+import { Terceiro, TerceirosCaracteristicas, TerceirosEnderecos } from '../../../app/models/terceiros';
+import { useTerceiroService, useTipoCaracteristicaService } from '../../../app/services';
+import { buscarCEP } from '../../../app/services/cep.service';
+import { deleteFromArray, updateArray } from '../../../app/util/common';
+import { formatDateToBackend } from '../../../app/util/formatData';
+import { Input, InputCNPJ, InputCPF } from '../../../components';
 import { useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
 import { Checkbox } from 'primereact/checkbox';
@@ -12,9 +12,9 @@ import { Dropdown } from 'primereact/dropdown';
 import { useEffect, useRef, useState } from 'react';
 import * as Yup from 'yup';
 import VMasker from 'vanilla-masker';
-import { ButtonType } from '@/components/common/button';
-import { TiposCaracteristicas } from '@/app/models/tiposCaracteristicas';
-import { usePermissao } from '@/app/hooks/usePermissoes';
+import { ButtonType } from '../../../components/common/button';
+import { TiposCaracteristicas } from '../../../app/models/tiposCaracteristicas';
+import { usePermissao } from '../../../app/hooks/usePermissoes';
 
 interface TerceiroFormProps {
     fornecedores: Terceiro;

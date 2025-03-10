@@ -24,7 +24,7 @@ import {
 } from "react-icons/fa";
 import { useState } from "react";
 import { signOut } from "next-auth/react";
-import { usePermissao } from "@/app/hooks/usePermissoes";
+import { usePermissao } from "../../../app/hooks/usePermissoes";
 
 interface MenuProps {
     expanded: boolean;

@@ -2,15 +2,15 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useRouter } from "next/navigation";
-import { ButtonType } from "@/components/common/button";
-import { UsuarioFuncao, Usuarios } from "@/app/models/usuarios";
-import { Input } from "@/components/common";
-import GridComponent from "@/components/common/GridComponent";
-import { useFuncoesService, useUsuarioService } from "@/app/services";
+import { ButtonType } from "../../../components/common/button";
+import { UsuarioFuncao, Usuarios } from "../../../app/models/usuarios";
+import { Input } from "../../../components/common";
+import GridComponent from "../../../components/common/GridComponent";
+import { useFuncoesService, useUsuarioService } from "../../../app/services";
 import { useState } from "react";
-import { ModalCard } from "@/components/common/modal";
+import { ModalCard } from "../../../components/common/modal";
 import { Dropdown } from "primereact/dropdown";
-import { usePermissao } from "@/app/hooks/usePermissoes";
+import { usePermissao } from "../../../app/hooks/usePermissoes";
 
 interface UsuariosFormProps {
   usuarios: Usuarios;

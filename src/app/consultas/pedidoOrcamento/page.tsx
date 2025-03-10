@@ -1,3 +1,3 @@
-import { ListagemPedidoOrcamento } from '@/components'
+import { ListagemPedidoOrcamento } from '../../../components';
 
 export default ListagemPedidoOrcamento;

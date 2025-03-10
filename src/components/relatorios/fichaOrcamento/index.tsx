@@ -1,10 +1,10 @@
 "use client"
-import { RelatoriosForm } from "@/app/models/relatorios";
-import { useFichaOrcamentoService } from "@/app/services";
-import { formatDateToBackend } from "@/app/util/formatData";
-import { AutoCompleteGenerico } from "@/components/common";
-import { ModalCard } from "@/components/common/modal";
-import { Layout } from "@/components/layout";
+import { RelatoriosForm } from "../../../app/models/relatorios";
+import { useFichaOrcamentoService } from "../../../app/services";
+import { formatDateToBackend } from "../../../app/util/formatData";
+import { AutoCompleteGenerico } from "../../common";
+import { ModalCard } from "../../common/modal";
+import { Layout } from "../../../components/layout";
 import { useFormik } from "formik";
 import { useMemo, useState } from "react";
 

@@ -1,10 +1,10 @@
 'use client'
-import { Layout } from "@/components/layout"
+import { Layout } from "../layout"
 import { PerfilForm } from "./form"
 import { useEffect, useRef, useState } from "react";
-import { useUsuarioService } from "@/app/services";
-import { ModalCard } from "@/components/common/modal";
-import { Perfil } from "@/app/models/usuarios";
+import { useUsuarioService } from "../../app/services";
+import { ModalCard } from "../common/modal";
+import { Perfil } from "../../app/models/usuarios";
 import { useSession } from "next-auth/react";
 
 export const VisualizaPerfil: React.FC = () => {

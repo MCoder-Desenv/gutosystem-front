@@ -1,9 +1,9 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useRouter } from "next/navigation";
-import { ButtonType } from "@/components/common/button";
-import { Input } from "@/components/common"
-import { Perfil } from "@/app/models/usuarios";
+import { ButtonType } from "../common/button";
+import { Input } from "../common/input"
+import { Perfil } from "../../app/models/usuarios";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react"; // Ícones de olho
 

@@ -1,11 +1,11 @@
 'use client'
-import { Produto } from "@/app/models/produtos"
-import { Layout } from "@/components/layout"
+import { Produto } from "../../../app/models/produtos"
+import { Layout } from "../../../components/layout"
 import { ProdutosForm } from "./form"
 import { useEffect, useRef, useState } from "react"
 import { useSearchParams } from "next/navigation"
-import { useProdutoService } from "@/app/services"
-import { ModalCard } from "@/components/common/modal"
+import { useProdutoService } from "../../../app/services"
+import { ModalCard } from "../../../components/common/modal"
 
 export const CadastroProdutos: React.FC = () => {
 

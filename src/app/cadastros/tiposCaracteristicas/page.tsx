@@ -1,3 +1,3 @@
-import { CadastroTiposCaracteristicas } from '@/components'
+import { CadastroTiposCaracteristicas } from '../../../components';
 
 export default CadastroTiposCaracteristicas

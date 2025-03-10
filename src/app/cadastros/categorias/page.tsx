@@ -1,3 +1,3 @@
-import { CadastroCategorias } from '@/components'
+import { CadastroCategorias } from '../../../components';
 
 export default CadastroCategorias

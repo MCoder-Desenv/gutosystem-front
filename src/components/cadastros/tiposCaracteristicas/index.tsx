@@ -1,11 +1,11 @@
 'use client'
-import { Layout } from "@/components/layout"
+import { Layout } from "../../../components/layout"
 import { TiposCaracteristicasForm } from "./form"
 import { useEffect, useRef, useState } from "react";
-import { useTipoCaracteristicaService } from "@/app/services";
+import { useTipoCaracteristicaService } from "../../../app/services";
 import { useSearchParams } from "next/navigation"
-import { ModalCard } from "@/components/common/modal";
-import { TiposCaracteristicas } from "@/app/models/tiposCaracteristicas";
+import { ModalCard } from "../../../components/common/modal";
+import { TiposCaracteristicas } from "../../../app/models/tiposCaracteristicas";
 
 export const CadastroTiposCaracteristicas: React.FC = () => {
 
