@@ -1,0 +1,114 @@
+.sidebar {
+    width: 250px;
+    background: #2C3E50;
+    color: white;
+    transition: width 0.3s ease-in-out;
+    min-height: 100vh; /* Faz o menu sempre ocupar toda a altura da tela */
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+    padding-top: 10px;
+}
+
+
+.collapsed {
+    width: 70px;
+}
+
+/* Sidebar expandida */
+.expanded {
+    width: 220px; /* Diminuído de 250px para 220px */
+}
+
+.toggleButton {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    padding: 10px;
+    cursor: pointer;
+    align-self: flex-end;
+}
+
+.menuList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menuItem {
+    transition: background 0.2s ease-in-out;
+}
+
+.menuLink {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: white;
+    padding: 12px 20px;
+    transition: background 0.3s;
+    font-size: 16px;
+}
+
+.menuLink:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.subMenuList {
+    list-style: none;
+    padding-left: 20px;
+    margin-top: 5px;
+    background: #0f1924;
+}
+
+.subMenuItem {
+    padding: 8px 0;
+}
+
+.subMenuLink {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: white;
+    font-size: 14px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: background 0.2s;
+}
+
+.subMenuLink:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.subMenuLink .icon {
+    font-size: 16px;
+    margin-right: 10px;
+}
+
+.chevron {
+    margin-left: 2%;
+    margin-top: 3%;
+    transition: transform 0.2s;
+}
+
+.icon {
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+.collapsed .menuLink {
+    justify-content: center;
+}
+
+.collapsed .icon {
+    margin-right: 0;
+}
+
+.label {
+    transition: opacity 0.2s ease-in-out;
+}
+
+.collapsed .label {
+    opacity: 0;
+    width: 0;
+}

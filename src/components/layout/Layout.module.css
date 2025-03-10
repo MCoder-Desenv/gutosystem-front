@@ -1,0 +1,25 @@
+.app {
+    display: flex;
+    min-height: 100vh; /* Garante que ocupe toda a tela */
+}
+
+
+/* Ajusta a largura do conteúdo principal */
+.mainContent {
+    flex-grow: 1;
+    min-height: 100vh; /* Garante que o conteúdo principal também ocupe a tela inteira */
+    transition: margin-left 0.3s ease-in-out;
+    padding: 20px;
+    background: white;
+}
+
+
+/* Sidebar expandida */
+.expanded {
+    margin-left: 0px; /* Diminuído de 250px para 220px */
+}
+
+/* Sidebar recolhida */
+.collapsed {
+    margin-left: 70px;
+}
