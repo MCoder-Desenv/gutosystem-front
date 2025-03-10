@@ -26,27 +26,21 @@ const campoObrigatorio = 'Campo Obrigatório';
 const validationScheme = Yup.object().shape({
     tipoTerceiro: Yup.string().required('Campo Obrigatório'),
     nome: Yup.string().required(campoObrigatorio),
-    cpf: Yup.string()
-        .trim()
-        .when('tipoTerceiro', {
-            is: '2', // Cliente CPF
-            then: (schema) => schema.required(campoObrigatorio).length(14, 'CPF Inválido'),
-            otherwise: (schema) => schema.notRequired(),
-        }),
-    cnpj: Yup.string()
-        .trim()
-        .when('tipoTerceiro', {
-            is: '3', // Cliente CNPJ
-            then: (schema) => schema.required(campoObrigatorio).length(18, 'CNPJ Inválido'),
-            otherwise: (schema) => schema.notRequired(),
-        }),
-    razaoSocial: Yup.string()
-        .trim()
-        .when('tipoTerceiro', {
-            is: '3', // Cliente CNPJ
-            then: (schema) => schema.required(campoObrigatorio),
-            otherwise: (schema) => schema.notRequired(),
-        }),
+    cpf: Yup.string().trim().when('tipoTerceiro', {
+        is: '2', // Cliente CPF
+        then: (schema) => schema.required(campoObrigatorio).length(14, 'CPF Inválido'),
+        otherwise: (schema) => schema.notRequired(),
+    }),
+    cnpj: Yup.string().trim().when('tipoTerceiro', {
+        is: '3', // Cliente CNPJ
+        then: (schema) => schema.required(campoObrigatorio).length(18, 'CNPJ Inválido'),
+        otherwise: (schema) => schema.notRequired(),
+    }),
+    razaoSocial: Yup.string().trim().when('tipoTerceiro', {
+        is: '3', // Cliente CNPJ
+        then: (schema) => schema.required(campoObrigatorio),
+        otherwise: (schema) => schema.notRequired(),
+    }),
 });
 
 export const ClienteForm: React.FC<TerceiroFormProps> = ({
@@ -639,8 +633,11 @@ export const ClienteForm: React.FC<TerceiroFormProps> = ({
                                 `${e.cep?.toLowerCase()}|${e.endereco?.toLowerCase()}|${e.numero?.toLowerCase()}` === chave
                             ).length > 1;
 
+                            // Se for duplicado e não tiver ID, aplicar classe extra
+                            const className = `${isDuplicated ? "linha-duplicada" : ""} ${isDuplicated && !endereco.id ? "linha-nao-salva" : ""}`;
+
                             return (
-                                <tr key={endereco.id || endereco.tempId} className={isDuplicated ? "linha-duplicada" : ""}>
+                                <tr key={endereco.id || endereco.tempId} className={className}>
                                     <td></td>
                                     <td>{endereco.cep}</td>
                                     <td>{endereco.endereco}</td>
@@ -957,18 +954,21 @@ export const ClienteForm: React.FC<TerceiroFormProps> = ({
                     <tbody>
                         {Array.isArray(formik.values.caracteristicas) &&
                             formik.values.caracteristicas.map((caracteristica, index, array) => {
-                                // Criar chave única (tipo + descrição) sem considerar tempId ou id
+                                // Criar chave única (tipo + descrição)
                                 const chave = `${caracteristica.tipo?.toLowerCase()}|${caracteristica.descricao?.toLowerCase()}`;
 
                                 // Contar quantas vezes essa chave aparece no array
-                                const isDuplicated = array.filter(c => 
+                                const isDuplicated = array.filter(c =>
                                     `${c.tipo?.toLowerCase()}|${c.descricao?.toLowerCase()}` === chave
                                 ).length > 1;
 
+                                // Se for duplicado e não tiver ID, aplicar classe extra
+                                const className = `${isDuplicated ? "linha-duplicada" : ""} ${isDuplicated && !caracteristica.id ? "linha-nao-salva" : ""}`;
+
                                 return (
                                     <tr 
-                                        key={caracteristica.id || caracteristica.tempId} 
-                                        className={isDuplicated ? "linha-duplicada" : ""}
+                                        key={caracteristica.id || caracteristica.tempId || index} 
+                                        className={className.trim()} // Remover espaços extras
                                     >
                                         <td></td>
                                         <td>{caracteristica.tipo}</td>
@@ -976,19 +976,19 @@ export const ClienteForm: React.FC<TerceiroFormProps> = ({
                                         <td>
                                             <button
                                                 className="button is-warning is-small"
-                                                type='button'
+                                                type="button"
                                                 onClick={() => editCaracteristica(caracteristica)}
                                             >
-                                                {!podeCadastrar ? 'Visualizar' : 'Editar'}
+                                                {!podeCadastrar ? "Visualizar" : "Editar"}
                                             </button>
                                             <button
                                                 className="button is-danger is-small ml-2"
-                                                type='button'
+                                                type="button"
                                                 onClick={() => caracteristica.id ?  
                                                     confirmDeleteCaracteristica(caracteristica) : deleteCaracteristica(caracteristica)}
                                                 disabled={!podeCadastrar}
                                             > 
-                                                {caracteristica.id ? 'Excluir' : 'Remover'}
+                                                {caracteristica.id ? "Excluir" : "Remover"}
                                             </button>
                                         </td>
                                     </tr>

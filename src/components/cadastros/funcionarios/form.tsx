@@ -425,8 +425,11 @@ export const FuncionarioForm: React.FC<FuncionarioFormProps> = ({
                                 `${e.cep?.toLowerCase()}|${e.endereco?.toLowerCase()}|${e.numero?.toLowerCase()}` === chave
                             ).length > 1;
 
+                            // Se for duplicado e não tiver ID, aplicar classe extra
+                            const className = `${isDuplicated ? "linha-duplicada" : ""} ${isDuplicated && !endereco.id ? "linha-nao-salva" : ""}`;
+
                             return (
-                                <tr key={endereco.id || endereco.tempId} className={isDuplicated ? "linha-duplicada" : ""}>
+                                <tr key={endereco.id || endereco.tempId} className={className}>
                                     <td></td>
                                     <td>{endereco.cep}</td>
                                     <td>{endereco.endereco}</td>
@@ -740,10 +743,13 @@ export const FuncionarioForm: React.FC<FuncionarioFormProps> = ({
                                     `${c.tipo?.toLowerCase()}|${c.descricao?.toLowerCase()}` === chave
                                 ).length > 1;
 
+                                // Se for duplicado e não tiver ID, aplicar classe extra
+                                const className = `${isDuplicated ? "linha-duplicada" : ""} ${isDuplicated && !caracteristica.id ? "linha-nao-salva" : ""}`;
+
                                 return (
                                     <tr 
                                         key={caracteristica.id || caracteristica.tempId} 
-                                        className={isDuplicated ? "linha-duplicada" : ""}
+                                        className={className}
                                     >
                                         <td></td>
                                         <td>{caracteristica.tipo}</td>

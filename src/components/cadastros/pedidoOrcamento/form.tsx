@@ -44,85 +44,80 @@ interface OrcamentoContextType {
 const campoObrigatorio = 'Campo Obarigatório';
 
 const validationScheme = Yup.object().shape({
-  //dataPedido: Yup.string().trim().required(campoObrigatorio),
-  dataPedido: Yup.string()
-              .trim()
-              .required(campoObrigatorio)
-              .test(
-                  'data-nao-futura',
-                  'A data do pedido não pode ser maior que a data atual',
-                  (value) => {
-                      if (!value) return false; // Se for nulo, falha automaticamente
-      
-                      let dataInserida;
-      
-                      if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
-                          // 📌 Se já está no formato YYYY-MM-DD, cria a data diretamente
-                          dataInserida = new Date(value + 'T00:00:00'); // Evita problemas de fuso
-                      } else {
-                          // 📌 Se estiver no formato DD/MM/YYYY, converte corretamente
-                          const regexData = /^(\d{2})\/(\d{2})\/(\d{4})$/;
-                          const match = value.match(regexData);
-                          
-                          if (!match) {
-                              return false;
-                          }
-      
-                          const [, dia, mes, ano] = match;
-                          dataInserida = new Date(`${ano}-${mes}-${dia}T00:00:00`);
-                      }
-      
-                      // Verifica se a conversão deu certo
-                      if (isNaN(dataInserida.getTime())) {
-                          return false;
-                      }
-      
-                      // Pegamos a data atual zerando horas para comparação correta
-                      const dataAtual = new Date();
-                      dataAtual.setHours(0, 0, 0, 0);
-                      dataInserida.setHours(0, 0, 0, 0);
-      
-                      return dataInserida <= dataAtual;
-                  }
-              ),
-  dataPosVenda: Yup.string()
-  .test(
-      'data-nao-futura',
-      'A data de pos-venda não pode ser maior que a data atual',
-      (value) => {
-          if (!value) return false; // Se for nulo, falha automaticamente
+  dataPedido: Yup.string().trim().required(campoObrigatorio).test(
+    'data-nao-futura',
+    'A data do pedido não pode ser maior que a data atual',
+    (value) => {
+        if (!value) return false; // Se for nulo, falha automaticamente
 
-          let dataInserida;
+        let dataInserida;
 
-          if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
-              // 📌 Se já está no formato YYYY-MM-DD, cria a data diretamente
-              dataInserida = new Date(value + 'T00:00:00'); // Evita problemas de fuso
-          } else {
-              // 📌 Se estiver no formato DD/MM/YYYY, converte corretamente
-              const regexData = /^(\d{2})\/(\d{2})\/(\d{4})$/;
-              const match = value.match(regexData);
-              
-              if (!match) {
-                  return false;
-              }
+        if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+            // 📌 Se já está no formato YYYY-MM-DD, cria a data diretamente
+            dataInserida = new Date(value + 'T00:00:00'); // Evita problemas de fuso
+        } else {
+            // 📌 Se estiver no formato DD/MM/YYYY, converte corretamente
+            const regexData = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+            const match = value.match(regexData);
+            
+            if (!match) {
+                return false;
+            }
 
-              const [, dia, mes, ano] = match;
-              dataInserida = new Date(`${ano}-${mes}-${dia}T00:00:00`);
-          }
+            const [, dia, mes, ano] = match;
+            dataInserida = new Date(`${ano}-${mes}-${dia}T00:00:00`);
+        }
 
-          // Verifica se a conversão deu certo
-          if (isNaN(dataInserida.getTime())) {
-              return false;
-          }
+        // Verifica se a conversão deu certo
+        if (isNaN(dataInserida.getTime())) {
+            return false;
+        }
 
-          // Pegamos a data atual zerando horas para comparação correta
-          const dataAtual = new Date();
-          dataAtual.setHours(0, 0, 0, 0);
-          dataInserida.setHours(0, 0, 0, 0);
+        // Pegamos a data atual zerando horas para comparação correta
+        const dataAtual = new Date();
+        dataAtual.setHours(0, 0, 0, 0);
+        dataInserida.setHours(0, 0, 0, 0);
 
-          return dataInserida <= dataAtual;
-      }
+        return dataInserida <= dataAtual;
+    }
   ),
+  dataPosVenda: Yup.string().nullable().test(
+    'data-nao-futura',
+    'A data de pos-venda não pode ser maior que a data atual',
+    (value) => {
+      if (!value) return true; // Permite valores nulos ou vazios sem falhar
+
+      let dataInserida;
+
+      if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+        // 📌 Se já está no formato YYYY-MM-DD, cria a data diretamente
+        dataInserida = new Date(value + 'T00:00:00'); // Evita problemas de fuso
+      } else {
+        // 📌 Se estiver no formato DD/MM/YYYY, converte corretamente
+        const regexData = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+        const match = value.match(regexData);
+
+        if (!match) {
+          return false;
+        }
+
+        const [, dia, mes, ano] = match;
+        dataInserida = new Date(`${ano}-${mes}-${dia}T00:00:00`);
+      }
+
+      // Verifica se a conversão deu certo
+      if (isNaN(dataInserida.getTime())) {
+        return false;
+      }
+
+      // Pegamos a data atual zerando horas para comparação correta
+      const dataAtual = new Date();
+      dataAtual.setHours(0, 0, 0, 0);
+      dataInserida.setHours(0, 0, 0, 0);
+
+      return dataInserida <= dataAtual;
+    }
+  ),            
   status: Yup.string().trim().required(campoObrigatorio),
   produtos: Yup.array().of(
     Yup.object().shape({

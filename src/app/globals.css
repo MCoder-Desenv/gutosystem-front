@@ -326,3 +326,20 @@
   background-color: #e6f1ff; /* Cor suave no hover */
   border-color: #007bff; /* Borda azul no hover */
 }
+
+/* LINHAS DUPLICADAS*/
+
+.linha-duplicada {
+  background-color: #ffcccc !important; /* Vermelho claro para todas duplicadas */
+  color: #c62828; /* Texto em vermelho mais forte */
+  font-weight: bold; /* Destacar ainda mais o texto */
+}
+
+.linha-nao-salva {
+  background-color: #ff0000 !important; /* Vermelho mais forte para as não salvas */
+  font-weight: bold; /* Destacar ainda mais o texto */
+}
+
+.linha-duplicada:hover {
+  background-color: #ffcdd2; /* Um tom mais forte ao passar o mouse */
+}
