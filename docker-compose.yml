@@ -7,13 +7,10 @@ services:
     working_dir: /app
     ports:
       - "3009:3000"
-    environment:
-      - NODE_ENV=production
-      - NEXTAUTH_URL=https://gutosystem.eadescola.online
-      - HOST_URL=https://gutosystem.eadescola.online
-      - TZ=America/Sao_Paulo
+    env_file:
+      - .env.teste.example  # Carrega todas as variáveis do arquivo .env
     volumes:
-      - /app/frontend-gutosystem-test/gutosystem-front:/app  # Agora aponta para a pasta correta
+      - /app/frontend-gutosystem-test/gutosystem-front:/app
     command: sh -c "npm install && npm run build && npm start"
     networks:
       - gutosystem_front_net
@@ -27,6 +24,7 @@ services:
       - "traefik.http.routers.gutosystem_frontend.tls=true"
       - "traefik.http.routers.gutosystem_frontend.tls.certresolver=leresolver"
       - "traefik.http.services.gutosystem_frontend.loadbalancer.server.port=3000"
+
 networks:
   gutosystem_front_net:
     external: true
