@@ -17,7 +17,16 @@ services:
     command: sh -c "npm install && npm run build && npm start"
     networks:
       - gutosystem_front_net
-
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend-http.entrypoints=web"
+      - "traefik.http.routers.frontend-http.middlewares=redirect-to-https"
+      - "traefik.http.routers.frontend-http.rule=Host(`gutosystem.eadescola.online`)"
+      - "traefik.http.routers.frontend.entrypoints=websecure"
+      - "traefik.http.routers.frontend.rule=Host(`gutosystem.eadescola.online`)"
+      - "traefik.http.routers.frontend.tls=true"
+      - "traefik.http.routers.frontend.tls.certresolver=leresolver"
+      - "traefik.http.services.frontend.loadbalancer.server.port=3000"
 networks:
   gutosystem_front_net:
     external: true
