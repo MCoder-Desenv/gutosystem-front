@@ -1,3 +1,10 @@
+import { Suspense } from 'react';
 import { CadastroPedidoOrcamento } from '../../../components';
 
-export default CadastroPedidoOrcamento
+export default function Page() {
+  return (
+    <Suspense fallback={<div>Carregando...</div>}>
+      <CadastroPedidoOrcamento />
+    </Suspense>
+  );
+}
