@@ -1,7 +1,7 @@
 import { AxiosResponse } from "axios";
 import { httpClient } from "../http";
 import { Terceiro, ClienteDto, FuncionarioDto, ClienteFichaDto, FornecedorDto } from "../models/terceiros";
-import { ApiResponse, Page } from "../models/common/page";
+import { ApiResponse, Page } from "../models/common";
 
 const resourceURL: string = "/api/terceiros"
 

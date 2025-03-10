@@ -1,5 +1,5 @@
 import { AxiosResponse } from "axios";
-import { ApiResponse } from "../models/common/page";
+import { ApiResponse } from "../models/common";
 import { httpClient } from "../http";
 import { Perfil, UsuarioFuncao, UsuarioProjection, Usuarios } from "../models/usuarios";
 

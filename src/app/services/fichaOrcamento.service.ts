@@ -1,7 +1,7 @@
 import { AxiosResponse } from "axios";
 import { httpClient } from "../http";
 import { FichaOrcamento, FichaOrcamentoDto } from "../models/fichaOrcamento";
-import { ApiResponse, Page } from "../models/common/page";
+import { ApiResponse, Page } from "../models/common";
 
 const resourceURL: string = "/api/fichas-orcamento";
 

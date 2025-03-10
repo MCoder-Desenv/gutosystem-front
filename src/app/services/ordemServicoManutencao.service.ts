@@ -1,5 +1,5 @@
 import { AxiosResponse } from "axios";
-import { ApiResponse, Page } from "../models/common/page";
+import { ApiResponse, Page } from "../models/common";
 import { OrdemServicoManutencao, OrdemServicoManutencaoDto } from "../models/ordemServicoManutencao";
 import { httpClient } from "../http";
 

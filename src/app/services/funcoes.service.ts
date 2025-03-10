@@ -1,7 +1,7 @@
 import { httpClient } from "../http"
 import { AxiosResponse } from "axios"
 import { Funcao } from "../models/funcoes"
-import { ApiResponse } from "../models/common/page"
+import { ApiResponse } from "../models/common"
 
 const resourceURL: string = "/api/funcoes"
 

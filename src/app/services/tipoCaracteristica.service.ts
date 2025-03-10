@@ -1,7 +1,7 @@
 import { httpClient } from "../http"
 import { TiposCaracteristicas } from "../models/tiposCaracteristicas"
 import { AxiosResponse } from "axios"
-import { ApiResponse, Page } from "../models/common/page"
+import { ApiResponse, Page } from "../models/common"
 
 const resourceURL: string = "/api/tipcar"
 

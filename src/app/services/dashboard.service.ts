@@ -1,7 +1,7 @@
 import { httpClient } from "../http";
 import { AxiosResponse } from "axios";
 import { DashboardData, DashboardStatus, DashboardTotalFichaPeido, DashboardTotalFichaPeidoPorDia, DashboardTotaPorDia, DashboardTotaPorMesStatus } from "../models/dashboard";
-import { ApiResponse } from "../models/common/page";
+import { ApiResponse } from "../models/common";
 
 const resourceURL: string = "/api/dashboard";
 

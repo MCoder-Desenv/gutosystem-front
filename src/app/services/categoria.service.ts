@@ -1,7 +1,7 @@
 import { httpClient } from "../http"
 import { Categoria } from "../models/categorias"
 import { AxiosResponse } from "axios"
-import { ApiResponse, Page } from "../models/common/page"
+import { ApiResponse, Page } from "../models/common"
 import { CategoriaProduto } from "../models/produtos"
 
 const resourceURL: string = "/api/categorias"
