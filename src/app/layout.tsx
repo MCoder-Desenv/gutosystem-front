@@ -15,7 +15,7 @@ import "../components/layout/Layout.module.css";
 import { OrcamentoProvider } from '../contexts/OrcamentoContext';
 import "primeicons/primeicons.css";
 import { Providers } from "./providers";
-import { ManutencaoProvider } from "@/contexts/ManutencaoContext";
+import { ManutencaoProvider } from "../contexts/ManutencaoContext";
 
 // Definição das fontes
 const geistSans = localFont({
