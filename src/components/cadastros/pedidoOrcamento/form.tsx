@@ -26,6 +26,7 @@ import { useManutencaoContext } from '../../../contexts/ManutencaoContext';
 import { AutoCompleteInput } from '../../../components/common/autoCompleteInput';
 import { Produto } from '../../../app/models/produtos';
 import { FuncionarioDto } from '../../../app/models/terceiros';
+import { format } from 'date-fns';
 
 
 interface PedidoOrcamentoFormProps {
@@ -176,6 +177,8 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
     { label: 'Cancelada', value: 'Cancelada', className: 'status-Cancelada' },
   ];
 
+  const dataFormatada = format(new Date(), 'yyyy-MM-dd');
+
   const formik = useFormik<PedidoOrcamento>({
     initialValues: {
       ...pedidoOrcamento,
@@ -212,7 +215,7 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
       responsavelMedida: pedidoOrcamento.responsavelMedida || {},
       total: pedidoOrcamento.total || 0,
       vendedor: pedidoOrcamento.vendedor || {},
-      dataPedido: pedidoOrcamento.dataPedido || null
+      dataPedido: pedidoOrcamento.dataPedido || dataFormatada
     },
     onSubmit: (values) => {
       const formattedValues = {
@@ -477,7 +480,7 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
       if (tela === 'FICHAORCAMENTO') {
           let resultsFicha: FichaOrcamentoDto[] = [];
     
-          resultsFicha = await serviceFicha.findFichasPedido('', query);
+          resultsFicha = await serviceFicha.findFichasPedido('', query, 'Encerrada');
     
           if (resultsFicha.length > 0) {
             const formattedResult = resultsFicha[0]; 

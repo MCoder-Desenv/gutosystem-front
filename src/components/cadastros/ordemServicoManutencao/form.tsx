@@ -13,6 +13,7 @@ import { useRouter } from 'next/navigation';
 import { Dropdown } from 'primereact/dropdown';
 import { useEffect, useMemo, useState } from 'react';
 import * as Yup from 'yup';
+import { format } from 'date-fns';
 
 interface OrdemServicoManutencaoFormProps {
     ordemServicoManutencao: OrdemServicoManutencao;
@@ -101,13 +102,15 @@ export const OrdemServicoManutencaoForm: React.FC<OrdemServicoManutencaoFormProp
         { label: 'Encerrada', value: 'Encerrada', className: 'status-Encerrada' },
         { label: 'Cancelada', value: 'Cancelada', className: 'status-Cancelada' },
     ];
+
+    const dataFormatada = format(new Date(), 'yyyy-MM-dd');
     
     const formik = useFormik<OrdemServicoManutencao>({
         initialValues: {
             id: ordemServicoManutencao.id || null,
             telefoneCliente: ordemServicoManutencao.telefoneCliente || null,
             enderecoCliente: ordemServicoManutencao.enderecoCliente || null,
-            dataSolicitacaoManutencao: ordemServicoManutencao.dataSolicitacaoManutencao || null,
+            dataSolicitacaoManutencao: ordemServicoManutencao.dataSolicitacaoManutencao || dataFormatada,
             pedidoOrcamento: ordemServicoManutencao.pedidoOrcamento,
             numero: ordemServicoManutencao.numero || null,
             produto: ordemServicoManutencao.produto || null,

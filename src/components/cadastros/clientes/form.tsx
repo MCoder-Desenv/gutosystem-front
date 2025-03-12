@@ -26,22 +26,23 @@ const campoObrigatorio = 'Campo Obrigatório';
 const validationScheme = Yup.object().shape({
     tipoTerceiro: Yup.string().required('Campo Obrigatório'),
     nome: Yup.string().required(campoObrigatorio),
-    cpf: Yup.string().trim().when('tipoTerceiro', {
-        is: '2', // Cliente CPF
+    cpf: Yup.string().trim().when(['tipoTerceiro', 'status'], {
+        is: (tipoTerceiro: string, status: string) => tipoTerceiro === '2' && status !== 'Primeiro-Contato',
         then: (schema) => schema.required(campoObrigatorio).length(14, 'CPF Inválido'),
-        otherwise: (schema) => schema.notRequired(),
+        otherwise: (schema) => schema.nullable().notRequired(),
     }),
-    cnpj: Yup.string().trim().when('tipoTerceiro', {
-        is: '3', // Cliente CNPJ
+    cnpj: Yup.string().trim().when(['tipoTerceiro', 'status'], {
+        is: (tipoTerceiro: string, status: string) => tipoTerceiro === '3' && status !== 'Primeiro-Contato',
         then: (schema) => schema.required(campoObrigatorio).length(18, 'CNPJ Inválido'),
-        otherwise: (schema) => schema.notRequired(),
+        otherwise: (schema) => schema.nullable().notRequired(),
     }),
-    razaoSocial: Yup.string().trim().when('tipoTerceiro', {
-        is: '3', // Cliente CNPJ
+    razaoSocial: Yup.string().trim().when(['tipoTerceiro', 'status'], {
+        is: (tipoTerceiro: string, status: string) => tipoTerceiro === '3' && status !== 'Primeiro-Contato',
         then: (schema) => schema.required(campoObrigatorio),
-        otherwise: (schema) => schema.notRequired(),
+        otherwise: (schema) => schema.nullable().notRequired(),
     }),
 });
+
 
 export const ClienteForm: React.FC<TerceiroFormProps> = ({
     cliente,

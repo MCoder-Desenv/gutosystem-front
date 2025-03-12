@@ -19,6 +19,7 @@ import TabelaDinamica, { Column } from '../../../components/common/tabelaDinamic
 import { usePermissao } from '../../../app/hooks/usePermissoes';
 import { TemplateImagem } from '../../../components/common/templateImagem';
 import styles from './ficha.module.css';
+import { format } from 'date-fns';
 
 interface FichaOrcamentoFormProps {
     fichaOrcamento: FichaOrcamento;
@@ -115,13 +116,15 @@ export const FichaOrcamentoForm: React.FC<FichaOrcamentoFormProps> = ({
     const [modalTipo, setModalTipo] = useState<'success' | 'error' | 'loading'>('success');
     const [erroBuscarClientes, setErroBuscarClientes] = useState('');
     const [erroBuscarEnderecos, setErroBuscarEnderecos] = useState('');
+
+    const dataFormatada = format(new Date(), 'yyyy-MM-dd');
     
     const formik = useFormik<FichaOrcamento>({
         initialValues: {
             id: fichaOrcamento.id || null,
             telefoneCliente: fichaOrcamento.telefoneCliente || null,
             enderecoCliente: fichaOrcamento.enderecoCliente || null,
-            dataSolicitacaoCliente: fichaOrcamento.dataSolicitacaoCliente || null,
+            dataSolicitacaoCliente: fichaOrcamento.dataSolicitacaoCliente || dataFormatada,
             cliente: fichaOrcamento.cliente,
             responsavel: fichaOrcamento.responsavel,
             orcamento: fichaOrcamento.orcamento || null,
