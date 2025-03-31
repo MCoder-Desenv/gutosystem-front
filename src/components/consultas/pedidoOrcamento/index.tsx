@@ -117,7 +117,7 @@ export const ListagemPedidoOrcamento: React.FC = () => {
   const handleSearch = async (query: string) => {
     try {
       setErroCarregarCliente('')
-      const results = await serviceTerceiro.findClienteAutoComplete(query, "");
+      const results = await serviceTerceiro.findClienteAutoComplete(query);
       setSearchResults(results.data || []);
     } catch (error) {
       setErroCarregarCliente("Erro ao buscar clientes:" + error)
