@@ -11,8 +11,9 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Senha", type: "password" },
       },
       async authorize(credentials) {
-        console.log("Enviando login para API...");
+        //console.log("Enviando login para API...");
         const res = await fetch("https://backendgutosystem.eadescola.online/auth/login", {
+        //const res = await fetch("http://localhost:8080/auth/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -20,7 +21,7 @@ export const authOptions: NextAuthOptions = {
             password: credentials?.password,
           }),
         });
-        console.log("Resposta do servidor:", res.status);
+        //console.log("Resposta do servidor:", res.status);
         const user = await res.json();
 
         if (!res.ok) {

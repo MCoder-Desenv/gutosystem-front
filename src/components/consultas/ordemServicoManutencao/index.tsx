@@ -74,6 +74,7 @@ export const ListagemOrdemServicoManutencao: React.FC = () => {
     const result = await service.findOrdemServico(
       filtro.tipoFiltro === "Numero" ? filtro.valorFiltro : '',
       filtro.tipoFiltro === "Cliente" ? filtro.valorFiltro : '',
+      filtro.tipoFiltro === "Telefone" ? filtro.valorFiltro : '',
       filtro.dataInicio,
       filtro.dataFim,
       page,
@@ -111,7 +112,7 @@ export const ListagemOrdemServicoManutencao: React.FC = () => {
   const handleSearch = async (query: string) => {
     try {
       setErroCarregarCliente('')
-      const results = await serviceTerceiro.findClienteAutoComplete(query, "");
+      const results = await serviceTerceiro.findClienteAutoComplete(query);
       setSearchResults(results.data || []);
     } catch (error) {
       setErroCarregarCliente("Erro ao buscar clientes:" + error)
@@ -147,7 +148,8 @@ export const ListagemOrdemServicoManutencao: React.FC = () => {
   
   const columns: Column[] = [
     { label: "Número", key: "numero", width: "15%" },
-    { label: "Nome", key: "nomeCliente", width: "50%" },
+    { label: "Nome", key: "nomeCliente", width: "35%" },
+    { label: "Telefone", key: "telefoneCliente", width: "15%" },
     { label: "Data Solicitação", key: "dataSolicitacaoManutencao", width: "15%" },
     { label: "Status", key: "status", width: "15%" },
     { label: "Ações", key: "acoes", width: "5%" }
@@ -157,6 +159,7 @@ export const ListagemOrdemServicoManutencao: React.FC = () => {
     id: ord.id || '',
     numero: ord.numero || '',
     nomeCliente: ord.nomeCliente || '',
+    telefoneCliente: ord.telefoneCliente || '',
     dataSolicitacaoManutencao: ord.dataSolicitacaoManutencao ? formatDateToBackend(ord.dataSolicitacaoManutencao) : '',
     status: <span className={`has-text-centered ${getStatusClass(ord.status || '')}`}>{ord.status?.replace("-", " ") || "N/A"}</span>,
     acoes: (actionTemplate(ord)),
@@ -191,9 +194,11 @@ export const ListagemOrdemServicoManutencao: React.FC = () => {
                     value={filtro.tipoFiltro}
                     onChange={customHandleChange} // Substitui o handleChange padrão
                     disabled={!podeConsultar}
+                    autoComplete="off"
                   >
                     <option value="Numero">Número</option>
                     <option value="Cliente">Cliente</option>
+                    <option value="Telefone">Telefone</option>
                   </select>
                 </div>
               </div>
@@ -214,6 +219,19 @@ export const ListagemOrdemServicoManutencao: React.FC = () => {
               />
             </div>
             :
+            filtro.tipoFiltro === 'Telefone' ?
+            <div className="column is-10">
+              <Input
+                label="Valor do Filtro"
+                id="valorFiltro"
+                name="valorFiltro"
+                value={filtro.valorFiltro}
+                autoComplete="off"
+                onChange={validateInput}
+                disabled={!podeConsultar}
+              />
+            </div>
+            :
             <div className="field column is-10">
                 <label htmlFor="valorFiltro" className="label">
                   Valor do Filtro
@@ -222,6 +240,7 @@ export const ListagemOrdemServicoManutencao: React.FC = () => {
                 <AutoComplete
                   id="valorFiltro"
                   name="valorFiltro"
+                  autoComplete="off"
                   value={filtro.nomeTerceiro} // Usa o valor sincronizado do formik
                   suggestions={searchResults} // Sugestões retornadas pela busca
                   completeMethod={(e) => {
@@ -263,6 +282,7 @@ export const ListagemOrdemServicoManutencao: React.FC = () => {
               label="Data Início"
               id="dataInicio"
               name="dataInicio"
+              autoComplete="off"
               type="date"
               value={filtro.dataInicio || ""}
               onChange={handleChange}
@@ -275,6 +295,7 @@ export const ListagemOrdemServicoManutencao: React.FC = () => {
               id="dataFim"
               name="dataFim"
               type="date"
+              autoComplete="off"
               value={filtro.dataFim || ""}
               onChange={handleChange}
               disabled={!podeConsultar}

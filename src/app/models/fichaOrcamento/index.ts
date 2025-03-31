@@ -1,3 +1,4 @@
+import { Arquivo } from "../arquivos";
 import { TerceiroFichaOrcamento } from "../terceiros";
 
 export interface FichaOrcamento {
@@ -19,11 +20,13 @@ export interface FichaOrcamento {
     servExtrObs?: string | null;
     casaComCheck?: string | null;
     casaComObs?: string | null;
-    voltagem?: string | null;
+    volt110?: boolean | null;
+    volt220?: boolean | null;
     altura?: string | null;
-    medOrcamento?: number | null;
-    medProducao?: number | null;
-    arquivos?: ArquivoFicha[]; // Lista de arquivos relacionados à ficha de orçamento
+    observacoes?: string | null;
+    medOrcamento?: boolean | null;
+    medProducao?: boolean | null;
+    arquivos?: Arquivo[]; // Lista de arquivos relacionados à ficha de orçamento
     novosArquivos?: File[]; // Novos arquivos para upload
 }
 
@@ -46,17 +49,6 @@ export interface FichaOrcamentoDto {
     enderecoCliente?: string | null;
     telefoneCliente?: string | null;
     status?: string | null;
-}
-
-export interface ArquivoFicha {
-    id?: string; // ID do arquivo no banco de dados
-    nome: string; // Nome do arquivo
-    tipo: string; // Tipo do arquivo ("imagem", "video", etc.)
-    caminho: string; // Caminho completo do arquivo no servidor
-    file?: File | null; // Arquivo no frontend para upload
-    status?: string;
-    tempId?: string;
-    videoUrl?: string | null;
 }
 
 export interface FichaOrcamentoRelatorio {

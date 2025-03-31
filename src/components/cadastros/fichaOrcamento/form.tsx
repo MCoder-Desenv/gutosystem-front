@@ -1,6 +1,7 @@
 'use client';
-import { ArquivoFicha, FichaOrcamento } from '../../../app/models/fichaOrcamento';
-import { ClienteFichaDto, TerceiroFichaOrcamento, TerceirosCaracteristicasDescricao, TerceirosEnderecosClienteDto } from '../../../app/models/terceiros';
+import { FichaOrcamento } from '../../../app/models/fichaOrcamento';
+import { Arquivo } from '../../../app/models/arquivos';
+import { TerceiroFichaOrcamento, TerceirosCaracteristicasDescricao, TerceirosEnderecosClienteDto } from '../../../app/models/terceiros';
 import { useTerceiroCaracteristicaService, useTerceiroService, useTerceiroEnderecoService, useFichaOrcamentoService, useMediaService } from '../../../app/services';
 import { Input } from '../../../components';
 import { useOrcamentoContext } from '../../../contexts/OrcamentoContext';
@@ -20,6 +21,7 @@ import { usePermissao } from '../../../app/hooks/usePermissoes';
 import { TemplateImagem } from '../../../components/common/templateImagem';
 import styles from './ficha.module.css';
 import { format } from 'date-fns';
+import { Checkbox } from 'primereact/checkbox';
 
 interface FichaOrcamentoFormProps {
     fichaOrcamento: FichaOrcamento;
@@ -75,8 +77,8 @@ const validationScheme = Yup.object().shape({
         )
 });
 
-const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
-const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/gif", "video/mp4", "image/heic", "image/heif"];
+// const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
+// const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/gif", "video/mp4", "image/heic", "image/heif"];
 
 export const FichaOrcamentoForm: React.FC<FichaOrcamentoFormProps> = ({
     fichaOrcamento,
@@ -138,11 +140,13 @@ export const FichaOrcamentoForm: React.FC<FichaOrcamentoFormProps> = ({
             servExtrObs: fichaOrcamento.servExtrObs || null,
             casaComCheck: fichaOrcamento.casaComCheck || null,
             casaComObs: fichaOrcamento.casaComObs || null,
-            voltagem: fichaOrcamento.voltagem || null,
+            volt110: fichaOrcamento.volt110 || null,
+            volt220: fichaOrcamento.volt220 || null,
             altura: fichaOrcamento.altura || null,
             status: fichaOrcamento.status || null,
             medOrcamento: fichaOrcamento.medOrcamento || null,
             medProducao: fichaOrcamento.medProducao || null,
+            observacoes: fichaOrcamento.observacoes || null,
             arquivos: fichaOrcamento.arquivos ? fichaOrcamento.arquivos.map(arquivo => ({
                 id: arquivo.id || undefined,  // Alterado de null para undefined
                 nome: arquivo.nome || '',
@@ -165,8 +169,8 @@ export const FichaOrcamentoForm: React.FC<FichaOrcamentoFormProps> = ({
                 servExtrObs: values.servExtrObs || null,
                 casaComCheck: values.casaComCheck || null,
                 casaComObs: values.casaComObs || null,
-                voltagem: values.voltagem || null,
                 altura: values.altura || null,
+                observacoes: values.observacoes || null,
                 novosArquivos: values.novosArquivos,
                 arquivos: values.arquivos,
                 
@@ -177,8 +181,8 @@ export const FichaOrcamentoForm: React.FC<FichaOrcamentoFormProps> = ({
         validationSchema: validationScheme
     });
 
-    const fichaCancelada = formik.values.status === 'Cancelada' || fichaOrcamento.status === 'Cancelada';
-    const fichaEncerrada = formik.values.status === 'Encerrada' || fichaOrcamento.status === 'Encerrada';
+    const fichaCancelada = fichaOrcamento.status === 'Cancelada';
+    const fichaEncerrada = fichaOrcamento.status === 'Encerrada';
 
     const irParaPedidoOrcamento = () => {
         const contexto = {
@@ -211,21 +215,25 @@ export const FichaOrcamentoForm: React.FC<FichaOrcamentoFormProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [clienteSelecionado]);
     
-    const handleSearchCliente = async (query: string, type: 'nome' | 'cpf' | 'cnpj') => {
+    //const handleSearchCliente = async (query: string, type: 'nome' | 'cpf' | 'cnpj') => {
+    const handleSearchCliente = async (query: string) => {
         try {
             setErroBuscarClientes('')
-            let results: ClienteFichaDto[] = [];
+            //const results: ClienteFichaDto[] = [];
     
-            if (type === 'nome') {
-                const response = await serviceTerceiro.findClienteFichaAutoComplete(query, '', '');
-                results = response.data
-            } else if (type === 'cpf') {
-                const response = await serviceTerceiro.findClienteFichaAutoComplete('', query, '');
-                results = response.data
-            } else if (type === 'cnpj') {
-                const response = await serviceTerceiro.findClienteFichaAutoComplete('', '', query);
-                results = response.data
-            }
+            const response = await serviceTerceiro.findClienteAutoComplete(query);
+            const results = response.data
+
+            // if (type === 'nome') {
+            //     const response = await serviceTerceiro.findClienteFichaAutoComplete(query, '', '');
+            //     results = response.data
+            // } else if (type === 'cpf') {
+            //     const response = await serviceTerceiro.findClienteFichaAutoComplete('', query, '');
+            //     results = response.data
+            // } else if (type === 'cnpj') {
+            //     const response = await serviceTerceiro.findClienteFichaAutoComplete('', '', query);
+            //     results = response.data
+            // }
             
             return results
                 .filter((item) => item.id !== undefined && item.id !== null)
@@ -371,7 +379,7 @@ export const FichaOrcamentoForm: React.FC<FichaOrcamentoFormProps> = ({
         // if (!validFiles.length) return;
     
         // Criando objetos para os arquivos válidos
-        const novosArquivos: ArquivoFicha[] = files.map(file => ({
+        const novosArquivos: Arquivo[] = files.map(file => ({
             id: undefined, // Arquivo ainda não salvo
             tempId: uuidv4(), // Gerando um tempId único
             nome: file.name,
@@ -392,12 +400,15 @@ export const FichaOrcamentoForm: React.FC<FichaOrcamentoFormProps> = ({
         );
     };
 
-    const carregarMidia = async (arquivo: ArquivoFicha) => {
+    const carregarMidia = async (arquivo: Arquivo) => {
         if (arquivo.tipo.startsWith("video/")) {
             return mediaService.carregarVideo(arquivo.caminho);
         }
         if (arquivo.tipo.startsWith("image/")) {
             return mediaService.carregarImagem(arquivo.caminho);
+        }
+        if (arquivo.tipo.startsWith("application/")) {
+            return mediaService.carregarDocumento(arquivo.caminho);
         }
         return null;
     };
@@ -560,6 +571,7 @@ export const FichaOrcamentoForm: React.FC<FichaOrcamentoFormProps> = ({
                             options={statusOptions}
                             optionLabel="label"
                             optionValue="value"
+                            autoComplete='off'
                             onChange={(e) => formik.setFieldValue('status', e.value)}
                             placeholder="Selecione o status"
                             className={`w-full custom-dropdown-height editable-dropdown ${
@@ -579,6 +591,7 @@ export const FichaOrcamentoForm: React.FC<FichaOrcamentoFormProps> = ({
                     id="clienteSelecionado"
                     name="clienteSelecionado"
                     label="Cliente: *"
+                    autoComplete='off'
                     disabled={!podeCadastrar || fichaCancelada}
                     value={
                         clienteSelecionado
@@ -588,16 +601,16 @@ export const FichaOrcamentoForm: React.FC<FichaOrcamentoFormProps> = ({
                     
                       onSearch={(query) => {
                         const trimmedQuery = query.trim();
-                    
-                        if (/^\d{2}\.\d/.test(trimmedQuery)) {
-                            return handleSearchCliente(trimmedQuery, 'cnpj');
-                        } 
-                        else if (/^\d{3}\.\d/.test(trimmedQuery)) {
-                            return handleSearchCliente(trimmedQuery, 'cpf');
-                        } 
-                        else {
-                            return handleSearchCliente(trimmedQuery, 'nome');
-                        }
+                        return handleSearchCliente(trimmedQuery);
+                        // if (/^\d{2}\.\d/.test(trimmedQuery)) {
+                        //     return handleSearchCliente(trimmedQuery, 'cnpj');
+                        // } 
+                        // else if (/^\d{3}\.\d/.test(trimmedQuery)) {
+                        //     return handleSearchCliente(trimmedQuery, 'cpf');
+                        // } 
+                        // else {
+                        //     return handleSearchCliente(trimmedQuery, 'nome');
+                        // }
                     }}                    
                     
                      // Chama a busca ao digitar
@@ -626,6 +639,7 @@ export const FichaOrcamentoForm: React.FC<FichaOrcamentoFormProps> = ({
                             id="telefoneCliente"
                             value={formik.values.telefoneCliente}
                             options={clienteFichaTel}
+                            autoComplete='off'
                             optionLabel="label"
                             onChange={(e) => {
                                 formik.setFieldValue('telefoneCliente', e.value);
@@ -665,20 +679,20 @@ export const FichaOrcamentoForm: React.FC<FichaOrcamentoFormProps> = ({
                     id="enderecoCliente"
                     name="enderecoCliente"
                     options={listaEnderecos}
+                    autoComplete='off'
                     displayFields={["endereco", "numero", "bairro", "cidade"]}
                     formik={formik}
                     disabled={!podeCadastrar || fichaCancelada}
                     label="Endereço:* "
                     erro={erroBuscarEnderecos !== '' ? erroBuscarEnderecos : formik.errors.enderecoCliente}
                 />
-                
             </div>
-
             <div className="columns">
                 <AutoCompleteGenerico
                     id="responsavelAtendimentoSelecionado"
                     name="responsavelAtendimentoSelecionado"
                     label="Responsável pelo Atendimento: *"
+                    autoComplete='off'
                     disabled={!podeCadastrar || fichaCancelada}
                     value={
                         responsavelAtendimentoSelecionado
@@ -734,42 +748,64 @@ export const FichaOrcamentoForm: React.FC<FichaOrcamentoFormProps> = ({
             />
             <br/>
             <div className="columns">
-                <Input
-                    id="medOrcamento"
-                    label="Medidas para Orçamento: "
-                    value={formik.values.medOrcamento || ''}
-                    columnClasses="column is-half"
-                    type="number"
-                    onChange={formik.handleChange}
-                    placeholder="Digite a Medida para Orçamento"
-                    autoComplete="off"
-                    disabled={!podeCadastrar || fichaCancelada}
-                />
-                <Input
-                    id="medProducao"
-                    label="Medida Final para Produção: "
-                    value={formik.values.medProducao || ''}
-                    columnClasses="column is-half"
-                    onChange={formik.handleChange}
-                    placeholder="Digite a Medida Final para Produção"
-                    autoComplete="off"
-                    type='number'
-                    disabled={!podeCadastrar || fichaCancelada}
-                />
+                <div className="column" style={{ display: 'flex', alignItems: 'center' }}>
+                    <label htmlFor="medOrcamento" style={{ marginRight: '8px' }}>
+                        Medidas para Orçamento:
+                    </label>
+                    <Checkbox
+                        inputId="medOrcamento"
+                        name='medOrcamento'
+                        autoComplete='off'
+                        checked={formik.values.medOrcamento ?? false} /* Aqui garantimos que o valor é booleano */
+                        onChange={(e) => formik.setFieldValue("medOrcamento", e.checked ? true : false)}
+                        disabled={!podeCadastrar}
+                    />
+                </div>
+                <div className="column" style={{ display: 'flex', alignItems: 'center' }}>
+                    <label htmlFor="medOrcamento" style={{ marginRight: '8px' }}>
+                        Medida Final para Produção:
+                    </label>
+                    <Checkbox
+                        inputId="medProducao"
+                        name='medProducao'
+                        autoComplete='off'
+                        checked={formik.values.medProducao ?? false}  /* Aqui garantimos que o valor é booleano */
+                        onChange={(e) => formik.setFieldValue("medProducao", e.checked ? true : false)}
+                        disabled={!podeCadastrar}
+                    />
+                </div>
             </div>
 
             <div className="columns">
-                <Input
-                    id="voltagem"
-                    label="Voltagem: "
-                    value={formik.values.voltagem || ''}
-                    columnClasses="column is-half"
-                    type="text"
-                    onChange={formik.handleChange}
-                    placeholder="Digite a Voltagem"
-                    autoComplete="off"
-                    disabled={!podeCadastrar || fichaCancelada}
-                />
+                <div className="column" style={{ display: 'flex', alignItems: 'center' }}>
+                    <label htmlFor="volt110" style={{ marginRight: '8px' }}>
+                        Voltagem 110:
+                    </label>
+                    <Checkbox
+                        inputId="volt110"
+                        name='volt110'
+                        autoComplete='off'
+                        checked={formik.values.volt110 ?? false} /* Aqui garantimos que o valor é booleano */
+                        onChange={(e) => formik.setFieldValue("volt110", e.checked ? true : false)}
+                        disabled={!podeCadastrar}
+                    />
+                </div>
+                <div className="column" style={{ display: 'flex', alignItems: 'center' }}>
+                    <label htmlFor="volt220" style={{ marginRight: '8px' }}>
+                        Voltagem 220:
+                    </label>
+                    <Checkbox
+                        inputId="volt220"
+                        name='volt220'
+                        autoComplete='off'
+                        checked={formik.values.volt220 ?? false}  /* Aqui garantimos que o valor é booleano */
+                        onChange={(e) => formik.setFieldValue("volt220", e.checked ? true : false)}
+                        disabled={!podeCadastrar}
+                    />
+                </div>
+            </div>
+            
+            <div className="columns">
                 <Input
                     id="altura"
                     label="Altura: "
@@ -781,6 +817,22 @@ export const FichaOrcamentoForm: React.FC<FichaOrcamentoFormProps> = ({
                     type='text'
                     disabled={!podeCadastrar || fichaCancelada}
                 />
+            </div>
+
+            <div className="field">
+                <label htmlFor="observacoes" className="label">
+                Observações:
+                </label>
+                <textarea
+                className="textarea"
+                id="observacoes"
+                name="observacoes"
+                value={formik.values.observacoes || ''}
+                autoComplete='off'
+                placeholder="Digite as Observações"
+                onChange={formik.handleChange}
+                disabled={!podeCadastrar}
+                ></textarea>
             </div>
             
             {/* <h4>Arquivos Vinculados</h4> */}
@@ -810,7 +862,7 @@ export const FichaOrcamentoForm: React.FC<FichaOrcamentoFormProps> = ({
                 <div className="upload-actions">  {/* Container flexível para botões */}
                     <label className="choose-button">
                         <i className="pi pi-plus"></i> Upload
-                        <input disabled={!podeCadastrar || fichaCancelada} type="file" multiple onChange={handleFileChange} accept="image/*,video/mp4" hidden />
+                        <input disabled={!podeCadastrar || fichaCancelada} type="file" multiple onChange={handleFileChange} accept="image/*,video/mp4, application/*" hidden />
                     </label>
 
                     {/* Botão Cancel (Remove Todos os Arquivos) */}
@@ -819,7 +871,10 @@ export const FichaOrcamentoForm: React.FC<FichaOrcamentoFormProps> = ({
                     </label>
                     
                     {/* Botão "Show" agora como label */}
-                    <label className="show-button" onClick={() => galleria.current?.show()}>
+                    <label
+                        className={`show-button ${!podeCadastrar || ((fichaOrcamento.arquivos?.length ?? formik.values.arquivos?.length ?? 0) < 1) ? styles.disabled : ''}`}  
+                        onClick={() => galleria.current?.show()}
+                    >
                         <i className="pi pi-folder-open"></i> Show
                     </label>
                 </div>
@@ -840,7 +895,12 @@ export const FichaOrcamentoForm: React.FC<FichaOrcamentoFormProps> = ({
                                             <video width="50" height="50" controls>
                                                 <source src={URL.createObjectURL(file.file)} type={file.tipo} />
                                             </video>
-                                        ) : (
+                                        ) : file.file && file.tipo?.startsWith('application/') ? (
+                                            <a href={URL.createObjectURL(file.file)} target="_blank" rel="noopener noreferrer">
+                                                Abrir {file.nome}
+                                            </a>
+                                        ): 
+                                        (
                                             <span>{file.nome}</span>
                                         )}
 

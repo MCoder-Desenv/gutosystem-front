@@ -11,3 +11,4 @@ export { useDashboardService } from './dashboard.service';
 export { useMediaService } from './media.service';
 export { useFuncoesService } from './funcoes.service';
 export { useUsuarioService } from './usuarios.service';
+export { useUnidadeMedidaService } from './unidadeMedida.service';

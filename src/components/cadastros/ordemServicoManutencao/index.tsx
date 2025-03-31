@@ -12,7 +12,6 @@ export const CadastroOrdemServicoManutencao: React.FC = () => {
     const [ordemServicoManutencao, setOrdemServicoManutencao] = useState<OrdemServicoManutencao>({
         id: '',
         cliente: {},
-        pedidoOrcamento: {},
         telefoneCliente:'',
         enderecoCliente: '',
         dataSolicitacaoManutencao: '',
@@ -30,11 +29,12 @@ export const CadastroOrdemServicoManutencao: React.FC = () => {
         casaComCheck: '',
         casaComObs: '',
         status:'',
-        cor: '',
         numero: '',
-        produto: '',
         altura: '',
-        voltagem: ''
+        observacoes: '',
+        produtosOrdemServicoMnt: [],
+        arquivos: [],
+        novosArquivos: []
     });
     const service = useOrdemServicoManutencaoService();
     const searchParams = useSearchParams();
@@ -48,9 +48,9 @@ export const CadastroOrdemServicoManutencao: React.FC = () => {
     const [modalTipo, setModalTipo] = useState<'success' | 'error' | 'loading'>('success');
        
     useEffect(() => {
-        const id = parseInt(queryId || '0', 10);
-        if (id !== 0 && id !== null && id !== undefined ) {
-            serviceRef.current.carregarOrdemServico(id).then(ordemServRetorna => {
+        const id = queryId;
+        if (id !== '' && id !== null && id !== undefined) {
+            serviceRef.current.carregarOrdemServico(id || '').then(ordemServRetorna => {
                 setOrdemServicoManutencao({
                     ...ordemServRetorna.data,
                     id: ordemServRetorna.data.id || '',
@@ -68,26 +68,35 @@ export const CadastroOrdemServicoManutencao: React.FC = () => {
                     servExtrObs: ordemServRetorna.data.servExtrObs || null,
                     status: ordemServRetorna.data.status || null,
                     telefoneCliente: ordemServRetorna.data.telefoneCliente || null,
-                    cor: ordemServRetorna.data.cor || null,
+                    observacoes: ordemServRetorna.data.observacoes || null,
                     numero: ordemServRetorna.data.numero || null,
-                    produto: ordemServRetorna.data.produto || null,
+                    volt110: ordemServRetorna.data.volt110 || null,
+                    volt220: ordemServRetorna.data.volt220 || null,
                     serviceExecutados: ordemServRetorna.data.serviceExecutados || null,
                     servicoExecutar: ordemServRetorna.data.servicoExecutar || null,
                     cliente: ordemServRetorna.data.cliente || {},
                     tipoManutencaoCheck: ordemServRetorna.data.tipoManutencaoCheck || null,
                     altura: ordemServRetorna.data.altura || null,
-                    voltagem: ordemServRetorna.data.voltagem || null,
-                    pedidoOrcamento: ordemServRetorna.data.pedidoOrcamento || {},
+                    produtosOrdemServicoMnt: ordemServRetorna.data.produtosOrdemServicoMnt || [],
+                    arquivos: ordemServRetorna.data.arquivos || [],
+                    novosArquivos: ordemServRetorna.data.novosArquivos || []
                 });
             });
         }
     }, [queryId]);
 
     const handleSubmit = (ordemServico: OrdemServicoManutencao) => {
+
+        const arquivosParaUpload = ordemServico.arquivos
+                ?.filter((arquivo) => arquivo.file) // Filtra apenas os objetos com `file` definido
+                .map((arquivo) => arquivo.file as File); // Garante que será do tipo Fil
     
         if (ordemServico.id) {
             exibirMensagem("Ordem de Serviço Manutenção sendo atualizada, aguarde...", "loading");
-            service.atualizar(ordemServico).then(() => {
+            service.atualizar(ordemServico, arquivosParaUpload).then((ord) => {
+                service.carregarOrdemServico(ord.data.id || '').then((ordemAtualizada) => {
+                    setOrdemServicoManutencao(ordemAtualizada.data); // Atualiza o estado com a ficha atualizada
+                });
                 setModalVisivel(false);
                 exibirMensagem('Ordem de Serviço Manutenção Atualizada com Sucesso!!', 'success');
             })
@@ -97,8 +106,10 @@ export const CadastroOrdemServicoManutencao: React.FC = () => {
         }
         else {
             exibirMensagem("Ordem de Serviço Manutenção sendo Salva, aguarde...", "loading");
-            service.salvar(ordemServico).then(ordemServicoSalva => {
-                setOrdemServicoManutencao(ordemServicoSalva.data);
+            service.salvar(ordemServico, arquivosParaUpload).then(ordemServicoSalva => {
+                service.carregarOrdemServico(ordemServicoSalva.data.id || '').then((ordSalvo) => {
+                    setOrdemServicoManutencao(ordSalvo.data); // Atualiza o estado com a ficha atualizada
+                });
                 setModalVisivel(false);
                 exibirMensagem('Ordem de Serviço Manutenção Salva com Sucesso!!', 'success');
             })

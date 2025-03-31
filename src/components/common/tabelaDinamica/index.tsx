@@ -84,6 +84,7 @@ const TabelaDinamica: React.FC<TabelaDinamicaProps> = ({
                     {col.type === "checkbox" ? (
                       <input
                         type="checkbox"
+                        autoComplete='off'
                         name={cellKey}
                         className="checkbox"
                         checked={values[cellKey] === "Sim"}
@@ -93,6 +94,7 @@ const TabelaDinamica: React.FC<TabelaDinamicaProps> = ({
                     ) : col.type === "textarea" ? (
                       <textarea
                         name={cellKey}
+                        autoComplete='off'
                         className="textarea"
                         value={value}
                         onChange={(e) => handleChange(cellKey, e.target.value)}
@@ -102,6 +104,7 @@ const TabelaDinamica: React.FC<TabelaDinamicaProps> = ({
                     ) : col.type === "text" ? (
                       <input
                         type="text"
+                        autoComplete='off'
                         className="input"
                         name={cellKey}
                         value={value}

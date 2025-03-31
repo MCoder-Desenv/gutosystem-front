@@ -90,6 +90,7 @@ export const CategoriaForm: React.FC<CategoriasFormProps> = ({ onSubmit, categor
                 type="text"
                 onChange={formik.handleChange}
                 placeholder="Digite o nome da Categoria"
+                autoComplete='off'
                 erro={formik.errors.nome}
                 disabled={!podeCadastrar}
             />
@@ -103,6 +104,7 @@ export const CategoriaForm: React.FC<CategoriasFormProps> = ({ onSubmit, categor
                         options={statusOptions}
                         optionLabel="label"
                         optionValue="value"
+                        autoComplete='off'
                         onChange={(e) => formik.setFieldValue('status', e.value)}
                         placeholder="Selecione o status"
                         className="w-full custom-dropdown-height"

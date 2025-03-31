@@ -4,6 +4,55 @@ import { FormatUtils } from "@4us-dev/utils";
 
 const formatUtils = new FormatUtils();
 
+const validarCPF = (cpf: string): boolean => {
+    cpf = cpf.replace(/[^\d]+/g, '');
+    if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false;
+    
+    let soma = 0, resto;
+    for (let i = 1; i <= 9; i++) soma += parseInt(cpf[i - 1]) * (11 - i);
+    resto = (soma * 10) % 11;
+    if (resto === 10 || resto === 11) resto = 0;
+    if (resto !== parseInt(cpf[9])) return false;
+    
+    soma = 0;
+    for (let i = 1; i <= 10; i++) soma += parseInt(cpf[i - 1]) * (12 - i);
+    resto = (soma * 10) % 11;
+    if (resto === 10 || resto === 11) resto = 0;
+    if (resto !== parseInt(cpf[10])) return false;
+    
+    return true;
+};
+
+const validarCNPJ = (cnpj: string): boolean => {
+    cnpj = cnpj.replace(/[^\d]+/g, '');
+    if (cnpj.length !== 14) return false;
+    
+    let tamanho = cnpj.length - 2;
+    let numeros = cnpj.substring(0, tamanho);
+    const digitos = cnpj.substring(tamanho);
+    let soma = 0;
+    let pos = tamanho - 7;
+    for (let i = tamanho; i >= 1; i--) {
+        soma += parseInt(numeros[tamanho - i]) * pos--;
+        if (pos < 2) pos = 9;
+    }
+    let resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11);
+    if (resultado !== parseInt(digitos[0])) return false;
+    
+    tamanho = tamanho + 1;
+    numeros = cnpj.substring(0, tamanho);
+    soma = 0;
+    pos = tamanho - 7;
+    for (let i = tamanho; i >= 1; i--) {
+        soma += parseInt(numeros[tamanho - i]) * pos--;
+        if (pos < 2) pos = 9;
+    }
+    resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11);
+    if (resultado !== parseInt(digitos[1])) return false;
+    
+    return true;
+};
+
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
     id: string;
     label: string;
@@ -94,17 +143,39 @@ export const InputPhone: React.FC<InputProps> = (props: InputProps) => {
     )
 }
 
-export const InputCPF: React.FC<InputProps> = (props: InputProps) => {
-    return (
-        <Input {...props} formatter={formatUtils.formatCPF}/>
-    )
-}
+// export const InputCPF: React.FC<InputProps> = (props: InputProps) => {
+//     return (
+//         <Input {...props} formatter={formatUtils.formatCPF}/>
+//     )
+// }
 
+export const InputCPF: React.FC<InputProps> = (props: InputProps) => {
+    const cpfValue = String(props.value || ""); // Garante que seja string
+    const erroValidacao = cpfValue && !validarCPF(cpfValue) ? "CPF inválido" : undefined;
+
+    // Combina o erro do Formik e da validação de CPF
+    const erroFinal = props.erro || erroValidacao;
+
+    return <Input {...props} formatter={formatUtils.formatCPF} erro={erroFinal} />;
+};
+
+
+// export const InputCNPJ: React.FC<InputProps> = (props: InputProps) => {
+//     return (
+//         <Input {...props} formatter={formatUtils.formatCNPJ}/>
+//     )
+// }
 export const InputCNPJ: React.FC<InputProps> = (props: InputProps) => {
-    return (
-        <Input {...props} formatter={formatUtils.formatCNPJ}/>
-    )
-}
+    const cnpjValue = String(props.value || ""); // Garante que seja uma string
+    const erroValidacao = cnpjValue && !validarCNPJ(cnpjValue) ? "CNPJ inválido" : undefined;
+
+    // Combina o erro do Formik e da validação de CNPJ
+    const erroFinal = props.erro || erroValidacao;
+
+    return <Input {...props} formatter={formatUtils.formatCNPJ} erro={erroFinal} />;
+};
+
+
 
 export const InputCEP: React.FC<InputProps> = (props: InputProps) => {
     return (

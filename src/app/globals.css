@@ -16,6 +16,11 @@
   color: #856404;
 }
 
+.dropdown-Aguardando-Resposta .p-dropdown {
+  background-color: #f88400;
+  color: #000000;
+}
+
 .dropdown-Encerrada .p-dropdown {
   background-color: #727272;
   color: #000000;
@@ -57,6 +62,7 @@
 }
 
 .dropdown-Aberta .p-dropdown-label,
+.dropdown-Aguardando-Resposta .p-dropdown-label,
 .dropdown-Em-Andamento .p-dropdown-label,
 .dropdown-Encerrada .p-dropdown-label,
 .dropdown-Cancelada .p-dropdown-label {
@@ -108,6 +114,15 @@
   padding: 7px; /* Opcional: espaço interno */
 }
 
+/* Status: Aguardando-Resposta */
+.status-Aguardando-Resposta {
+  background-color: #f88400 !important; /* Amarelo claro */
+  color: #000000 !important; /* Texto amarelo escuro */
+  font-weight: bold !important;
+  border-radius: 25px;
+  padding: 7px;
+}
+
 /* Status: Em Andamento */
 .status-Em-Andamento {
   background-color: #fff3cd !important; /* Amarelo claro */
@@ -136,7 +151,7 @@
 }
 
 /* Ajustes para alinhar o texto no centro */
-.status-Ativo, .status-Inativo, .status-Primeiro-Contato, .status-Aberta, .status-Em-Andamento, .status-Encerrada, .status-Cancelada {
+.status-Ativo, .status-Inativo, .status-Primeiro-Contato, .status-Aberta, .status-Aguardando-Resposta, .status-Em-Andamento, .status-Encerrada, .status-Cancelada {
   display: inline-block;
   text-align: center;
   min-width: 100%;
@@ -342,4 +357,16 @@
 
 .linha-duplicada:hover {
   background-color: #ffcdd2; /* Um tom mais forte ao passar o mouse */
+}
+
+/* Remove setas em Webkit (Chrome, Safari, Edge) */
+input[type="number"]::-webkit-inner-spin-button, 
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Remove setas no Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
 }

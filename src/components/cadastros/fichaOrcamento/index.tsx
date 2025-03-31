@@ -29,7 +29,6 @@ export const CadastroFichaOrcamento: React.FC = () => {
         servExtrObs:'',
         status:'',
         telefoneCliente:'',
-        voltagem:'',
         arquivos: [],
         novosArquivos: []
     });
@@ -71,7 +70,9 @@ export const CadastroFichaOrcamento: React.FC = () => {
                     servExtrObs: fichaRetorna.data.servExtrObs || null,
                     status: fichaRetorna.data.status || null,
                     telefoneCliente: fichaRetorna.data.telefoneCliente || null,
-                    voltagem: fichaRetorna.data.voltagem || null,
+                    volt110: fichaRetorna.data.volt110 || null,
+                    volt220: fichaRetorna.data.volt220 || null,
+                    observacoes: fichaRetorna.data.observacoes || null,
                     arquivos: fichaRetorna.data.arquivos || [],
                     novosArquivos: fichaRetorna.data.novosArquivos || []
                 });

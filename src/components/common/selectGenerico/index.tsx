@@ -29,6 +29,7 @@ export const SelectGenerico = <T extends Record<string, any>>({
       <div className="select is-fullwidth">
         <select
           value={value ? getId(value) : ""}
+          autoComplete='off'
           onChange={(e) => {
             const selectedItem = items.find((item) => getId(item) === e.target.value) || null;
             onChange(selectedItem);

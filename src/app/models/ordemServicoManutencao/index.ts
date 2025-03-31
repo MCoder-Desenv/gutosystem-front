@@ -1,10 +1,9 @@
-import { PedidoOrcamentoOrdemServicoManutencao } from "../pedidoOrcamento";
+import { Arquivo } from "../arquivos";
 import { TerceiroOrdemServicoManutencao } from "../terceiros";
 
 export interface OrdemServicoManutencao {
     id?: string | null;
     cliente?: TerceiroOrdemServicoManutencao | null;
-    pedidoOrcamento?: PedidoOrcamentoOrdemServicoManutencao;
     telefoneCliente?: string | null;
     enderecoCliente?: string | null;
     dataSolicitacaoManutencao?: string | null; // formato "dd/MM/yyyy"
@@ -22,11 +21,22 @@ export interface OrdemServicoManutencao {
     casaComCheck?: string | null;
     casaComObs?: string | null;
     numero?: string | null
-    produto?: string | null
-    cor?: string | null
-    altura?: string | null
-    voltagem?: string | null
+    volt110?: boolean | null;
+    volt220?: boolean | null;
+    observacoes?: string | null;
+    produtosOrdemServicoMnt?: ProdutosOrdemServicoMnt[] | null;
+    altura?: string | null;
     status?: string | null;
+    arquivos?: Arquivo[]; // Lista de arquivos relacionados à ficha de orçamento
+    novosArquivos?: File[]; // Novos arquivos para upload
+}
+
+export interface ProdutosOrdemServicoMnt {
+    id?: string;
+    produto?: string | null;
+    cor?: string | null;
+    quantidade?: number | null;
+    ordemServicoManutencaoId?: string | null;
 }
 
 export interface OrdemServicoManutencaoPedido {

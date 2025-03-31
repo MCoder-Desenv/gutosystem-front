@@ -81,19 +81,16 @@ const Dashboard = () => {
 
     if(selectedCheckbox === 'fichaOrcamento'){
       dashboardService.getFichaPorDia(dataInicioDate, dataFimDate, selectedStatus).then(ret => setFichasPorDia(ret.data));
-      console.log(fichasPorDia)
       setPedidosPorDia([])
       setOsmPorDia([])
     }
     else if(selectedCheckbox === 'pedidoOrcamento'){
       dashboardService.getPedidoPorDia(dataInicioDate, dataFimDate, selectedStatus).then(ret => setPedidosPorDia(ret.data));
-      console.log(pedidosPorDia)
       setFichasPorDia([])
       setOsmPorDia([])
     }
     else if (selectedCheckbox === 'ordemServico'){
       dashboardService.getOsmPorDia(dataInicioDate, dataFimDate, selectedStatus).then(ret => setOsmPorDia(ret.data));
-      console.log(osmPorDia)
       setFichasPorDia([])
       setPedidosPorDia([])
     }
@@ -126,19 +123,16 @@ const Dashboard = () => {
 
     if(selectedCheckbox === 'fichaOrcamento'){
       dashboardService.getFichaPorMesStatus(dataInicioDate, dataFimDate, selectedStatus).then(ret => setFichasPorMesAno(ret.data));
-      console.log(fichasPorDia)
       setPedidosPorMesAno([])
       setOsmPorMesAno([])
     }
     else if(selectedCheckbox === 'pedidoOrcamento'){
       dashboardService.getPedidoPorMesStatus(dataInicioDate, dataFimDate, selectedStatus).then(ret => setPedidosPorMesAno(ret.data));
-      console.log(pedidosPorDia)
       setFichasPorMesAno([])
       setOsmPorMesAno([])
     }
     else if (selectedCheckbox === 'ordemServico'){
       dashboardService.getOsmPorMesStatus(dataInicioDate, dataFimDate, selectedStatus).then(ret => setOsmPorMesAno(ret.data));
-      console.log(osmPorDia)
       setFichasPorMesAno([])
       setPedidosPorMesAno([])
     }
@@ -179,9 +173,9 @@ const Dashboard = () => {
           label: "Total de Pedidos",
           data: data.map((d) => d.total),
           backgroundColor: selectedStatus === 'Aberta' ? "rgb(29, 129, 3)" : selectedStatus === 'Encerrada' ? "rgb(0, 0, 0)" :
-                           selectedStatus === 'Cancelada' ? "rgb(255, 21, 4)" : "rgb(214, 200, 7)",
+                           selectedStatus === 'Cancelada' ? "rgb(255, 21, 4)": selectedStatus === 'Aguardando-Resposta' ? "rgb(255, 125, 4)" : "rgb(214, 200, 7)",
           borderColor: selectedStatus === 'Aberta' ? "rgba(28, 129, 3, 0.59)" : selectedStatus === 'Encerrada' ? "rgba(0, 0, 0, 0.59)" :
-                       selectedStatus === 'Cancelada' ? "rgba(255, 21, 4, 0.59)" : "rgba(214, 200, 7, 0.59)",
+                       selectedStatus === 'Cancelada' ? "rgba(255, 21, 4, 0.59)" : selectedStatus === 'Aguardando-Resposta' ? "rgba(255, 125, 4, 0.27)" : "rgba(214, 200, 7, 0.59)",
           borderWidth: 2,
         },
         {
@@ -284,9 +278,9 @@ const Dashboard = () => {
           label: "Total de Pedidos",
           data: data.map((d) => d.total),
           backgroundColor: selectedStatus === 'Aberta' ? "rgb(29, 129, 3)" : selectedStatus === 'Encerrada' ? "rgb(0, 0, 0)" :
-                           selectedStatus === 'Cancelada' ? "rgb(255, 21, 4)" : "rgb(214, 200, 7)",
+                           selectedStatus === 'Cancelada' ? "rgb(255, 21, 4)" :  selectedStatus === 'Aguardando-Resposta' ? "rgb(255, 125, 4)" :  "rgb(214, 200, 7)",
           borderColor: selectedStatus === 'Aberta' ? "rgba(28, 129, 3, 0.59)" : selectedStatus === 'Encerrada' ? "rgba(0, 0, 0, 0.59)" :
-                       selectedStatus === 'Cancelada' ? "rgba(255, 21, 4, 0.59)" : "rgba(214, 200, 7, 0.59)",
+                       selectedStatus === 'Cancelada' ? "rgba(255, 21, 4, 0.59)" : selectedStatus === 'Aguardando-Resposta' ? "rgba(255, 125, 4, 0.27)" : "rgba(214, 200, 7, 0.59)",
           borderWidth: 2,
         },
         {
@@ -466,6 +460,18 @@ const Dashboard = () => {
                 />
                 Aberta
               </label>
+              {selectedCheckbox === 'pedidoOrcamento' &&
+                <label className="checkbox">
+                  <input
+                    type="checkbox"
+                    name="status"
+                    value="Aguardando-Resposta"
+                    onChange={handleCheckboxChangeStatus}
+                    disabled={!!selectedStatus && selectedStatus !== "Aguardando-Resposta"}
+                  />
+                  Aguardando Resposta
+                </label>
+              }
 
               <label className="checkbox">
                 <input

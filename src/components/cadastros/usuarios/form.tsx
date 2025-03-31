@@ -153,6 +153,7 @@ export const UsuariosForm: React.FC<UsuariosFormProps> = ({ onSubmit, usuarios }
             {formik.values.id &&
                 <Input
                     id="id"
+                    autoComplete='off'
                     columnClasses="column is-half"
                     label="Código"
                     value={formik.values.id}
@@ -168,6 +169,7 @@ export const UsuariosForm: React.FC<UsuariosFormProps> = ({ onSubmit, usuarios }
             }
             <Input
                 id="name"
+                autoComplete='off'
                 columnClasses="column is-half"
                 label="Nome do Usuário *"
                 value={formik.values.name || ''}
@@ -198,6 +200,7 @@ export const UsuariosForm: React.FC<UsuariosFormProps> = ({ onSubmit, usuarios }
                     <Dropdown
                         id="role"
                         name="role"
+                        autoComplete='off'
                         value={formik.values.role}
                         options={roleOptions}
                         optionLabel="label"
@@ -233,6 +236,7 @@ export const UsuariosForm: React.FC<UsuariosFormProps> = ({ onSubmit, usuarios }
           <div className="column is-half">
             <label className="checkbox">
               <input
+                autoComplete='off'
                 type="checkbox"
                 checked={selecionarTodosCadastrar}
                 onChange={(e) => toggleSelecionarTodos("podeCadastrar", e.target.checked)}
@@ -243,6 +247,7 @@ export const UsuariosForm: React.FC<UsuariosFormProps> = ({ onSubmit, usuarios }
           <div className="column is-half">
             <label className="checkbox">
               <input
+                autoComplete='off'
                 type="checkbox"
                 checked={selecionarTodosConsultar}
                 onChange={(e) => toggleSelecionarTodos("podeConsultar", e.target.checked)}

@@ -1,0 +1,1 @@
+export { RecuperacaoPedido } from './recuperacaoPedido'

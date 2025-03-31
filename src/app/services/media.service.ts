@@ -63,8 +63,37 @@ export const useMediaService = () => {
         }
     };
 
+    const carregarDocumento = async (caminho: string): Promise<string> => {
+        try {
+            const session = await getSession();
+            const token = session?.accessToken;
+    
+            if (!token) {
+                throw new Error("Token de autenticação não encontrado");
+            }
+    
+            const url = `${resourceURL}/documento?caminho=${encodeURIComponent(caminho)}`;
+    
+            const response: AxiosResponse<Blob> = await httpClient.get(url, {
+                responseType: "blob", // 📂 Recebe o arquivo como blob
+                withCredentials: true,
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+    
+            const documentUrl = URL.createObjectURL(response.data);
+            return documentUrl;
+        } catch (error) {
+            console.error("Erro ao carregar documento:", error);
+            throw error;
+        }
+    };
+    
+
     return {
         carregarVideo,
-        carregarImagem
+        carregarImagem,
+        carregarDocumento
     };
 };

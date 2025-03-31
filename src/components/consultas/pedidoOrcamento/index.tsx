@@ -76,6 +76,7 @@ export const ListagemPedidoOrcamento: React.FC = () => {
     // Chama a função unificada, passando as datas, se estiverem disponíveis
     const result = await service.findPedidos(
       filtro.tipoFiltro === "Numero" ? filtro.valorFiltro : '',
+      filtro.tipoFiltro === "Telefone" ? filtro.valorFiltro : '',
       filtro.tipoFiltro === "Cliente" ? filtro.valorFiltro : '',
       filtro.dataInicio,
       filtro.dataFim,
@@ -152,7 +153,8 @@ export const ListagemPedidoOrcamento: React.FC = () => {
 
   const columns: Column[] = [
     { label: "Número", key: "identificador", width: "15%" },
-    { label: "Nome", key: "nomeTerceiro", width: "50%" },
+    { label: "Nome", key: "nomeTerceiro", width: "35%" },
+    { label: "Telefone", key: "telefoneCliente", width: "15%" },
     { label: "Data Pedido", key: "dataPedido", width: "15%" },
     { label: "Status", key: "status", width: "15%" },
     { label: "Ações", key: "acoes", width: "5%" }
@@ -161,6 +163,7 @@ export const ListagemPedidoOrcamento: React.FC = () => {
   const data = pedidoOrcamento.map((ped) => ({
     identificador: ped.identificador || '',
     nomeTerceiro: ped.nomeTerceiro || '',
+    telefoneCliente: ped.telefoneCliente || '',
     dataPedido: ped.dataPedido ? formatDateToBackend(ped.dataPedido) : '',
     status: <span className={`has-text-centered ${getStatusClass(ped.status || '')}`}>{ped.status?.replace("-", " ") || "N/A"}</span>,
     acoes: (actionTemplate(ped)),
@@ -207,11 +210,13 @@ export const ListagemPedidoOrcamento: React.FC = () => {
                     id="tipoFiltro"
                     name="tipoFiltro"
                     value={filtro.tipoFiltro}
+                    autoComplete="off"
                     onChange={customHandleChange} // Substitui o handleChange padrão
                     disabled={!podeConsultar}
                   >
                     <option value="Numero">Número</option>
                     <option value="Cliente">Cliente</option>
+                    <option value="Telefone">Telefone</option>
                   </select>
                 </div>
               </div>
@@ -232,6 +237,19 @@ export const ListagemPedidoOrcamento: React.FC = () => {
               />
             </div>
             :
+            filtro.tipoFiltro === 'Telefone' ?
+            <div className="column is-10">
+              <Input
+                label="Valor do Filtro"
+                id="valorFiltro"
+                name="valorFiltro"
+                value={filtro.valorFiltro}
+                autoComplete="off"
+                onChange={validateInput}
+                disabled={!podeConsultar}
+              />
+            </div>
+            :
             <div className="field column is-10">
                 <label htmlFor="valorFiltro" className="label">
                   Valor do Filtro
@@ -240,6 +258,7 @@ export const ListagemPedidoOrcamento: React.FC = () => {
                 <AutoComplete
                   id="valorFiltro"
                   name="valorFiltro"
+                  autoComplete="off"
                   value={filtro.nomeTerceiro} // Usa o valor sincronizado do formik
                   suggestions={searchResults} // Sugestões retornadas pela busca
                   completeMethod={(e) => {
@@ -283,6 +302,7 @@ export const ListagemPedidoOrcamento: React.FC = () => {
               id="dataInicio"
               name="dataInicio"
               type="date"
+              autoComplete="off"
               value={filtro.dataInicio || ""}
               onChange={handleChange}
               disabled={!podeConsultar}
@@ -294,6 +314,7 @@ export const ListagemPedidoOrcamento: React.FC = () => {
               id="dataFim"
               name="dataFim"
               type="date"
+              autoComplete="off"
               value={filtro.dataFim || ""}
               onChange={handleChange}
               disabled={!podeConsultar}

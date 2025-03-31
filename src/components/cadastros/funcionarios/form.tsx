@@ -344,6 +344,7 @@ export const FuncionarioForm: React.FC<FuncionarioFormProps> = ({
                             options={statusOptions}
                             optionLabel="label"
                             optionValue="value"
+                            autoComplete='off'
                             onChange={(e) => formik.setFieldValue('status', e.value)}
                             placeholder="Selecione o status"
                             className="w-full custom-dropdown-height"
@@ -490,6 +491,7 @@ export const FuncionarioForm: React.FC<FuncionarioFormProps> = ({
                                         type="text"
                                         value={currentEndereco?.cep || ''}
                                         ref={cepInputRef} // Referência ao campo de CEP
+                                        autoComplete='off'
                                         onChange={(e) =>
                                             setCurrentEndereco({
                                                 ...currentEndereco,
@@ -539,6 +541,7 @@ export const FuncionarioForm: React.FC<FuncionarioFormProps> = ({
                                     <div className="control">
                                         <Checkbox
                                             inputId="statusEnd"
+                                            autoComplete='off'
                                             checked={currentEndereco?.status === 'Ativo'}
                                             onChange={(e) => 
                                                 setCurrentEndereco({
@@ -700,7 +703,7 @@ export const FuncionarioForm: React.FC<FuncionarioFormProps> = ({
                         </section>
                         <footer className="modal-card-foot">
                             <button className="button is-success" onClick={saveEndereco} type='button' disabled={!podeCadastrar}>
-                                Salvar
+                                Adicionar
                             </button>
                             <button className="button" onClick={hideEnderecoDialog} type='button' disabled={!podeCadastrar}>
                                 Cancelar
@@ -854,7 +857,7 @@ export const FuncionarioForm: React.FC<FuncionarioFormProps> = ({
                         </section>
                         <footer className="modal-card-foot">
                             <button className="button is-success" onClick={saveCaracteristica} type='button' disabled={!podeCadastrar}>
-                                Salvar
+                                Adicionar
                             </button>
                             <button className="button" onClick={hideCaracteristicaDialog} type='button' disabled={!podeCadastrar}>
                                 Cancelar

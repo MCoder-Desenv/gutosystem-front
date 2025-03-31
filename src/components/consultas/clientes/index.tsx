@@ -13,6 +13,9 @@ import { usePermissao } from "../../../app/hooks/usePermissoes";
 
 interface ConsultaClientesForm {
   nome?: string;
+  celular?: string;
+  tipoFiltro: string;
+  valorFiltro: string;
 }
 
 export const ListagemClientes: React.FC = () => {
@@ -39,16 +42,21 @@ export const ListagemClientes: React.FC = () => {
     loadData(0, pageSize, filtro); // Carrega os dados da primeira página
   };
 
-  const { handleSubmit: formikSubmit, values: filtro, handleChange } = useFormik<ConsultaClientesForm>({
+  const { handleSubmit: formikSubmit, values: filtro, setFieldValue, handleChange } = useFormik<ConsultaClientesForm>({
     onSubmit: handleSubmit,
-    initialValues: { nome: "" },
+    initialValues: { tipoFiltro: "nome", valorFiltro: "" },
   });
 
   const loadData = async (page: number, size: number, filtro: ConsultaClientesForm) => {
     if (loading) return; // Evita chamadas duplicadas
     setLoading(true);
 
-    await service.findClientes(filtro.nome, page, size).then((result) => {
+    await service.findClientes(
+      filtro.tipoFiltro === "nome" ? filtro.valorFiltro : '',
+      filtro.tipoFiltro === "celular" ? filtro.valorFiltro : '',
+      page,
+      size
+    ).then((result) => {
       if (result.data.content?.length > 0) {
         setClientes(result.data.content);
         
@@ -82,6 +90,18 @@ export const ListagemClientes: React.FC = () => {
     }
   };
 
+  const validateInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+
+    if (filtro.tipoFiltro === "celular") {
+
+      setFieldValue("valorFiltro", value);
+    } else {
+      // Permitir texto normal
+      setFieldValue("valorFiltro", value);
+    }
+  };
+
   const actionTemplate = (registro: Terceiro) => {
     const url = `/cadastros/clientes?id=${registro.id}`;
     return (
@@ -101,7 +121,7 @@ export const ListagemClientes: React.FC = () => {
   const columns: Column[] = [
     { label: "Código", key: "id", width: "6%" },
     { label: "Nome", key: "nome", width: "47%" },
-    { label: "Tipo Cliente", key: "tipoTerceiro", width: "12%" },
+    { label: "Celular", key: "celular", width: "12%" },
     { label: "CPF/CNPJ", key: "cpfcnpf", width: "15%" },
     { label: "Status", key: "status", width: "15%" },
     { label: "Ações", key: "acoes", width: "5%" }
@@ -110,7 +130,8 @@ export const ListagemClientes: React.FC = () => {
   const data = clientes.map((cli) => ({
     id: cli.id || '',
     nome: cli.nome || '',
-    tipoTerceiro: cli.tipoTerceiro === "2" ? "CPF" : cli.tipoTerceiro === "3" ? "CNPJ" : "Desconhecido",
+    celular: cli.celular || '',
+    //tipoTerceiro: cli.tipoTerceiro === "2" ? "CPF" : cli.tipoTerceiro === "3" ? "CNPJ" : "Desconhecido",
     cpfcnpf: cli.cpf || cli.cnpj || "N/A",
     status: <span className={`has-text-centered ${getStatusClass(cli.status || '')}`}>{cli.status || "N/A"}</span>,
     acoes: (actionTemplate(cli)),
@@ -132,6 +153,42 @@ export const ListagemClientes: React.FC = () => {
   return (
     <Layout titulo="Clientes">
       <form onSubmit={formikSubmit}>
+      <div className="columns">
+          {/* Campo para selecionar o tipo de filtro */}
+          <div className="column is-2">
+            <div className="field">
+              <label className="label">Tipo de Filtro</label>
+              <div className="control">
+                <div className="select is-fullwidth">
+                  <select
+                    id="tipoFiltro"
+                    name="tipoFiltro"
+                    value={filtro.tipoFiltro}
+                    autoComplete='off'
+                    onChange={handleChange}
+                    disabled={!podeConsultar}
+                  >
+                    <option value="nome">Nome</option>
+                    <option value="celular">Celular</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Campo para o valor do filtro */}
+          <div className="column is-10">
+            <Input
+              label="Valor do Filtro"
+              id="valorFiltro"
+              name="valorFiltro"
+              value={filtro.valorFiltro}
+              autoComplete="off"
+              onChange={validateInput}
+              disabled={!podeConsultar}
+            />
+          </div>
+        </div>
         <div className="columns">
           <Input
             label="Nome"

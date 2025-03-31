@@ -2,7 +2,7 @@
 import { RelatoriosForm } from "../../../app/models/relatorios";
 import { usePedidoOrcamentoService } from "../../../app/services";
 import { formatDateToBackend } from "../../../app/util/formatData";
-import { AutoCompleteGenerico } from "../../../components/common";
+import { AutoCompleteGenerico, Input } from "../../../components/common";
 import { ModalCard } from "../../common/modal";
 import { Layout } from "../../../components/layout";
 import { useFormik } from "formik";
@@ -25,7 +25,8 @@ export const RelatoriosPedidoOrcamento: React.FC = () => {
         if (formData?.pedido?.id !== '' && formData?.pedido?.id !== null && formData?.pedido?.id !== undefined) {
             if (tipoRelatorio === 'informacoesRastreamento') {
                 exibirMensagem("Relatório sendo gerado, aguarde...", "loading");
-                service.gerarRelatorioInformacaoComplementar(formData?.pedido?.id).then(blob => {
+                service.gerarRelatorioInformacaoComplementar(formData?.pedido?.id, formData?.dataRelatorio?.trim() ? formData.dataRelatorio : new Date().toISOString().split("T")[0]
+            ).then(blob => {
                     const fileUrl = URL.createObjectURL(blob);
                     window.open(fileUrl);
                     setModalVisivel(false);
@@ -135,6 +136,19 @@ export const RelatoriosPedidoOrcamento: React.FC = () => {
                             </div>
                         </div>
                     </div>
+
+                    {tipoRelatorio === 'informacoesRastreamento' && (
+                        <div className="column">
+                            <Input
+                                id="dataImpressao"
+                                label="Data Impressão: "
+                                value={formik.values.dataRelatorio ?? new Date().toISOString().split("T")[0]}
+                                onChange={(e) => formik.setFieldValue("dataRelatorio", e.target.value)}
+                                autoComplete="off"
+                                type="date"
+                            />
+                        </div>
+                    )}
                 </div>
                 <div className="columns">
                     <AutoCompleteGenerico
@@ -155,6 +169,9 @@ export const RelatoriosPedidoOrcamento: React.FC = () => {
                     <button
                         type="submit"
                         className="button is-link"
+                        disabled={
+                            !tipoRelatorio || !formik.values.pedido || !formik.values.pedido.id
+                        }                        
                         //onClick={() => formik.handleSubmit()}
                     >
                         Gerar Relatório

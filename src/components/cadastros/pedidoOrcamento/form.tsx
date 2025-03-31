@@ -1,20 +1,23 @@
 'use client';
-import { PedidoOrcamento, ProdutoPedidoOrcamento } from '../../../app/models/pedidoOrcamento';
+import { PedidoOrcamento } from '../../../app/models/pedidoOrcamento';
 import { formatDateToBackend } from '../../../app/util/formatData';
 import { Input } from '../../../components';
 import { useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
 import { Dropdown } from 'primereact/dropdown';
 import * as Yup from 'yup';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useOrcamentoContext } from '../../../contexts/OrcamentoContext';
 import {
   useFichaOrcamentoService,
   useOrdemServicoManutencaoService,
   usePedidoOrcamentoService,
   useProdutoService,
-  useTerceiroService
+  useTerceiroService,
+  useUnidadeMedidaService,
+  useMediaService
 } from '../../../app/services';
+import { v4 as uuidv4 } from 'uuid';
 import { FichaOrcamentoDto } from '../../../app/models/fichaOrcamento';
 import { OrdemServicoManutencaoDto } from '../../../app/models/ordemServicoManutencao';
 import { ButtonType } from '../../../components/common/button';
@@ -22,11 +25,16 @@ import { AutoCompleteGenerico } from '../../../components/common';
 import { ModalCard } from '../../../components/common/modal';
 import { usePermissao } from '../../../app/hooks/usePermissoes';
 import { formatCurrency } from '../../../app/util/money';
-import { useManutencaoContext } from '../../../contexts/ManutencaoContext';
 import { AutoCompleteInput } from '../../../components/common/autoCompleteInput';
 import { Produto } from '../../../app/models/produtos';
 import { FuncionarioDto } from '../../../app/models/terceiros';
 import { format } from 'date-fns';
+import GenericList from '../../common/genericList';
+import { UnidadeMedida } from '../../../app/models/unidadeMedida';
+import { Galleria } from 'primereact/galleria';
+import { TemplateImagem } from '../../common/templateImagem';
+import { Arquivo } from '../../../app/models/arquivos';
+import styles from './pedido.module.css';
 
 
 interface PedidoOrcamentoFormProps {
@@ -42,7 +50,11 @@ interface OrcamentoContextType {
   setOrcamentoData: (data: OrcamentoContextType) => void;
 }
 
-const campoObrigatorio = 'Campo Obarigatório';
+interface VariaveisRelatorios {
+  dataImpressao: string;
+}
+
+const campoObrigatorio = 'Campo Obrigatório';
 
 const validationScheme = Yup.object().shape({
   dataPedido: Yup.string().trim().required(campoObrigatorio).test(
@@ -120,17 +132,22 @@ const validationScheme = Yup.object().shape({
     }
   ),            
   status: Yup.string().trim().required(campoObrigatorio),
-  produtos: Yup.array().of(
+  produtosPedido: Yup.array().of(
     Yup.object().shape({
-      descricao: Yup.string().required(campoObrigatorio),
-      quantidade: Yup.number()
-        .required(campoObrigatorio)
-        .min(1, 'Quantidade deve ser maior que zero'),
-      vlrUnitario: Yup.number()
-        .required(campoObrigatorio)
-        .min(0.01, 'Valor deve ser maior que zero'),
-    })
-  ),
+      produto: Yup.string().required(campoObrigatorio),
+      informacoesProduto: Yup.array()
+        .of(
+          Yup.object().shape({
+            descricao: Yup.string()
+              .trim()
+              .required("A descrição é obrigatória"),
+            unidadeMedida: Yup.object()
+              .nullable()
+              .required("A unidade de medida é obrigatória"),
+          })
+        )
+    }),
+  )
 });
 
 export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
@@ -144,7 +161,9 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
   const serviceTerceiro = useTerceiroService();
   const serviceFicha = useFichaOrcamentoService();
   const serviceOrdemMnt = useOrdemServicoManutencaoService();
-  const { setManutencaoData } = useManutencaoContext(); // Acessar a função para setar os dados
+  const serviceUniMed = useUnidadeMedidaService();
+  const mediaService = useMediaService();
+  // const { setManutencaoData } = useManutencaoContext(); // Acessar a função para setar os dados
 
   const { podeCadastrar } = usePermissao("Pedido Orçamento");
   const relatorio = usePermissao("Relatório Pedido de Orçamento");
@@ -154,11 +173,22 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
 
   const [setaTela, setSetarTela] = useState(tela);
 
+  // const [products, setProducts] = useState(initialProducts || []);
+
+  const galleria = useRef<Galleria | null>(null); // Define o tipo correto
+  const [indiceAtual, setIndiceAtual] = useState(0);
+
+  const [ listaUnidadeMedida, setListaUnidadeMedida ] = useState<UnidadeMedida[]>([]);
+  const [ loadingUniMed, setLoadingUniMed ] = useState(true);
+  const [ erroUniMed, setErroUniMed ] = useState('');
+
   //BOTOES
   const [showModal, setShowModal] = useState(false); // Controle do modal
   const [nextTipoTela, setNextTipoTela] = useState<string | null>(null);
 
   const [isTrackingInfoVisible, setTrackingInfoVisible] = useState(false);
+
+  const [variaveisRelatorio, setVariaveisRelatorio] = useState<VariaveisRelatorios | null>(null);
 
   //mensagem
   const [modalVisivel, setModalVisivel] = useState(false);
@@ -172,6 +202,7 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
 
   const statusOptions = [
     { label: 'Aberta', value: 'Aberta', className: 'status-Aberta' },
+    { label: 'Aguardando Resposta', value: 'Aguardando-Resposta', className: 'status-Aguardando-Resposta' },
     { label: 'Em Andamento', value: 'Em-Andamento', className: 'status-Em-Andamento' },
     { label: 'Encerrada', value: 'Encerrada', className: 'status-Encerrada' },
     { label: 'Cancelada', value: 'Cancelada', className: 'status-Cancelada' },
@@ -200,17 +231,25 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
         numero: pedidoOrcamento.ordemServicoManutencao?.numero || null,
         dataSolicitacaoManutencao: pedidoOrcamento.ordemServicoManutencao?.dataSolicitacaoManutencao || null,
       },
-      produtosPedido: pedidoOrcamento.produtosPedido || [],  // Garantir que seja um array
+      produtosPedido: pedidoOrcamento.produtosPedido?.map(produto => ({
+        ...produto,
+        informacoesProduto: produto.informacoesProduto || [] // Garantindo que seja um array
+      })) || [], // Garantir que seja um array
+      arquivos: pedidoOrcamento.arquivos ? pedidoOrcamento.arquivos.map(arquivo => ({
+        id: arquivo.id || undefined,  // Alterado de null para undefined
+        nome: arquivo.nome || '',
+        caminho: arquivo.caminho || '',
+        tipo: arquivo.tipo || '',
+        file: arquivo.file
+      })) : [],
+      novosArquivos: pedidoOrcamento.novosArquivos || [],
       formaDePagamento: pedidoOrcamento.formaDePagamento || '',
       status: pedidoOrcamento.status || '',
       identificador: pedidoOrcamento.identificador || '',
-      dataPosVenda: pedidoOrcamento.dataPosVenda || null,
       responsavelPedido: pedidoOrcamento.responsavelPedido || {},
       disServico: pedidoOrcamento.disServico || '',
-      retorno: pedidoOrcamento.retorno || '',
       infoComplementar: pedidoOrcamento.infoComplementar || '',
-      satisfacaoCliente: pedidoOrcamento.satisfacaoCliente || '',
-      satisfacaoCheck: pedidoOrcamento.satisfacaoCheck || '',
+      observacoes: pedidoOrcamento.observacoes || '',
       fornecedor: pedidoOrcamento.fornecedor || {},
       responsavelMedida: pedidoOrcamento.responsavelMedida || {},
       total: pedidoOrcamento.total || 0,
@@ -233,9 +272,29 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
     enableReinitialize: true
   });
 
+  useEffect(() => {
+    const carregarUnidadeMedida = async () => {
+      setLoadingUniMed(true);
+      try {
+        const result = await serviceUniMed.findAllUnidadesMedida('Ativo');
+        setErroUniMed('')
+        setListaUnidadeMedida(result.data);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (error: any) {
+        setErroUniMed("Erro ao carregar Unidade de Medida:" + error?.message);
+      } finally {
+        setLoadingUniMed(false);
+        setErroUniMed('')
+      }
+    };
+    
+    carregarUnidadeMedida();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); 
+
   //status
-  const pedidoCancelada = formik.values.status === 'Cancelada' || pedidoOrcamento.status === 'Cancelada';
-  const pedidoEncerrada = formik.values.status === 'Encerrada' || pedidoOrcamento.status === 'Encerrada';
+  const pedidoCancelada = pedidoOrcamento.status === 'Cancelada';
+  //const pedidoEncerrada = pedidoOrcamento.status === 'Encerrada';
 
   //BOTÕES
 
@@ -494,7 +553,7 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
       else if (tela === 'ORDEMSERVMNT') {
           let resultsOrdemServMnt: OrdemServicoManutencaoDto[] = [];
     
-          resultsOrdemServMnt = await serviceOrdemMnt.findOrdemServMntPedido(query);
+          resultsOrdemServMnt = await serviceOrdemMnt.findOrdemServMntPedido(query, 'Encerrada');
     
           if (resultsOrdemServMnt.length > 0) {
             const formattedResult = resultsOrdemServMnt[0]; 
@@ -524,17 +583,6 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [idFichaVsIdOrdemMnt]);
 
-  // Calcular o total ao carregar ou alterar os produtosPedido
-  useEffect(() => {
-    const totalCalculado = formik.values.produtosPedido?.reduce(
-        (acc, produto) => acc + (produto.vlrTotal || 0),
-        0
-    );
-    
-    // Atualizar o valor total no formik
-    formik.setFieldValue("total", totalCalculado);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formik.values?.produtosPedido]); // Dependência de produtosPedido
 
   const handleSearchProduto = async (query: string): Promise<{ id: string | number; descricao: string | null }[]> => {
     try {
@@ -554,70 +602,12 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
     }
   };
 
-  const adicionarProduto = () => {
-    const novoProduto: ProdutoPedidoOrcamento = {
-      tempId: `temp-${Date.now()}`,
-      id: '',
-      idPedidoOrcamento: formik.values.id,
-      descricao: '',
-      quantidade: 1,
-      vlrUnitario: 0,
-      vlrTotal: 0,
-    };
-  
-    // Atualiza o array de produtos no Formik, mantendo os valores anteriores e adicionando o novo produto
-    const novosProdutos = [...formik.values.produtosPedido || [], novoProduto];
-    formik.setFieldValue('produtosPedido', novosProdutos); // Atualiza o array de produtos no Formik
-  };
-
-  const atualizarProduto = (id: string, campo: keyof ProdutoPedidoOrcamento, valor: unknown) => {
-    const novosProdutos = formik.values.produtosPedido?.map((produto) => {
-      if (produto.tempId === id || produto.id === id) {
-        return {
-          ...produto,
-          [campo]: valor,
-          vlrTotal:
-            campo === 'quantidade' || campo === 'vlrUnitario'
-              ? (campo === 'quantidade' ? Number(valor) : produto.quantidade || 0) *
-                (campo === 'vlrUnitario' ? Number(valor) : produto.vlrUnitario || 0)
-              : produto.vlrTotal,
-        };
-      }
-      return produto;
-    });
-  
-    //setProdutosPedido(novosProdutos);
-    formik.setFieldValue('produtosPedido', novosProdutos);
-  };
-  
-  const removerProduto = (produto: ProdutoPedidoOrcamento) => {
-    // Verifica se o produto tem o id, se não, usa o tempId
-    const novosProdutos = formik.values.produtosPedido?.filter((item) => {
-      return item.id ? item.id !== produto.id : item.tempId !== produto.tempId;
-    });
-  
-    formik.setFieldValue('produtosPedido', novosProdutos); // Atualiza o Formik
-  };  
-
-  const atualizarDescricaoProduto = (index: number, descricao: string) => {
-    const novosProdutos = [...formik.values?.produtosPedido || []];
-    
-    // Verifica se o índice está dentro do limite do array e se o produto existe
-    if (novosProdutos[index]) {
-        novosProdutos[index].descricao = descricao; // Atualiza somente a descrição
-        formik.setFieldValue('produtosPedido', novosProdutos); // Atualiza o Formik
-    } else {
-        alert(`Produto não encontrado no índice ${index}, chamar o suporte`)
-        console.error(`Produto não encontrado no índice ${index}, chamar o suporte`);
-    }
-  };
-
   //relatorio
-  const imprimirPedido = (idPedido: string, tipoRelatorio: string) =>{
+  const imprimirPedido = (idPedido: string, dataImpressao: string, tipoRelatorio: string) =>{
       if (idPedido !== '' && idPedido !== null && idPedido !== undefined) {
           if (tipoRelatorio === 'informacoesRastreamento') {
               exibirMensagem("Relatório sendo gerado, aguarde...", "loading");
-              service.gerarRelatorioInformacaoComplementar(idPedido).then(blob => {
+              service.gerarRelatorioInformacaoComplementar(idPedido, dataImpressao).then(blob => {
                   const fileUrl = URL.createObjectURL(blob);
                   window.open(fileUrl)
                   setModalVisivel(false);
@@ -638,8 +628,7 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
       }
       else {
         exibirMensagem("O Pedido ainda não tem foi criado para gerar o relatório", "error");
-      }
-      
+      }   
   }
 
   const exibirMensagem = (texto: string, tipo: 'success' | 'error' | 'loading') => {
@@ -655,16 +644,99 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
     }
   };
 
-  const irParaOrdemServicoManutencao = () => {
-    const contexto = {
-        idPedido: formik.values?.id || pedidoOrcamento?.id,
-    };
+  // const irParaOrdemServicoManutencao = () => {
+  //   const contexto = {
+  //       idPedido: formik.values?.id || pedidoOrcamento?.id,
+  //   };
     
-    // Atualizar os dados no contexto, sem a necessidade de uma função de atualização completa
-    setManutencaoData(contexto);  // Passa o objeto direto, já que o setOrcamentoData agora aceita objetos parciais
+  //   // Atualizar os dados no contexto, sem a necessidade de uma função de atualização completa
+  //   setManutencaoData(contexto);  // Passa o objeto direto, já que o setOrcamentoData agora aceita objetos parciais
     
-    // Navegar para a tela de Ordem de Servico Manutencao
-    router.push('/cadastros/ordemServicoManutencao');
+  //   // Navegar para a tela de Ordem de Servico Manutencao
+  //   router.push('/cadastros/ordemServicoManutencao');
+  // };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      const files = Array.from(event.target.files || []);
+      if (!files.length) return; // Se não houver arquivos, não faz nada
+  
+      // Filtrando arquivos válidos
+      // const validFiles = files.filter(file => 
+      //     file.size <= MAX_FILE_SIZE && ALLOWED_TYPES.includes(file.type)
+      // );
+  
+      // Exibe alerta se houver arquivos inválidos
+      // if (validFiles.length < files.length) {
+      //     alert('Alguns arquivos foram rejeitados por tamanho ou tipo inválido.');
+      // }
+  
+      // Se nenhum arquivo for válido, não continua
+      // if (!validFiles.length) return;
+  
+      // Criando objetos para os arquivos válidos
+      const novosArquivos: Arquivo[] = files.map(file => ({
+          id: undefined, // Arquivo ainda não salvo
+          tempId: uuidv4(), // Gerando um tempId único
+          nome: file.name,
+          tipo: file.type,
+          caminho: '',
+          file,
+          status: 'Pronto para envio', // Status automático
+      }));
+  
+      // Atualiza o campo 'arquivos' no formik
+      formik.setFieldValue('arquivos', [...(formik.values?.arquivos || []), ...novosArquivos]);
+  };
+      
+  const handleRemove = (tempId: string) => {
+      formik.setFieldValue(
+          'arquivos',
+          (formik.values?.arquivos ?? []).filter(file => file.tempId !== tempId)
+      );
+  };
+
+  const carregarMidia = async (arquivo: Arquivo) => {
+      if (arquivo.tipo.startsWith("video/")) {
+          return mediaService.carregarVideo(arquivo.caminho);
+      }
+      if (arquivo.tipo.startsWith("image/")) {
+          return mediaService.carregarImagem(arquivo.caminho);
+      }
+      if (arquivo.tipo.startsWith("application/")) {
+          return mediaService.carregarDocumento(arquivo.caminho);
+      }
+      return null;
+  };
+      
+  
+  const handleRemoveArquivos = (id: string) => {
+      const arquivosAtuais = formik.values?.arquivos ?? [];
+      const novoArquivos = arquivosAtuais.filter(arquivo => arquivo.id !== id);
+  
+      if (novoArquivos.length > 0) {
+          const indexAtual = arquivosAtuais.findIndex(arquivo => arquivo.id === id);
+          const proximoIndex = indexAtual >= novoArquivos.length ? novoArquivos.length - 1 : indexAtual;
+          setIndiceAtual(proximoIndex); // Atualiza o índice antes de remover
+      } else {
+          setIndiceAtual(0); // Se não houver imagens restantes, resetar para 0
+      }
+  
+      formik.setFieldValue("arquivos", novoArquivos);
+  };
+  
+  const totalSizeMB = (formik.values.arquivos ?? [])
+  .filter(file => file?.file && !file?.id) // Apenas arquivos novos e válidos
+  .reduce((acc, file) => acc + (file?.file?.size ?? 0), 0) / (1024 * 1024);
+
+  const isTotalTooLarge = totalSizeMB > 350; // Verifica se passou de 500MB
+
+  const hasLargeFile = (formik.values.arquivos ?? []).some(file => 
+      file?.file && file.file.size / (1024 * 1024) > 100
+  );// Verifica se cada arquivo passou de 100MB
+  
+
+  const handleRemoveAll = () => {
+      formik.setFieldValue("arquivos", formik.values.arquivos?.filter(file => file.id)); // Mantém apenas arquivos já enviados
   };
   
   return (
@@ -720,6 +792,7 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
             id="fichaSelecionada"
             name="fichaSelecionada"
             label="Ficha Orçamento: *"
+            autoComplete='off'
             value={
               fichaSelecionada
                 ? `${fichaSelecionada.id} - ${fichaSelecionada.cliente?.id} - ${fichaSelecionada.cliente?.nome} - ${formatDateToBackend(fichaSelecionada?.dataSolicitacaoCliente || '')}`
@@ -755,6 +828,7 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
             id="ordemServicoSelecionado"
             name="ordemServicoSelecionado"
             label="Ordem Serviço Manutenção: *"
+            autoComplete='off'
             value={
               ordemServicoSelecionado
                 ? `${ordemServicoSelecionado.numero} - ${ordemServicoSelecionado.cliente?.id} - ${ordemServicoSelecionado.cliente?.nome}`
@@ -844,6 +918,7 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
                     <Dropdown
                         id="status"
                         name="status"
+                        autoComplete='off'
                         value={formik.values.status}
                         options={statusOptions}
                         optionLabel="label"
@@ -866,6 +941,7 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
               name='nomeCliente'
               label="Nome: "
               value={formik.values.fichaOrcamento?.cliente?.nome || formik.values.ordemServicoManutencao?.cliente?.nome || cliente?.nome || ''}
+              
               columnClasses="column is-half"
               disabled
           />
@@ -886,6 +962,7 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
           <Input
               id="enderecoCliente"
               name='enderecoCliente'
+              autoComplete='off'
               label="Endereço: "
               value={formik.values.fichaOrcamento?.enderecoCliente || formik.values.ordemServicoManutencao?.enderecoCliente || enderecoCliente || ''}
               columnClasses="column is-full"
@@ -896,6 +973,7 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
       <div className="columns">
           <Input
               id="cpfCnpjCliente"
+              autoComplete='off'
               name='cpfCnpjCliente'
               label="CPF / CNPJ: "
               value={
@@ -907,6 +985,7 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
           <Input
               id="telefoneCliente"
               name='telefoneCliente'
+              autoComplete='off'
               label="Telefone: "
               value={formik.values.fichaOrcamento?.telefoneCliente || formik.values.ordemServicoManutencao?.telefoneCliente || telefoneCliente || ''}
               columnClasses="column is-half"
@@ -918,6 +997,7 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
         <AutoCompleteGenerico
           id="vendedor"
           name="vendedor"
+          autoComplete='off'
           label="Vendedor:"
           value={
             vendedorSelecionado
@@ -936,8 +1016,255 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
         />
       </div>
 
+      <GenericList<{ produto: string }, { descricao: string | null; unidadeMedida: UnidadeMedida | null; quantidade: number | null; vlrUnitario: number | null; vlrTotal: number | null }>
+        items={(formik.values.produtosPedido || []).map((produto) => ({
+          id: produto.id ?? "",
+          data: { produto: produto.produto || "" },
+          children: (produto.informacoesProduto || []).map((info) => ({
+            data: {
+              id: info.id || undefined,
+              descricao: info.descricao || "",
+              quantidade: info.quantidade ?? null,
+              vlrUnitario: info.vlrUnitario ?? null,
+              vlrTotal: info.vlrTotal ?? null,
+              unidadeMedida: info.unidadeMedida ?? null,
+              produtoPedidoOrcamentoId: info.produtoPedidoOrcamentoId ?? null
+            },
+          })),
+        }))}
+
+        setItems={(updatedProducts) => {
+          formik.setFieldValue(
+            "produtosPedido",
+            updatedProducts.map((prod) => ({
+              id: prod.id || undefined,
+              produto: prod.data.produto,
+              informacoesProduto: prod.children.map((child) => ({
+                id: child.data.id || undefined, // Mantém o ID se existir
+                descricao: child.data.descricao,
+                quantidade: child.data.quantidade,
+                vlrUnitario: child.data.vlrUnitario,
+                vlrTotal: child.data.vlrTotal,
+                unidadeMedida: child.data.unidadeMedida,
+                produtoPedidoOrcamentoId: child.data.produtoPedidoOrcamentoId || prod.id || undefined,
+              })),
+            }))
+          );
+        }}
+        columns={["Produto"]}
+        enableRemoveItem={true}
+        enableRemoveChild={true}
+        enableCollapseChildren={true} // <-- ATIVANDO O COLLAPSE
+        renderRow={(produto, index, updateProduct) => (
+          <td>
+            <AutoCompleteInput
+              id={`produto_${index}`}
+              name={`produto_${index}`}
+              autoComplete='off'
+              disabled={!podeCadastrar || pedidoCancelada}
+              value={produto.data.produto}
+              onSearch={async (query) => handleSearchProduto(query.trim())}
+              onSelect={(item) => updateProduct(index, "produto", item.descricao || "")}
+              formatResult={(item) => `${item.id} - ${item.descricao}`}
+              placeholder="Digite a Descrição do Produto"
+              erro={produto.data.produto === "" ? campoObrigatorio : ""}
+            />
+          </td>
+        )}
+        childColumns={["Descrição", "UM", "Quantidade", "Valor Unitário", "Valor Total"]} // <- Agora os títulos são dinâmicos!
+        renderChildRow={(child, childIndex, productIndex, updateChild, updateChildMultiple) => {
+          // Função para calcular o total
+          const calcularTotal = (quantidade: number | null, vlrUnitario: number | null) => {
+            if (quantidade !== null && vlrUnitario !== null) {
+              return quantidade * vlrUnitario;
+            }
+            return 0; // Retorna 0 em vez de null
+          };
+        
+          // Função para atualizar os valores e recalcular o vlrTotal
+          const atualizarValores = (quantidade: number | null, vlrUnitario: number | null) => {
+            const novoTotal = calcularTotal(quantidade, vlrUnitario);
+            
+            if (!updateChildMultiple) {
+              throw new Error("Erro na tela, entrar em contato com o Suporte, e enviar um print da tela.");
+            }
+          
+            updateChildMultiple(productIndex, childIndex, {
+              quantidade,
+              vlrUnitario,
+              vlrTotal: novoTotal
+            });
+          };
+
+          // Criar uma variável total para armazenar o valor calculado
+          const total = calcularTotal(child.data.quantidade, child.data.vlrUnitario);
+        
+          return (
+            <>
+              {/* Descrição com Textarea (maior e estilizado) */}
+              <td style={{ width: "30%" }}>
+                <div className="control">
+                  <textarea
+                    className="textarea"
+                    autoComplete='off'
+                    value={child.data.descricao ?? ""}
+                    onChange={(e) => updateChild(productIndex, childIndex, "descricao", e.target.value)}
+                    rows={10}
+                    maxLength={950}
+                    style={{ resize: "none", minHeight: "120px" }}
+                  />
+                  {(child.data.descricao === undefined || child.data.descricao === "") && (
+                      <p
+                        className="help is-danger"
+                        style={{
+                          marginTop: "0px",
+                          position: "absolute",
+                          marginLeft: "5px",
+                          bottom: "0px",
+                        }}
+                      >
+                        Campo Obrigatório
+                      </p>
+                    )}
+                </div>
+              </td>
+
+              <td style={{ width: "10%" }}>
+                <div className="control">
+                  <div className="select is-fullwidth">
+                    <select
+                      value={child.data.unidadeMedida ? String(child.data.unidadeMedida.id) : ""}
+                      autoComplete="off"
+                      onChange={(e) => {
+                        const selectedId = e.target.value;
+                        const selectedItem = listaUnidadeMedida.find((item) => String(item.id) === selectedId) || null;
+                        
+                        // Atualiza a unidadeMedida corretamente
+                        updateChild(productIndex, childIndex, "unidadeMedida", selectedItem);
+                      }}
+                      className={`select ${erroUniMed ? "is-danger" : ""}`}
+                      disabled={loadingUniMed}
+                      aria-disabled={loadingUniMed}
+                    >
+                      <option value="" disabled>
+                        {loadingUniMed ? "Carregando..." : "Selecione uma Unidade de Medida"}
+                      </option>
+                      {listaUnidadeMedida.map((item) => (
+                        <option key={String(item.id)} value={String(item.id)}>
+                          {`${item.id} - ${item.unidade}`}
+                        </option>
+                      ))}
+                    </select>
+
+                    {(erroUniMed || child.data.unidadeMedida?.id === undefined) && (
+                      <p
+                        className="help is-danger"
+                        style={{
+                          marginTop: "4px",
+                          position: "absolute",
+                          bottom: "-20px",
+                        }}
+                      >
+                        {erroUniMed || 'Campo Obrigatório'}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </td>
+
+        
+              {/* Quantidade */}
+              <td>
+                <div className="control">
+                  <input
+                    type="number"
+                    autoComplete='off'
+                    className="input"
+                    value={child.data.quantidade !== null ? child.data.quantidade : ""}
+                    onChange={(e) => {
+                      const numericValue = e.target.value === "" ? null : Number(e.target.value);
+                      atualizarValores(numericValue, child.data.vlrUnitario);
+                    }}
+                    style={{ width: "100%" }}
+                  />
+                </div>
+              </td>
+
+              {/* Valor Unitário */}
+              <td>
+                <div className="control">
+                  <input
+                    type="text"
+                    className="input"
+                    autoComplete='off'
+                    value={child.data.vlrUnitario !== null ? formatCurrency(child.data.vlrUnitario) : ""}
+                    onChange={(e) => {
+                      const rawValue = e.target.value.replace(/\D/g, "");
+                      const numericValue = Number(rawValue) / 100;
+                      // Atualiza vlrUnitario e recalcula o vlrTotal
+                      atualizarValores(child.data.quantidade, numericValue);
+                    }}
+                    onBlur={(e) => {
+                      const value = child.data.vlrUnitario;
+                      if (value !== null) {
+                        e.target.value = formatCurrency(value);
+                      }
+                    }}
+                    step="0.01"
+                    style={{ width: "full" }}
+                  />
+                </div>
+              </td>
+        
+              {/* Valor Total (Somente leitura) */}
+              <td>
+                <div className="control">
+                  <input
+                    type="text"
+                    autoComplete='off'
+                    className="input"
+                    value={total !== null ? formatCurrency(total) : ""}
+                    onBlur={(e) => {
+                      const value = total;
+                      if (value !== null) {
+                        e.target.value = formatCurrency(value);
+                      }
+                    }}
+                    step="0.01"
+                    style={{ width: "full", backgroundColor: "#f5f5f5" }}
+                    readOnly
+                  />
+                </div>
+              </td>
+            </>
+          );
+        }}
+        renderFooter={(items) => {
+          const total = items.reduce((totalPedido, item) => {
+            return totalPedido + item.children.reduce((totalInfo, child) => {
+              return totalInfo + (child.data.vlrTotal ?? 0);
+            }, 0);
+          }, 0);
+      
+          return (
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td colSpan={1} className="has-text-right">
+              <strong>Total: {formatCurrency(total)}</strong>
+              </td>
+            </tr>
+          );
+        }}
+      />
+      <br/>
+
       {/* Tabela Editável */}
-      <div className="columns">
+      {/* <div className="columns">
           <div className="column is-full">
           <table className="table is-bordered is-striped is-hoverable is-fullwidth">
               <thead>
@@ -966,7 +1293,7 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
                         id={`descricao-${index}`}
                         name={`descricao-${index}`}
                         disabled={!podeCadastrar || pedidoCancelada}
-                        value={produto.descricao || ''}
+                        value={produto.produto || ''}
                         onSearch={async (query) => {
                           const trimmedQuery = query.trim();
                           return handleSearchProduto(trimmedQuery);
@@ -976,7 +1303,7 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
                         }}
                         formatResult={(item) => `${item.id} - ${item.descricao}`}
                         placeholder="Digite a Descrição do Produto"
-                        erro={produto?.descricao === "" ? campoObrigatorio : ""}
+                        erro={produto?.produto === "" ? campoObrigatorio : ""}
                       />
                     </td>
                     <td style={{ width: "15%" }}>
@@ -1057,6 +1384,22 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
               </tfoot>
           </table>
           </div>
+      </div> */}
+
+      <div className="field">
+        <label htmlFor="observacoes" className="label">
+          Observações:
+        </label>
+        <textarea
+          className="textarea"
+          autoComplete='off'
+          id="observacoes"
+          name="observacoes"
+          value={formik.values.observacoes || ''}
+          placeholder="Digite as Observações"
+          onChange={formik.handleChange}
+          disabled={!podeCadastrar || pedidoCancelada}
+        ></textarea>
       </div>
 
       <div className="columns">
@@ -1067,6 +1410,7 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
               </label>
               <textarea
                   className="textarea"
+                  autoComplete='off'
                   id='formaDePagamento'
                   name="formaDePagamento"
                   value={formik.values.formaDePagamento || ''}
@@ -1080,6 +1424,112 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
           </div>
           </div>
       </div>
+
+      {/* <h4>Arquivos Vinculados</h4> */}
+      <Galleria
+          ref={galleria}
+          value={formik.values.arquivos?.filter(arquivo => arquivo.id)}
+          numVisible={5}
+          activeIndex={indiceAtual}
+          onItemChange={(e) => setIndiceAtual(e.index)}
+          circular
+          fullScreen
+          showItemNavigators
+          showThumbnails={false}
+          item={(arquivo) => (
+              <TemplateImagem
+                  arquivo={arquivo}
+                  podeCadastrar={podeCadastrar}
+                  onRemoveArquivo={() => handleRemoveArquivos(arquivo.id ?? "")} // Agora remove corretamente
+                  carregarMidia={carregarMidia}
+              />
+          )}
+          style={{ maxWidth: "50%" }}
+      />
+
+      <div className="file-upload-container">
+          <label>Arquivos:</label>
+          <div className="upload-actions">  {/* Container flexível para botões */}
+              <label className="choose-button">
+                  <i className="pi pi-plus"></i> Upload
+                  <input disabled={!podeCadastrar} type="file" multiple onChange={handleFileChange} accept="image/*,video/mp4, application/*" hidden />
+              </label>
+
+              {/* Botão Cancel (Remove Todos os Arquivos) */}
+              <label className="cancel-button" onClick={handleRemoveAll}>
+                  <i className="pi pi-times"></i> Cancelar
+              </label>
+              
+              {/* Botão "Show" agora como label */}
+              <label 
+                className={`show-button ${!podeCadastrar || ((pedidoOrcamento.arquivos?.length ?? formik.values.arquivos?.length ?? 0) < 1) ? styles.disabled : ''}`}                    onClick={() => galleria.current?.show()}
+              >
+                  <i className="pi pi-folder-open"></i> Show
+              </label>
+
+          </div>
+          {(formik.values.arquivos ?? []).filter(file => file?.file && !file?.id).length > 0 && (
+            <div className={styles.fileList}>
+                {(formik.values.arquivos ?? [])
+                    .filter(file => file?.file && !file?.id) // Apenas arquivos novos com file definido
+                    .map((file) => {
+                        const fileSizeMB = file.file ? (file.file.size / (1024 * 1024)).toFixed(2) : "0.00"; // Converte para MB
+                        const isTooLarge = parseFloat(fileSizeMB) > 100; // Converte para número antes da comparação
+
+                        return (
+                            <div key={file.tempId} className={`${styles.fileItem} ${isTooLarge ? styles.tooLarge : ''}`}>
+                                {file.file && file.tipo?.startsWith('image') ? (
+                                    // eslint-disable-next-line @next/next/no-img-element
+                                    <img src={URL.createObjectURL(file.file)} alt={file.nome} className={styles.thumbnail} />
+                                ) : file.file && file.tipo?.startsWith('video') ? (
+                                    <video width="50" height="50" controls>
+                                        <source src={URL.createObjectURL(file.file)} type={file.tipo} />
+                                    </video>
+                                ) : file.file && file.tipo?.startsWith('application/') ? (
+                                    <a href={URL.createObjectURL(file.file)} target="_blank" rel="noopener noreferrer">
+                                        Abrir {file.nome}
+                                    </a>
+                                ): 
+                                (
+                                    <span>{file.nome}</span>
+                                )}
+
+                                <div className={styles.fileInfo}>
+                                    <span className={styles.fileName}>{file.nome} ({fileSizeMB} MB)</span>
+                                    {isTooLarge ? (
+                                        <span className={`${styles.status} ${styles.error}`}>Erro: Arquivo maior que 100MB</span>
+                                    ) : (
+                                        <span className={`${styles.status} ${styles.uploaded}`}>Pronto para envio</span>
+                                    )}
+                                </div>
+
+                                <button onClick={() => handleRemove(file.tempId || '')} type='button' disabled={!podeCadastrar} className={styles.removeButton}>❌</button>
+                            </div>
+                        );
+                })}
+
+                {/* Exibição do tamanho total de todos os arquivos */}
+                <div className={styles.totalSize}>
+                    <strong>Total:</strong> {totalSizeMB.toFixed(2)} MB
+                </div>
+
+                {/* Exibir erro se o total ultrapassar 500MB */}
+                {isTotalTooLarge && (
+                    <div className={`${styles.status} ${styles.error}`}>
+                        Erro: O total dos arquivos não pode ultrapassar 350MB!
+                    </div>
+                )}
+
+                {/* Exibir erro caso o usuário tente adicionar mais de 7 arquivos */}
+                {(formik.values.arquivos ?? []).filter(file => file?.file && !file?.id).length > 7 && (
+                    <div className={`${styles.status} ${styles.error}`}>
+                        Erro: Você pode enviar no máximo 7 arquivos!
+                    </div>
+                )}
+            </div>
+          )}
+      </div>
+      <br/>
 
       {/* Botão de Toggle para Informações de Rastreamento */}
       <ButtonType 
@@ -1095,29 +1545,56 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
         <div className="box">
           <div className="is-flex is-align-items-center">
             <h3 className="title is-5" style={{ marginRight: '15px' }}>Informações de Rastreamento</h3>
-            {formik.values?.id &&
-              <ButtonType 
-                label={
-                  <>
-                    <i className="pi pi-file-pdf" style={{ marginRight: '8px', fontSize: '1.2rem' }}></i>
-                    Imprimir
-                  </>
-                }
-                type="button"
-                className='button'
-                disabled={!relatorioInformacaoComplementar.podeConsultar || pedidoCancelada}
-                style={{ 
-                  padding: '10px 20px', 
-                  fontSize: '1rem', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  transition: 'background 0.3s' 
-                }}
-                onMouseOver={(e) => e.currentTarget.style.background = '#ff3860'} 
-                onMouseOut={(e) => e.currentTarget.style.background = ''}  
-                onClick={() => imprimirPedido(formik.values.id || pedidoOrcamento.id || '', 'informacoesRastreamento')}
-              />
-            }
+            {formik.values?.id && (
+              <div className="field is-grouped is-align-items-center">
+                <div className="control is-expanded">
+                  <Input
+                    id="dataImpressao"
+                    label="Data Impressão: "
+                    value={variaveisRelatorio?.dataImpressao ?? new Date().toISOString().split("T")[0]}
+                    onChange={(e) => 
+                      setVariaveisRelatorio({ 
+                        ...variaveisRelatorio, 
+                        dataImpressao: e.target.value 
+                      })
+                    }
+                    autoComplete="off"
+                    type="date"
+                    disabled={!podeCadastrar || pedidoCancelada}
+                  />
+                </div>
+
+                <div className="control">
+                  <br/>
+                  <ButtonType 
+                    label={
+                      <>
+                        <i className="pi pi-file-pdf" style={{ marginRight: '8px', fontSize: '1.2rem' }}></i>
+                        Imprimir
+                      </>
+                    }
+                    type="button"
+                    className="button"
+                    disabled={!relatorioInformacaoComplementar.podeConsultar || pedidoCancelada}
+                    style={{ 
+                      padding: '10px 20px', 
+                      fontSize: '1rem', 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      transition: 'background 0.3s' 
+                    }}
+                    onMouseOver={(e) => e.currentTarget.style.background = '#ff3860'} 
+                    onMouseOut={(e) => e.currentTarget.style.background = ''}  
+                    onClick={() => imprimirPedido(
+                      formik.values.id || pedidoOrcamento.id || '', 
+                      variaveisRelatorio?.dataImpressao ? variaveisRelatorio.dataImpressao : new Date().toISOString().split("T")[0] || '', 
+                      'informacoesRastreamento'
+                    )}
+                  />
+                </div>
+              </div>
+            )}
+
           </div>
           <br/>
           <div className="columns">
@@ -1125,6 +1602,7 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
               id="responsavelPedido"
               name="responsavelPedido"
               label="Res. Pedido:"
+              autoComplete='off'
               value={
                 responsavelPedidoSelecionado
                   ? `${responsavelPedidoSelecionado.id} - ${responsavelPedidoSelecionado.nome}`
@@ -1144,6 +1622,7 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
               id="responsavelMedida"
               name="responsavelMedida"
               label="Res. Medida:"
+              autoComplete='off'
               value={
                 responsavelMedidaSelecionado
                   ? `${responsavelMedidaSelecionado.id} - ${responsavelMedidaSelecionado.nome}`
@@ -1162,6 +1641,7 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
             <AutoCompleteGenerico
               id="fornecedorSelecionado"
               name="fornecedorSelecionado"
+              autoComplete='off'
               label="Fornecedor:"
               value={
                 fornecedorSelecionado
@@ -1200,6 +1680,7 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
             </label>
             <textarea
               className="textarea"
+              autoComplete='off'
               id="infoComplementar"
               name="infoComplementar"
               value={formik.values.infoComplementar || ''}
@@ -1213,7 +1694,7 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
           </div>
 
           {/* Data e Teve Retorno */}
-          <div className="columns">
+          {/* <div className="columns">
             <div className="column is-one-fifth">
               <div className="field">
                 <label htmlFor="dataPosVenda" className="label">
@@ -1221,6 +1702,7 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
                 </label>
                 <input
                   type="date"
+                  autoComplete='off'
                   id="dataPosVenda"
                   name="dataPosVenda"
                   className="input"
@@ -1240,6 +1722,7 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
                     <input
                       type="checkbox"
                       id="retorno"
+                      autoComplete='off'
                       name="retorno"
                       checked={formik.values.retorno === 'Sim'}
                         onChange={(e) =>
@@ -1263,6 +1746,7 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
                   <div className="select is-fullwidth">
                     <select
                       id="satisfacaoCheck"
+                      autoComplete='off'
                       name="satisfacaoCheck"
                       value={formik.values.satisfacaoCheck || ''}
                       onChange={formik.handleChange}
@@ -1281,9 +1765,9 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
                 )}
               </div>
             </div>
-          </div>
+          </div> */}
           {/* Satisfação do Cliente */}
-          <div className="field">
+          {/* <div className="field">
             <label htmlFor="satisfacaoCliente" className="label">
               Satisfação do Cliente:
             </label>
@@ -1292,6 +1776,7 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
               id="satisfacaoCliente"
               name="satisfacaoCliente"
               value={formik.values.satisfacaoCliente || ''}
+              autoComplete='off'
               placeholder="Digite a Satisfação do Cliente"
               onChange={formik.handleChange}
               disabled={!podeCadastrar || pedidoCancelada}
@@ -1299,7 +1784,7 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
             {formik.errors.satisfacaoCliente && (
               <p className="help is-danger">{formik.errors.satisfacaoCliente}</p>
             )}
-          </div>
+          </div> */}
         </div>
       )}
 
@@ -1310,6 +1795,7 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
           type="submit"
           style={{ padding: '10px 20px', fontSize: '1rem' }}
           disabled={
+            hasLargeFile ||
             !podeCadastrar ||
             !formik.dirty ||
             !formik.isValid ||
@@ -1327,14 +1813,14 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
         />
         {formik.values?.id &&
           <>
-            <ButtonType 
+            {/* <ButtonType 
                 label={"Realizar Manutenção"}
                 type="button"
                 className='button'
                 style={{ padding: '10px 20px', fontSize: '1rem' }}
                 onClick={irParaOrdemServicoManutencao}
                 disabled={!podeCadastrar || !pedidoEncerrada}
-            />
+            /> */}
             <ButtonType 
               label={
                 <>
@@ -1354,7 +1840,7 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
               }}
               onMouseOver={(e) => e.currentTarget.style.background = '#ff3860'} 
               onMouseOut={(e) => e.currentTarget.style.background = ''}  
-              onClick={() => imprimirPedido(formik.values.id || pedidoOrcamento.id || '', 'pedidoOrcamento')}
+              onClick={() => imprimirPedido(formik.values.id || pedidoOrcamento.id || '', '', 'pedidoOrcamento')}
             />
           </>
         }

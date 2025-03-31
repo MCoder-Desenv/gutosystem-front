@@ -75,6 +75,7 @@ export const useFichaOrcamentoService = () => {
 
     const findFichas = async (
             nomeCliente: string = '',
+            telefone: string = '',
             codigo: string = '',
             dataInicio: string = '',
             dataFim: string = '',
@@ -83,11 +84,11 @@ export const useFichaOrcamentoService = () => {
           ): Promise<Page<FichaOrcamentoDto>> => {
             // Verifica se as datas foram passadas
             if (dataInicio && dataFim) {
-              const url = `${resourceURL}/fichas?nomeCliente=${nomeCliente}&codigo=${codigo}&dataInicio=${dataInicio}&dataFim=${dataFim}&page=${page}&size=${size}`;
+              const url = `${resourceURL}/fichas?nomeCliente=${nomeCliente}&telefone=${telefone}&codigo=${codigo}&dataInicio=${dataInicio}&dataFim=${dataFim}&page=${page}&size=${size}`;
               const response: AxiosResponse<Page<FichaOrcamentoDto>> = await httpClient.get(url);
               return response.data;
             } else {
-              const url = `${resourceURL}/fichas?nomeCliente=${nomeCliente}&codigo=${codigo}&page=${page}&size=${size}`;
+              const url = `${resourceURL}/fichas?nomeCliente=${nomeCliente}&telefone=${telefone}&codigo=${codigo}&page=${page}&size=${size}`;
               const response: AxiosResponse<Page<FichaOrcamentoDto>> = await httpClient.get(url);
               return response.data;
             }

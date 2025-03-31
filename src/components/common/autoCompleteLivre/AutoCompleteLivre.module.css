@@ -1,0 +1,74 @@
+/* Estilizando o container do autocomplete */
+.control {
+    position: relative;
+    width: 100%;
+  }
+  
+  /* Estilizando o input */
+  .autocomplete-input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+    transition: border-color 0.3s;
+  }
+  
+  .autocomplete-input:focus {
+    border-color: #007bff;
+  }
+  
+  /* Estilizando o dropdown */
+  .dropdown {
+    position: absolute;
+    top: 100%;
+    display: block;
+    right: 0%;
+    width: 100%;
+    background: white;
+    border: 1px solid #ccc;
+    max-height: 300px;
+    overflow-y: auto;
+    border-radius: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    padding: 5px;
+  }
+  
+  /* Ajustando a exibição dos itens do dropdown */
+  .dropdown-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 8px 12px;
+    font-size: 14px;
+    border-bottom: 1px solid #eee;
+    transition: background 0.3s;
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    margin: 0;
+    word-wrap: break-word;
+  }
+  
+  .dropdown-item:hover {
+    background: #f0f0f0;
+  }
+  
+  /* Organizando o conteúdo dentro do dropdown */
+  .dropdown-item span {
+    display: inline-block;
+    min-width: 100px;
+    margin-right: 10px;
+  }
+  
+  /* Melhorando a visualização dos itens */
+  .dropdown-item .code {
+    font-weight: bold;
+    font-size: 15px;
+    color: #181a22;
+    margin-bottom: 4px;
+  }
+  

@@ -20,7 +20,9 @@ import {
         FaTag,
         FaUnsplash,
         FaPaperclip,
-        FaUser
+        FaUser,
+        FaDesktop,
+        FaShoppingBag
 } from "react-icons/fa";
 import { useState } from "react";
 import { signOut } from "next-auth/react";
@@ -67,6 +69,7 @@ export const Menu: React.FC<MenuProps> = ({ expanded, setExpanded }) => {
                 isMaster ? { label: "Funções", href: "/cadastros/funcoes", icon: <FaPaperclip /> } : null,
                 permissoes["Funcionários"]?.podeAcessar ? { label: "Funcionários", href: "/consultas/funcionarios", icon: <FaUserCog /> } : null,
                 permissoes["Fornecedores"]?.podeAcessar ? { label: "Fornecedores", href: "/consultas/fornecedores", icon: <FaTruck /> } : null,
+                permissoes["Unidade Medida"]?.podeAcessar ? { label: "Unidade Medida", href: "/consultas/unidadesMedida", icon: <FaDesktop /> } : null,
                 permissoes["Tipos Características"]?.podeAcessar ? { label: "Tipos Info. Complementares", href: "/consultas/tiposCaracteristicas", icon: <FaTag /> } : null,
             ].filter(Boolean) as MenuItem[], // ✅ Garante que o array final tenha apenas MenuItem
         },
@@ -96,6 +99,7 @@ export const Menu: React.FC<MenuProps> = ({ expanded, setExpanded }) => {
             icon: <FaFileInvoice/>,
             children: [
                 permissoes["Pedido Orçamento"]?.podeAcessar && { label: "Pedido Orçamento", href: "/consultas/pedidoOrcamento", icon: <FaFileInvoice /> },
+                permissoes["Recuperação Venda"]?.podeAcessar && { label: "Recuperação Venda", href: "/controle/recuperacaoPedido", icon: <FaShoppingBag /> },
                 permissoes["Relatório Pedido de Orçamento"]?.podeAcessar && { label: "Relatórios", href: "/relatorios/pedidoOrcamento", icon: <FaClipboardList /> }
             ].filter(Boolean) as MenuItem[], // 🔹 Aqui garantimos um array válido
         },

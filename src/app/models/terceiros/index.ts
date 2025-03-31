@@ -18,7 +18,8 @@ export interface ClienteDto {
     status?: string;
     cpf?: string | null;
     cnpj?: string | null;
-    tipoTerceiro?: string;
+    celular?: string;
+    telefones?: string;
 }
 
 export interface ClienteFichaDto {

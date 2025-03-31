@@ -11,7 +11,8 @@ export {
     CadastroOrdemServicoManutencao,
     CadastroFornecedores,
     CadastroFuncoes,
-    CadastroUsuarios
+    CadastroUsuarios,
+    CadastroUnidadesMedida
 } from './cadastros'
 export { 
     ListagemCategorias,
@@ -23,8 +24,13 @@ export {
     ListagemPedidoOrcamento,
     ListagemOrdemServicoManutencao,
     ListagemFornecedores,
-    ListagemUsuarios
+    ListagemUsuarios,
+    ListagemUnidadesMedida
 } from './consultas'
+
+export { 
+    RecuperacaoPedido
+} from './controle'
 
 export { 
     VisualizaPerfil

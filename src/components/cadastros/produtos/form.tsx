@@ -107,6 +107,7 @@ export const ProdutosForm: React.FC<ProdutosFormProps> = ({ onSubmit, produto })
                 <Dropdown
                     id="status"
                     name="status"
+                    autoComplete='off'
                     value={formik.values.status}
                     options={statusOptions}
                     optionLabel="label"
@@ -128,6 +129,7 @@ export const ProdutosForm: React.FC<ProdutosFormProps> = ({ onSubmit, produto })
           <label htmlFor="descricao" className="label">Nome do Produto: *</label>
             <input
               id="descricao"
+              autoComplete='off'
               name="descricao"
               value={formik.values.descricao || ''}
               onChange={formik.handleChange}

@@ -52,9 +52,9 @@ export const useTerceiroService = () => {
         await httpClient.delete(url)
     }
 
-    const findClientes = async (nome: string = '', page: number = 0, size: number = 10) : Promise<ApiResponse<Page<ClienteDto>>> =>{
+    const findClientes = async (nome: string = '', celular: string = '', page: number = 0, size: number = 10) : Promise<ApiResponse<Page<ClienteDto>>> =>{
         try {
-            const url = `${resourceURL}/clientes?nome=${nome}&page=${page}&size=${size}`
+            const url = `${resourceURL}/clientes?nome=${nome}&celular=${celular}&page=${page}&size=${size}`
             const response: AxiosResponse<ApiResponse<Page<ClienteDto>>> = await httpClient.get(url);
             return response.data
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -66,7 +66,7 @@ export const useTerceiroService = () => {
     const findFornecedores = async (nome: string = '', page: number = 0, size: number = 10) : Promise<ApiResponse<Page<FornecedorDto>>> =>{
         try {
             const url = `${resourceURL}/fornecedores?nome=${nome}&page=${page}&size=${size}`
-            const response: AxiosResponse<ApiResponse<Page<ClienteDto>>> = await httpClient.get(url);
+            const response: AxiosResponse<ApiResponse<Page<FornecedorDto>>> = await httpClient.get(url);
             return response.data
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
@@ -86,9 +86,21 @@ export const useTerceiroService = () => {
         }
     }
 
-    const findClienteAutoComplete = async (nome: string = '', codigo: string = '') : Promise<ApiResponse<ClienteDto[]>> =>{
+    // const findClienteAutoComplete = async (nome: string = '', celular: string = '') : Promise<ApiResponse<ClienteDto[]>> =>{
+    //     try {
+    //         const url = `${resourceURL}/clientesPorNomeCelular?nome=${nome}&celular=${celular}`
+    //         const response: AxiosResponse<ApiResponse<ClienteDto[]>> = await httpClient.get(url);
+    //         return response.data
+    //     }
+    //     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    //     catch (error: any) {
+    //         throw error;
+    //     }
+    // }
+
+    const findClienteAutoComplete = async (filtro: string = '',) : Promise<ApiResponse<ClienteDto[]>> =>{
         try {
-            const url = `${resourceURL}/clientesPorNomeId?nome=${nome}&codigo=${codigo}`
+            const url = `${resourceURL}/clientesPorNomeCelular?filtro=${filtro}`
             const response: AxiosResponse<ApiResponse<ClienteDto[]>> = await httpClient.get(url);
             return response.data
         }

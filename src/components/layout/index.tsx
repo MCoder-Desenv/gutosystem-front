@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { ReactNode, useState } from "react";
 import { Menu } from "./menu";
 import { Message } from "../common";
@@ -9,16 +9,17 @@ interface LayoutProps {
     titulo?: string;
     children?: ReactNode;
     mensagens?: Array<Alert>;
+    wide?: boolean;  // Nova prop
 }
 
-export const Layout: React.FC<LayoutProps> = ({ titulo, children, mensagens }) => {
+export const Layout: React.FC<LayoutProps> = ({ titulo, children, mensagens, wide }) => {
     const [expanded, setExpanded] = useState(true);
 
     return (
         <div className={styles.app}>
             <Menu expanded={expanded} setExpanded={setExpanded} />
             <section className={`${styles.mainContent} ${expanded ? styles.expanded : styles.collapsed}`}>
-                <div className="container">
+            <div className={`${wide ? styles.containerLarge : "container"}`}>
                     <div className="section">
                         <div className="card">
                             <div className="card-header">
@@ -26,8 +27,9 @@ export const Layout: React.FC<LayoutProps> = ({ titulo, children, mensagens }) =
                             </div>
                             <div className="card-content">
                                 <div className="content">
-                                    {mensagens &&
-                                        mensagens.map((msg, index) => <Message key={index} {...msg} />)}
+                                    {mensagens?.map((msg, index) => (
+                                        <Message key={index} {...msg} />
+                                    ))}
                                     {children}
                                 </div>
                             </div>

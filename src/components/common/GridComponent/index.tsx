@@ -259,16 +259,18 @@ const GridComponent = <T extends ParentItem>({
               type="checkbox"
               checked={Boolean(item[col.key])}
               onChange={handleChange}
+              autoComplete='off'
               style={{ transform: "scale(1.3)", margin: "5px" }}
             />
           );
         } else if (col.type === "textarea") {
-          return <textarea className="textarea" value={String(displayValue)} onChange={handleChange} />;
+          return <textarea className="textarea" value={String(displayValue)} onChange={handleChange} autoComplete='off'/>;
         } else if (col.type === "date") {
           return (
             <input
               type="date"
               className="input"
+              autoComplete='off'
               value={item[col.key] ? new Date(String(item[col.key])).toISOString().split("T")[0] : ""}
               onChange={handleChange}
             />
@@ -281,6 +283,7 @@ const GridComponent = <T extends ParentItem>({
               name={col.key}
               value={String(displayValue)}
               onSearch={col.onSearch}
+              autoComplete='off'
               onSelect={(selectedItem) => {
                 if (isParent) {
                   handleParentChange(index, col.key, selectedItem);

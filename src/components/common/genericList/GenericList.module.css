@@ -1,0 +1,24 @@
+.tabelaContainer {
+    width: 100%;
+    overflow-x: auto; /* Permite rolagem horizontal se necessário */
+    display: flex;
+    justify-content: center; /* Centraliza a tabela */
+}
+
+.tabela {
+    width: 100%;
+    max-width: 100%;
+    table-layout: auto; /* Ajusta automaticamente */
+    border-collapse: collapse; /* Para evitar espaços entre as bordas */
+}
+
+.tabela th,
+.tabela td {
+    padding: 8px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+.tabela th {
+    background-color: #f4f4f4;
+}

@@ -83,6 +83,7 @@ export const TiposCaracteristicasForm: React.FC<TiposCaracteristicasFormProps> =
                 label="Nome *"
                 value={formik.values.nome || ''}
                 type="text"
+                autoComplete='off'
                 style={{ textTransform: 'uppercase' }} // Garante que o texto seja exibido em maiúsculas
                 onChange={formik.handleChange}
                 placeholder="Digite o nome do Tipo Caracteristica"
@@ -96,6 +97,7 @@ export const TiposCaracteristicasForm: React.FC<TiposCaracteristicasFormProps> =
                 <Checkbox
                     inputId="status"
                     name='status'
+                    autoComplete='off'
                     checked={formik.values.status === 'Ativo'}
                     onChange={(e) => formik.setFieldValue("status", e.checked ? 'Ativo' : 'Inativo')}
                     disabled={!podeCadastrar}

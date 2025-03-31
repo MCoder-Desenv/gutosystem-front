@@ -56,6 +56,7 @@ export const ListagemFichaOrcamento: React.FC = () => {
     // Chama a função unificada, passando as datas, se estiverem disponíveis
     const result = await service.findFichas(
       filtro.tipoFiltro === "nome" ? filtro.valorFiltro : '',
+      filtro.tipoFiltro === "telefone" ? filtro.valorFiltro : '',
       filtro.tipoFiltro === "codigo" ? filtro.valorFiltro : '',
       filtro.dataInicio,
       filtro.dataFim,
@@ -122,7 +123,8 @@ export const ListagemFichaOrcamento: React.FC = () => {
 
   const columns: Column[] = [
     { label: "Código", key: "id", width: "10%" },
-    { label: "Nome", key: "nomeCliente", width: "55%" },
+    { label: "Nome", key: "nomeCliente", width: "40%" },
+    { label: "Telefone", key: "telefoneCliente", width: "15%" },
     { label: "Data Solicitação", key: "dataSolicitacaoCliente", width: "15%" },
     { label: "Status", key: "status", width: "15%" },
     { label: "Ações", key: "acoes", width: "5%" }
@@ -131,6 +133,7 @@ export const ListagemFichaOrcamento: React.FC = () => {
   const data = fichaOrcamento.map((ficha) => ({
     id: ficha.id || '',
     nomeCliente: ficha.nomeCliente || '',
+    telefoneCliente: ficha.telefoneCliente || '',
     dataSolicitacaoCliente: ficha.dataSolicitacaoCliente ? formatDateToBackend(ficha.dataSolicitacaoCliente) : '',
     status: <span className={`has-text-centered ${getStatusClass(ficha.status || '')}`}>{ficha.status || "N/A"}</span>,
     acoes: (actionTemplate(ficha))
@@ -164,9 +167,11 @@ export const ListagemFichaOrcamento: React.FC = () => {
                     name="tipoFiltro"
                     value={filtro.tipoFiltro}
                     onChange={handleChange}
+                    autoComplete="off"
                     disabled={!podeConsultar}
                   >
                     <option value="nome">Nome</option>
+                    <option value="telefone">Telefone</option>
                     <option value="codigo">Código</option>
                   </select>
                 </div>
@@ -193,6 +198,7 @@ export const ListagemFichaOrcamento: React.FC = () => {
             <Input
               label="Data Início"
               id="dataInicio"
+              autoComplete="off"
               name="dataInicio"
               type="date"
               value={filtro.dataInicio || ""}
@@ -205,6 +211,7 @@ export const ListagemFichaOrcamento: React.FC = () => {
               label="Data Fim"
               id="dataFim"
               name="dataFim"
+              autoComplete="off"
               type="date"
               value={filtro.dataFim || ""}
               onChange={handleChange}

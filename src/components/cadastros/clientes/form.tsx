@@ -446,6 +446,7 @@ export const ClienteForm: React.FC<TerceiroFormProps> = ({
                                     options={statusOptions}
                                     optionLabel="label"
                                     optionValue="value"
+                                    autoComplete='off'
                                     onChange={(e) => formik.setFieldValue('status', e.value)}
                                     placeholder="Selecione o status"
                                     className="w-full custom-dropdown-height"
@@ -506,6 +507,7 @@ export const ClienteForm: React.FC<TerceiroFormProps> = ({
                                     name="status"
                                     value={formik.values.status}
                                     options={statusOptions}
+                                    autoComplete='off'
                                     optionLabel="label"
                                     optionValue="value"
                                     onChange={(e) => formik.setFieldValue('status', e.value)}
@@ -652,6 +654,7 @@ export const ClienteForm: React.FC<TerceiroFormProps> = ({
                                             disabled={!podeCadastrar}
                                             checked={endereco.status === 'Ativo'}
                                             readOnly
+                                            autoComplete='off'
                                         />
                                     </td>
                                     <td>
@@ -710,6 +713,7 @@ export const ClienteForm: React.FC<TerceiroFormProps> = ({
                                         }
                                         disabled={!podeCadastrar}
                                         placeholder="00000-000"
+                                        autoComplete='off'
                                         onKeyDown={(e) => {
                                             if (e.key === 'Enter') {
                                                 buscarDadosPorCEP(); // Aciona a busca ao pressionar Enter
@@ -753,6 +757,7 @@ export const ClienteForm: React.FC<TerceiroFormProps> = ({
                                         <Checkbox
                                             inputId="statusEnd"
                                             checked={currentEndereco?.status === 'Ativo'}
+                                            autoComplete='off'
                                             onChange={(e) => 
                                                 setCurrentEndereco({
                                                     ...currentEndereco,
@@ -920,7 +925,7 @@ export const ClienteForm: React.FC<TerceiroFormProps> = ({
                         </section>
                         <footer className="modal-card-foot">
                             <button className="button is-success" onClick={saveEndereco} type='button' disabled={!podeCadastrar}>
-                                Salvar
+                                Adicionar
                             </button>
                             <button className="button" onClick={hideEnderecoDialog} type='button' disabled={!podeCadastrar}>
                                 Cancelar
@@ -1019,6 +1024,7 @@ export const ClienteForm: React.FC<TerceiroFormProps> = ({
                                     <div className="select is-fullwidth">
                                         <select
                                             id="tipoCar"
+                                            autoComplete='off'
                                             value={currentCaracteristica?.tipo || ''}
                                             onChange={(e) => setCurrentCaracteristica({
                                                 ...currentCaracteristica,
@@ -1076,7 +1082,7 @@ export const ClienteForm: React.FC<TerceiroFormProps> = ({
                         </section>
                         <footer className="modal-card-foot">
                             <button className="button is-success" onClick={saveCaracteristica} type='button' disabled={!podeCadastrar}>
-                                Salvar
+                                Adicionar
                             </button>
                             <button className="button" onClick={hideCaracteristicaDialog} type='button' disabled={!podeCadastrar}>
                                 Cancelar

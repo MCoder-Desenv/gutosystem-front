@@ -23,12 +23,11 @@ export const CadastroPedidoOrcamento: React.FC = () => {
         produtosPedido: [],
         status: '',
         total: undefined,
-        dataPosVenda: '',
         infoComplementar: '',
-        retorno: '',
-        satisfacaoCheck: '',
-        satisfacaoCliente: '',
-        vendedor: {} 
+        vendedor: {},
+        observacoes: '',
+        arquivos: [],
+        novosArquivos: []
     });
     const service = usePedidoOrcamentoService();
     const searchParams = useSearchParams();
@@ -42,9 +41,9 @@ export const CadastroPedidoOrcamento: React.FC = () => {
     const [modalTipo, setModalTipo] = useState<'success' | 'error' | 'loading'>('success');
        
     useEffect(() => {
-        const id = parseInt(queryId || '0', 10);
-        if (id !== 0 && id !== null && id !== undefined ) {
-            serviceRef.current.carregarPedido(id).then(pedidoRetorna => {
+        const id = queryId;
+        if (id !== '' && id !== null && id !== undefined) {
+            serviceRef.current.carregarPedido(id || '').then(pedidoRetorna => {
                 setPedidoOrcamento({
                     ...pedidoRetorna.data,
                     id: pedidoRetorna.data.id || '',
@@ -57,25 +56,36 @@ export const CadastroPedidoOrcamento: React.FC = () => {
                     fornecedor: pedidoRetorna.data.fornecedor || {},
                     responsavelMedida: pedidoRetorna.data.responsavelMedida || {},
                     responsavelPedido: pedidoRetorna.data.responsavelPedido || {},
-                    produtosPedido: pedidoRetorna.data.produtosPedido || [],
+                    observacoes: pedidoRetorna.data.observacoes || '',
+                    produtosPedido: pedidoRetorna.data.produtosPedido?.map(produto => ({
+                        ...produto,
+                        informacoesProduto: produto.informacoesProduto || [] // Garantindo que seja um array
+                      })) || [],
                     status: pedidoRetorna.data.status || null,
                     total: pedidoRetorna.data.total || undefined,
                     vendedor: pedidoRetorna.data.vendedor || {},
-                    dataPosVenda: pedidoRetorna.data.dataPosVenda || null,
                     infoComplementar: pedidoRetorna.data.infoComplementar || null,
-                    retorno: pedidoRetorna.data.retorno || null,
-                    satisfacaoCheck: pedidoRetorna.data.satisfacaoCheck || null,
-                    satisfacaoCliente: pedidoRetorna.data.satisfacaoCliente || null,
+                    arquivos: pedidoRetorna.data.arquivos || [],
+                    novosArquivos: pedidoRetorna.data.novosArquivos || []
                 });
             });
         }
     }, [queryId]);
 
     const handleSubmit = (pedido: PedidoOrcamento) => {
+
+        const arquivosParaUpload = pedido.arquivos
+                ?.filter((arquivo) => arquivo.file) // Filtra apenas os objetos com `file` definido
+                .map((arquivo) => arquivo.file as File); // Garante que será do tipo File
     
         if (pedido.id) {
             exibirMensagem("Pedido de Orçamento sendo Atualizado, aguarde...", "loading");
-            service.atualizar(pedido).then(() => {
+            service.atualizar(pedido, arquivosParaUpload).then((ped) => {
+                service.carregarPedido(ped.data.id || '').then((pedidoAtualizada) => {
+                    setPedidoOrcamento(pedidoAtualizada.data); // Atualiza o estado com a ficha atualizada
+                    //setModalVisivel(false);
+                    //exibirMensagem('Ficha de Orçamento atualizada com sucesso!', 'success');
+                });
                 setModalVisivel(false);
                 exibirMensagem('Pedido de Orçamento Atualizado com sucesso!', 'success');
             })
@@ -85,9 +95,14 @@ export const CadastroPedidoOrcamento: React.FC = () => {
         }
         else {
             exibirMensagem("Pedido de Orçamento sendo Salvo, aguarde...", "loading");
-            service.salvar(pedido)
+            service.salvar(pedido, arquivosParaUpload)
                 .then(pedidoSalvo => {
-                    setPedidoOrcamento(pedidoSalvo.data);
+                    service.carregarPedido(pedidoSalvo.data.id || '').then((pedSalvo) => {
+                        setPedidoOrcamento(pedSalvo.data); // Atualiza o estado com a ficha atualizada
+                        //setModalVisivel(false);
+                        //exibirMensagem('Ficha de Orçamento atualizada com sucesso!', 'success');
+                    });
+                    //setPedidoOrcamento(pedidoSalvo.data);
                     setModalVisivel(false);
                     exibirMensagem('Pedido de Orçamento Salvo com sucesso!', 'success');
                 })
@@ -111,7 +126,7 @@ export const CadastroPedidoOrcamento: React.FC = () => {
     };
 
     return (
-        <Layout titulo="Pedido Orçamento">
+        <Layout titulo="Pedido Orçamento" wide>
             {modalVisivel && (
                 <ModalCard 
                     mensagem={modalMensagem} 
