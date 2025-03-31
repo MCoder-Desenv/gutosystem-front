@@ -227,8 +227,6 @@ export const OrdemServicoManutencaoForm: React.FC<OrdemServicoManutencaoFormProp
     //     }
     //   };
 
-    console.log('Produtos Serviços:' + formik.values.produtosOrdemServicoMnt?.length)
-
     const irParaPedidoOrcamento = () => {
         const contexto = {
             idFichaVsIdOrdemMnt: formik.values.id ?? null,
