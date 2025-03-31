@@ -32,18 +32,17 @@ export const AutoCompleteLivre = <T extends { id: string | number; label: string
   const [isLoading, setIsLoading] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const previousQuery = useRef<string>("");
+  //const previousQuery = useRef<string>("");
 
+  // Atualiza o estado do input quando o `value` muda (vindo do formulário externo)
   useEffect(() => {
     setQuery(value);
   }, [value]);
+  
 
   useEffect(() => {
     const handler = setTimeout(() => {
       const trimmedQuery = query?.trim();
-      if (trimmedQuery === previousQuery.current) return;
-
-      previousQuery.current = trimmedQuery;
       if (!trimmedQuery) {
         setSearchResults([]);
         return;
@@ -81,10 +80,11 @@ export const AutoCompleteLivre = <T extends { id: string | number; label: string
           setShowDropdown(true);
         }}
         onBlur={() => {
-          // Se o valor digitado não corresponder a nenhum item da lista, aceita como string
+          // Se o usuário digitou algo que não está na lista, ainda assim salvamos
           if (!searchResults.some(item => (formatResult ? formatResult(item) : item.label) === query)) {
-            onSelect(query); // Aceita entrada livre
+            onSelect(query); // Atualiza o formulário com o valor digitado
           }
+          setShowDropdown(false);
         }}
         placeholder={placeholder}
         className={`input ${erro ? "is-danger" : styles["autocomplete-input"]}`}
@@ -97,10 +97,11 @@ export const AutoCompleteLivre = <T extends { id: string | number; label: string
           {searchResults.map((item) => (
             <li
               key={item.id}
-              onClick={() => {
-                onSelect(item);
-                setQuery(formatResult ? formatResult(item) : item.label);
-                setShowDropdown(false);
+              onMouseDown={() => {
+                const selectedValue = typeof item === "string" ? item : item.label;
+                setQuery(selectedValue); // Atualiza o input visível
+                onSelect(selectedValue); // Atualiza o Formik
+                setShowDropdown(false); // Fecha o dropdown
               }}
               className={styles["dropdown-item"]}
             >

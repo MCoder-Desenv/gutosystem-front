@@ -106,6 +106,7 @@ export const CadastroOrdemServicoManutencao: React.FC = () => {
         }
         else {
             exibirMensagem("Ordem de Serviço Manutenção sendo Salva, aguarde...", "loading");
+            console.log(JSON.stringify(ordemServico.produtosOrdemServicoMnt, null, 2));
             service.salvar(ordemServico, arquivosParaUpload).then(ordemServicoSalva => {
                 service.carregarOrdemServico(ordemServicoSalva.data.id || '').then((ordSalvo) => {
                     setOrdemServicoManutencao(ordSalvo.data); // Atualiza o estado com a ficha atualizada

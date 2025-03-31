@@ -227,6 +227,8 @@ export const OrdemServicoManutencaoForm: React.FC<OrdemServicoManutencaoFormProp
     //     }
     //   };
 
+    console.log('Produtos Serviços:' + formik.values.produtosOrdemServicoMnt?.length)
+
     const irParaPedidoOrcamento = () => {
         const contexto = {
             idFichaVsIdOrdemMnt: formik.values.id ?? null,
@@ -709,7 +711,7 @@ export const OrdemServicoManutencaoForm: React.FC<OrdemServicoManutencaoFormProp
                     </thead>
                     <tbody>
                         {(formik.values.produtosOrdemServicoMnt || []).map((produto, index) => (
-                            <tr key={produto.id ?? index}>
+                            <tr key={produto.id !== '' ? produto.id : `${index}-${produto.produto || "novo"}`}>
                             <td>
                                 <AutoCompleteLivre
                                     id={`produtosOrdemServicoMnt.${index}.produto`}
@@ -721,13 +723,10 @@ export const OrdemServicoManutencaoForm: React.FC<OrdemServicoManutencaoFormProp
                                         return handleSearchProduto(trimmedQuery);
                                     }}
                                     onSelect={(item) => {
-                                        if (typeof item === "string") {
-                                          formik.setFieldValue(`produtosOrdemServicoMnt.${index}.produto`, item);
-                                        } else {
-                                          formik.setFieldValue(`produtosOrdemServicoMnt.${index}.produto`, item.label);
-                                        }
-                                      }}
-                                      
+                                        const selectedValue = typeof item === "string" ? item : item.label;
+                                        formik.setFieldValue(`produtosOrdemServicoMnt.${index}.produto`, selectedValue);
+                                    }}
+                                    autoComplete='off'
                                     formatResult={(item) => `${item.id} - ${item.label}`}
                                     placeholder="Digite a Descrição do Produto"
                                     erro={produto?.produto === "" ? campoObrigatorio : ""}
@@ -739,6 +738,7 @@ export const OrdemServicoManutencaoForm: React.FC<OrdemServicoManutencaoFormProp
                                     name={`produtosOrdemServicoMnt.${index}.cor`}
                                     id={`produtosOrdemServicoMnt.${index}.cor`}
                                     className="input"
+                                    autoComplete='off'
                                     disabled={!podeCadastrar}
                                     value={produto.cor || ""}
                                     onChange={formik.handleChange}
@@ -751,6 +751,7 @@ export const OrdemServicoManutencaoForm: React.FC<OrdemServicoManutencaoFormProp
                                     id={`produtosOrdemServicoMnt.${index}.quantidade`}
                                     className="input"
                                     disabled={!podeCadastrar}
+                                    autoComplete='off'
                                     value={produto.quantidade || ""}
                                     onChange={formik.handleChange}
                                 />
