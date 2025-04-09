@@ -1175,7 +1175,7 @@ export const OrdemServicoManutencaoForm: React.FC<OrdemServicoManutencaoFormProp
                     disabled={!formik.dirty || !formik.isValid || !podeCadastrar || hasLargeFile}
                 />
                 <ButtonType 
-                    label={"Voltar"}
+                    label={"Voltar (Tela de Consulta)"}
                     type="button"
                     className='button'
                     onClick={() => router.push("/consultas/ordemServicoManutencao")}

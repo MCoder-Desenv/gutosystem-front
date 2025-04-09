@@ -126,7 +126,7 @@ export const CategoriaForm: React.FC<CategoriasFormProps> = ({ onSubmit, categor
             />
             <ButtonType 
                 type="button"
-                label={"Voltar"}
+                label={"Voltar (Tela de Consulta)"}
                 className='button'
                 onClick={() => router.push("/consultas/categorias")}
             />

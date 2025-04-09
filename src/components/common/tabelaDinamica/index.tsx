@@ -57,7 +57,7 @@ const TabelaDinamica: React.FC<TabelaDinamicaProps> = ({
         <thead>
           <tr>
             {columns.map((col, index) => (
-              <th key={index} className={col.className || ""} style={{ width: col.width }}>
+              <th key={index} className={col.className || ""}>
                 {col.label}
               </th>
             ))}

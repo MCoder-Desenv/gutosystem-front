@@ -8,6 +8,7 @@ export interface Terceiro {
     razaoSocial?: string | null;
     dataNascimento?: string | null;
     dataCadastro?: string | null;
+    observacao?: string | null;
     caracteristicas?: TerceirosCaracteristicas[] | [];
     enderecos?: TerceirosEnderecos[] | [];
 }
@@ -45,6 +46,7 @@ export interface Clientes {
     razaoSocial?: string | null;
     dataNascimento?: string | null;
     dataCadastro?: string | null;
+    observacao?: string | null;
 }
 
 export interface Funcionarios {
@@ -56,6 +58,7 @@ export interface Funcionarios {
     razaoSocial?: string | null;
     dataNascimento?: string | null;
     dataCadastro?: string | null;
+    observacao?: string | null;
 }
 
 export interface Fornecedores {
@@ -66,6 +69,7 @@ export interface Fornecedores {
     cnpj?: string | null;
     razaoSocial?: string | null;
     dataNascimento?: string | null;
+    observacao?: string | null;
     dataCadastro?: string | null;
 }
 

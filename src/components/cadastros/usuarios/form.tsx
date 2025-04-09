@@ -304,7 +304,7 @@ export const UsuariosForm: React.FC<UsuariosFormProps> = ({ onSubmit, usuarios }
             />
             <ButtonType 
                 type="button"
-                label={"Voltar"}
+                label={"Voltar (Tela de Consulta)"}
                 className='button'
                 onClick={() => router.push("/consultas/usuarios")}
             />  

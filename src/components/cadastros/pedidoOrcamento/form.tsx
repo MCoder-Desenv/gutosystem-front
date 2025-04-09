@@ -906,6 +906,12 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
                 id="identificador"
                 name="identificador"
                 label="Número: "
+                style={{
+                  fontWeight: "bold", 
+                  border: "2px solid rgb(0, 0, 0)", // Borda preta para destaque
+                  padding: "8px",
+                  borderRadius: "5px"
+                }}
                 value={formik.values.identificador || ''}
                 columnClasses="column is-half"
                 autoComplete="off"
@@ -1151,7 +1157,7 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
                       </option>
                       {listaUnidadeMedida.map((item) => (
                         <option key={String(item.id)} value={String(item.id)}>
-                          {`${item.id} - ${item.unidade}`}
+                          {`${item.unidade} - ${item.descricao} `}
                         </option>
                       ))}
                     </select>

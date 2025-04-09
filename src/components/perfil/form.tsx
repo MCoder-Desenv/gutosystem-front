@@ -158,7 +158,7 @@ export const PerfilForm: React.FC<PerfilFormProps> = ({ onSubmit, perfil }) => {
             />
             <ButtonType 
                 type="button"
-                label={"Voltar"}
+                label={"Voltar (Tela de Consulta)"}
                 className='button'
                 onClick={() => router.push("/dashboard")}
             />

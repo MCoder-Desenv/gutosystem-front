@@ -19,6 +19,7 @@ export const CadastroClientes: React.FC = () => {
         dataNascimento: '',
         tipoTerceiro: '',
         enderecos: [],
+        observacao:'',
         caracteristicas: []
     });
     const service = useTerceiroService();
@@ -48,6 +49,7 @@ export const CadastroClientes: React.FC = () => {
                     cnpj: clienteRetorna.data.cnpj || null,
                     dataNascimento: clienteRetorna.data.dataNascimento || null,
                     tipoTerceiro: clienteRetorna.data.tipoTerceiro || '',
+                    observacao: clienteRetorna.data.observacao || '',
                     caracteristicas: clienteRetorna.data.caracteristicas ? clienteRetorna.data.caracteristicas.map(car => ({
                         ...car
                     })) : [],

@@ -17,6 +17,7 @@ export const CadastroFuncionarios: React.FC = () => {
         dataNascimento: '',
         tipoTerceiro: '',
         enderecos: [],
+        observacao: '',
         caracteristicas: []
     });
     const service = useTerceiroService();
@@ -46,6 +47,7 @@ export const CadastroFuncionarios: React.FC = () => {
                     dataCadastro: funcionarioRetorna.data.dataCadastro || null,
                     tipoTerceiro: funcionarioRetorna.data.tipoTerceiro || '',
                     status: funcionarioRetorna.data.status || '',
+                    observacao: funcionarioRetorna.data.observacao || '',
                     caracteristicas: funcionarioRetorna.data.caracteristicas ? funcionarioRetorna.data.caracteristicas.map(car => ({
                         ...car
                     })) : [],

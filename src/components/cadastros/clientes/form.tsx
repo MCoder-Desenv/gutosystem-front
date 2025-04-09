@@ -110,6 +110,7 @@ export const ClienteForm: React.FC<TerceiroFormProps> = ({
             dataCadastro: cliente?.dataCadastro,
             dataNascimento: cliente?.dataNascimento || null,
             tipoTerceiro: cliente?.tipoTerceiro || '',
+            observacao: cliente?.observacao || '',
             status: cliente?.status || 'Ativo',
             caracteristicas: cliente?.caracteristicas && Array.isArray(cliente.caracteristicas) 
             ? cliente.caracteristicas.map(car => ({
@@ -594,6 +595,26 @@ export const ClienteForm: React.FC<TerceiroFormProps> = ({
                 </div>
             )}
 
+            <div className="field">
+                <label htmlFor="observacao" className="label">
+                Observações:
+                </label>
+                <textarea
+                className="textarea"
+                id="observacao"
+                name="observacao"
+                value={formik.values.observacao || ''}
+                autoComplete='off'
+                placeholder="Digite as Observações"
+                onChange={formik.handleChange}
+                disabled={!podeCadastrar}
+                ></textarea>
+            </div>
+
+            <br/>
+            <h4 className="title is-4">Endereços:</h4>
+            <p/>
+
             <div className="table-container">
                 <table className="table is-striped is-fullwidth">
                     <thead>
@@ -935,6 +956,10 @@ export const ClienteForm: React.FC<TerceiroFormProps> = ({
                 </div>
             )}
 
+            <br/>
+            <h4 className="title is-4">Informações Complementares (Telefone, Celular, E-mail e etc.):</h4>
+            <p/>
+
             <div className="table-container">
                 <table className="table is-striped is-fullwidth">
                     <thead>
@@ -1161,7 +1186,7 @@ export const ClienteForm: React.FC<TerceiroFormProps> = ({
                 />
                 <ButtonType 
                     type="button"
-                    label={"Voltar"}
+                    label={"Voltar (Tela de Consulta)"}
                     className='button'
                     onClick={() => router.push("/consultas/clientes")}
                 />  

@@ -90,6 +90,7 @@ export const FuncionarioForm: React.FC<FuncionarioFormProps> = ({
             dataNascimento: funcionario.dataNascimento || null,
             tipoTerceiro: funcionario.tipoTerceiro || '1',
             status: funcionario.status || 'Ativo', // Define o valor padrão como "Ativo"
+            observacao: funcionario.observacao || '',
             caracteristicas: funcionario.caracteristicas,
             enderecos: funcionario.enderecos
         },
@@ -383,6 +384,28 @@ export const FuncionarioForm: React.FC<FuncionarioFormProps> = ({
                     disabled={!podeCadastrar}
                 />
             </div>
+
+            <div className="field">
+                <label htmlFor="observacao" className="label">
+                Observações:
+                </label>
+                <textarea
+                className="textarea"
+                id="observacao"
+                name="observacao"
+                value={formik.values.observacao || ''}
+                autoComplete='off'
+                placeholder="Digite as Observações"
+                onChange={formik.handleChange}
+                disabled={!podeCadastrar}
+                ></textarea>
+            </div>
+
+
+            <br/>
+            <h4 className="title is-4">Endereços:</h4>
+            <p/>
+
 
             <div className="table-container">
                 <table className="table is-striped is-fullwidth">
@@ -713,6 +736,10 @@ export const FuncionarioForm: React.FC<FuncionarioFormProps> = ({
                 </div>
             )}
 
+            <br/>
+            <h4 className="title is-4">Informações Complementares (Telefone, Celular, E-mail e etc.):</h4>
+            <p/>
+
             <div className="table-container">
                 <table className="table is-striped is-fullwidth">
                     <thead>
@@ -937,7 +964,7 @@ export const FuncionarioForm: React.FC<FuncionarioFormProps> = ({
                 />
                 <ButtonType 
                     type="button"
-                    label={"Voltar"}
+                    label={"Voltar (Tela de Consulta)"}
                     className='button'
                     onClick={() => router.push("/consultas/funcionarios")}
                 /> 

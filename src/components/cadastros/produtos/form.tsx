@@ -152,7 +152,7 @@ export const ProdutosForm: React.FC<ProdutosFormProps> = ({ onSubmit, produto })
           />
           <ButtonType 
               type="button"
-              label={"Voltar"}
+              label={"Voltar (Tela de Consulta)"}
               className='button'
               onClick={() => router.push("/consultas/produtos")}
           />  

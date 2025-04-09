@@ -152,16 +152,18 @@ export const ListagemPedidoOrcamento: React.FC = () => {
   };
 
   const columns: Column[] = [
-    { label: "Número", key: "identificador", width: "15%" },
+    { label: "Número", key: "identificador", width: "15%"},
     { label: "Nome", key: "nomeTerceiro", width: "35%" },
-    { label: "Telefone", key: "telefoneCliente", width: "15%" },
+    { label: "Telefone/Celular", key: "telefoneCliente", width: "15%" },
     { label: "Data Pedido", key: "dataPedido", width: "15%" },
     { label: "Status", key: "status", width: "15%" },
     { label: "Ações", key: "acoes", width: "5%" }
   ];
     
   const data = pedidoOrcamento.map((ped) => ({
-    identificador: ped.identificador || '',
+    identificador: <span style={{
+      fontWeight: "bold" // Borda preta para destaque
+  }}> {ped.identificador || '' }</span>,
     nomeTerceiro: ped.nomeTerceiro || '',
     telefoneCliente: ped.telefoneCliente || '',
     dataPedido: ped.dataPedido ? formatDateToBackend(ped.dataPedido) : '',

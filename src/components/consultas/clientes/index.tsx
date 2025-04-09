@@ -121,7 +121,7 @@ export const ListagemClientes: React.FC = () => {
   const columns: Column[] = [
     { label: "Código", key: "id", width: "6%" },
     { label: "Nome", key: "nome", width: "47%" },
-    { label: "Celular", key: "celular", width: "12%" },
+    { label: "Celular/Telefone", key: "celular", width: "12%" },
     { label: "CPF/CNPJ", key: "cpfcnpf", width: "15%" },
     { label: "Status", key: "status", width: "15%" },
     { label: "Ações", key: "acoes", width: "5%" }
@@ -169,7 +169,7 @@ export const ListagemClientes: React.FC = () => {
                     disabled={!podeConsultar}
                   >
                     <option value="nome">Nome</option>
-                    <option value="celular">Celular</option>
+                    <option value="celular">Celular/Telefone</option>
                   </select>
                 </div>
               </div>

@@ -18,6 +18,7 @@ export const CadastroFornecedores: React.FC = () => {
         status:'',
         dataNascimento: '',
         tipoTerceiro: '',
+        observacao: '',
         enderecos: [],
         caracteristicas: []
     });
@@ -49,6 +50,7 @@ export const CadastroFornecedores: React.FC = () => {
                     dataNascimento: fornecedorRetorna.data.dataNascimento || null,
                     tipoTerceiro: fornecedorRetorna.data.tipoTerceiro || '',
                     status: fornecedorRetorna.data.status || '',
+                    observacao: fornecedorRetorna.data.observacao || '',
                     dataCadastro: fornecedorRetorna.data.dataCadastro || null,
                     caracteristicas: fornecedorRetorna.data.caracteristicas ? fornecedorRetorna.data.caracteristicas.map(car => ({
                         ...car

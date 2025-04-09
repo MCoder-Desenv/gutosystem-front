@@ -118,6 +118,7 @@ export const FornecedorForm: React.FC<TerceiroFormProps> = ({
             dataNascimento: fornecedores.dataNascimento || null,
             tipoTerceiro: fornecedores.tipoTerceiro || '',
             status: fornecedores.status || 'Ativo',
+            observacao: fornecedores.observacao || '',
             caracteristicas: fornecedores?.caracteristicas && Array.isArray(fornecedores.caracteristicas) 
             ? fornecedores.caracteristicas.map(car => ({
                 ...car
@@ -608,6 +609,26 @@ export const FornecedorForm: React.FC<TerceiroFormProps> = ({
                 </div>
             )}
 
+            <div className="field">
+                <label htmlFor="observacao" className="label">
+                Observações:
+                </label>
+                <textarea
+                className="textarea"
+                id="observacao"
+                name="observacao"
+                value={formik.values.observacao || ''}
+                autoComplete='off'
+                placeholder="Digite as Observações"
+                onChange={formik.handleChange}
+                disabled={!podeCadastrar}
+                ></textarea>
+            </div>
+
+            <br/>
+            <h4 className="title is-4">Endereços:</h4>
+            <p/>
+
             <div className="table-container">
                 <table className="table is-striped is-fullwidth">
                     <thead>
@@ -947,6 +968,10 @@ export const FornecedorForm: React.FC<TerceiroFormProps> = ({
                 </div>
             )}
 
+            <br/>
+            <h4 className="title is-4">Informações Complementares (Telefone, Celular, E-mail e etc.):</h4>
+            <p/>
+
             <div className="table-container">
                 <table className="table is-striped is-fullwidth">
                     <thead>
@@ -1178,7 +1203,7 @@ export const FornecedorForm: React.FC<TerceiroFormProps> = ({
                 />
                 <ButtonType 
                     type="button"
-                    label={"Voltar"}
+                    label={"Voltar (Tela de Consulta)"}
                     className='button'
                     onClick={() => router.push("/consultas/fornecedores")}
                 />  
