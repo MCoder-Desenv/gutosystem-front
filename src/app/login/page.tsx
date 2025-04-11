@@ -4,11 +4,13 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import styles from "./login.module.css";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [showSenhaAnterior, setShowSenhaAnterior] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -37,30 +39,37 @@ export default function LoginPage() {
         <form onSubmit={handleSubmit}>
           <input
             type="email"
+            name="email"
+            autoComplete="email"
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className={styles.input}
             required
           />
-          <input
-            type="password"
-            placeholder="Senha"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className={styles.input}
-            required
-          />
+          <div className={styles.passwordContainer}>
+            <input
+              type={showSenhaAnterior ? "text" : "password"}
+              name="password"
+              autoComplete="current-password"
+              placeholder="Senha"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className={styles.input}
+              required
+            />
+            <span
+              className={styles.eyeIcon}
+              onClick={() => setShowSenhaAnterior(!showSenhaAnterior)}
+            >
+              {showSenhaAnterior ? <EyeOff size={18} /> : <Eye size={18} />}
+            </span>
+          </div>
+
           <button type="submit" className={styles.button}>
             Entrar
           </button>
         </form>
-        {/* <a
-          className={styles.forgotPassword}
-          onClick={() => router.push("/resetPassword")}
-        >
-          Esqueceu a senha?
-        </a> */}
       </div>
     </div>
   );

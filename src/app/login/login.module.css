@@ -35,10 +35,26 @@
   .input {
     width: 100%;
     padding: 10px;
+    padding-right: 2.5rem; /* Espaço para o ícone */
     border: 1px solid #ddd;
     border-radius: 5px;
     margin-bottom: 1rem;
     font-size: 1rem;
+  }
+
+  .passwordContainer {
+    position: relative;
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  .eyeIcon {
+    position: absolute;
+    right: 10px; /* Distância do lado direito */
+    top: 42%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    z-index: 2;
   }
   
   .button {
