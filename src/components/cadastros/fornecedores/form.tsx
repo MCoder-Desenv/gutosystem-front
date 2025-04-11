@@ -2,7 +2,7 @@
 import { Terceiro, TerceirosCaracteristicas, TerceirosEnderecos } from '../../../app/models/terceiros';
 import { useTerceiroService, useTipoCaracteristicaService } from '../../../app/services';
 import { buscarCEP } from '../../../app/services/cep.service';
-import { deleteFromArray, updateArray } from '../../../app/util/common';
+import { deleteFromArray, ESTADOS_BR, updateArray } from '../../../app/util/common';
 import { formatDateToBackend } from '../../../app/util/formatData';
 import { Input, InputCNPJ, InputCPF } from '../../../components';
 import { useFormik } from 'formik';
@@ -15,6 +15,7 @@ import VMasker from 'vanilla-masker';
 import { ButtonType } from '../../../components/common/button';
 import { TiposCaracteristicas } from '../../../app/models/tiposCaracteristicas';
 import { usePermissao } from '../../../app/hooks/usePermissoes';
+import { SelectGenerico } from '../../common/selectGenerico';
 
 interface TerceiroFormProps {
     fornecedores: Terceiro;
@@ -346,6 +347,9 @@ export const FornecedorForm: React.FC<TerceiroFormProps> = ({
             .replace(/^(\d{5})(\d)/, '$1-$2') // Insere o '-' após o quinto dígito
             .substring(0, 9); // Limita o tamanho a 9 caracteres
     };
+
+    const getEstadoSelecionado = (sigla: string | null | undefined) =>
+        ESTADOS_BR.find((estado) => estado.sigla === sigla) || null;
 
     return (
         <form 
@@ -874,27 +878,26 @@ export const FornecedorForm: React.FC<TerceiroFormProps> = ({
                             </div>
 
                             <div className="columns">
-                                <Input
-                                    id="estadoEnd"
-                                    name="estadoEnd"
-                                    label="Estado: *"
-                                    value={currentEndereco?.estado || ''}
-                                    columnClasses="column is-half"
-                                    type="text"
-                                    onChange={(e) =>
+                                <SelectGenerico
+                                    value={getEstadoSelecionado(currentEndereco?.estado)}
+                                    onChange={(selected) => {
+                                        console.log(selected?.sigla)
                                         setCurrentEndereco({
-                                            ...currentEndereco,
-                                            estado: e.target.value,
-                                        })
-                                    }
-                                    placeholder="Digite o Estado"
-                                    autoComplete="off"
-                                    erro={
-                                        currentEndereco?.estado === '' || currentEndereco?.estado == null
-                                            ? 'O Estado é obrigatório.'
-                                            : undefined
-                                    }
+                                        ...currentEndereco,
+                                        estado: selected?.sigla || "",
+                                        });
+                                    }}
+                                    items={ESTADOS_BR}
+                                    getLabel={(estado) => `${estado.sigla} - ${estado.nome}`}
+                                    getId={(estado) => estado.sigla}
+                                    label="Estado"
+                                    loading={false}
                                     disabled={!podeCadastrar}
+                                    error={
+                                        !currentEndereco?.estado
+                                        ? "O Estado é obrigatório."
+                                        : undefined
+                                    }
                                 />
                                 <Input
                                     id="paisEnd"

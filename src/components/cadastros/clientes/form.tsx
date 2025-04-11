@@ -338,8 +338,6 @@ export const ClienteForm: React.FC<TerceiroFormProps> = ({
             .substring(0, 9); // Limita o tamanho a 9 caracteres
     };
 
-    console.log(formik.values.enderecos)
-
     const getEstadoSelecionado = (sigla: string | null | undefined) =>
         ESTADOS_BR.find((estado) => estado.sigla === sigla) || null;
       
