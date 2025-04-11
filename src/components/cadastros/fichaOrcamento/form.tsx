@@ -33,7 +33,6 @@ const validationScheme = Yup.object().shape({
     responsavel: Yup.object().required(campoObrigatorio),
     status: Yup.string().trim().required(campoObrigatorio),
     telefoneCliente: Yup.string().trim().required(campoObrigatorio),
-    enderecoCliente: Yup.string().trim().required(campoObrigatorio),
     orcamento: Yup.string().trim().required(campoObrigatorio),
     dataSolicitacaoCliente: Yup.string()
         .trim()
@@ -283,7 +282,6 @@ export const FichaOrcamentoForm: React.FC<FichaOrcamentoFormProps> = ({
                 };
     
                 setListaEnderecos([enderecoDefault]);
-                formik.setFieldValue('enderecoCliente', enderecoDefault); // Usa o objeto diretamente
             }
         } catch (error) {
             setErroBuscarEnderecos('🚨 Erro ao buscar endereços do Cliente: ' + error)
