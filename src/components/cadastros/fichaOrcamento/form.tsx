@@ -264,16 +264,14 @@ export const FichaOrcamentoForm: React.FC<FichaOrcamentoFormProps> = ({
             setErroBuscarEnderecos('')
             if (enderecos.length > 0) {
                 setListaEnderecos(enderecos);
-    
                 // Se houver apenas um endereço, define a string formatada no Formik
-                if (enderecos.length === 1 && !formik.values.enderecoCliente) {
+                if (enderecos.length === 1) {
                     const enderecoFormatado = formatarEndereco(enderecos[0]);
                     formik.setFieldValue("enderecoCliente", enderecoFormatado);
                 }
             } else {
                 // Tratamento para quando não houver endereços cadastrados
                 const partes = fichaOrcamento.enderecoCliente?.split(',').map(part => part.trim()) || [];
-    
                 const enderecoDefault = {
                     endereco: partes[0] ?? "",
                     numero: partes[1] ?? "",
