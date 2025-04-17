@@ -4,13 +4,14 @@ import * as Yup from "yup";
 import { useRouter } from "next/navigation";
 import { ButtonType } from "../../../components/common/button";
 import { UsuarioFuncao, Usuarios } from "../../../app/models/usuarios";
-import { Input } from "../../../components/common";
+import { AutoCompleteGenerico, Input } from "../../../components/common";
 import GridComponent from "../../../components/common/GridComponent";
-import { useFuncoesService, useUsuarioService } from "../../../app/services";
-import { useState } from "react";
+import { useFuncoesService, useTerceiroService, useUsuarioService } from "../../../app/services";
+import { useMemo, useState } from "react";
 import { ModalCard } from "../../../components/common/modal";
 import { Dropdown } from "primereact/dropdown";
 import { usePermissao } from "../../../app/hooks/usePermissoes";
+import { FuncionarioDto } from "@/app/models/terceiros";
 
 interface UsuariosFormProps {
   usuarios: Usuarios;
@@ -43,6 +44,7 @@ const validationScheme = Yup.object().shape({
 export const UsuariosForm: React.FC<UsuariosFormProps> = ({ onSubmit, usuarios }) => {
   const router = useRouter();
   const service = useUsuarioService();
+  const serviceTerceiro = useTerceiroService();
   const serviceFuncao = useFuncoesService();
   const { role } = usePermissao();
   const [selecionarTodosCadastrar, setSelecionarTodosCadastrar] = useState(false);
@@ -57,26 +59,36 @@ export const UsuariosForm: React.FC<UsuariosFormProps> = ({ onSubmit, usuarios }
   //mensagem
     const [modalVisivel, setModalVisivel] = useState(false);
     const [modalMensagem, setModalMensagem] = useState('');
+    const [erroBuscarFuncionario, setErroBuscarFuncionario] = useState('');
     const [modalTipo, setModalTipo] = useState<'success' | 'error'>('success');
 
-  const formik = useFormik<Usuarios>({
-    initialValues: {
-      id: usuarios.id || '',
-      email: usuarios.email || null,
-      name: usuarios.name || null,
-      role: usuarios.role || null,
-      password: usuarios.password || null,
-      usuariosFuncoes: usuarios.usuariosFuncoes || []
-    },
-    onSubmit: (values) => {
+    const formik = useFormik<Usuarios>({
+      initialValues: {
+        id: usuarios.id || null,
+        email: usuarios.email || null,
+        name: usuarios.name || null,
+        role: usuarios.role || null,
+        password: usuarios.password || null,
+        usuarioFuncionario: usuarios.usuarioFuncionario ? {
+          id: usuarios.usuarioFuncionario.id || null,
+          funcionario: usuarios.usuarioFuncionario.funcionario || {}
+          }:
+          { funcionario: { id: null, nome: null } 
+        },
+        usuariosFuncoes: usuarios.usuariosFuncoes || []
+      },
+      onSubmit: (values) => {
         const formattedValues = {
-            ...values
+          ...values,
+          usuarioFuncionario: (values.usuarioFuncionario?.funcionario || formik.values.usuarioFuncionario?.funcionario)
+          ? { userId: values.id, ...values.usuarioFuncionario }
+          : null
         };
         onSubmit(formattedValues);
-    },
-    enableReinitialize: true,
-    validationSchema: validationScheme
-  });
+      },
+      enableReinitialize: true,
+      validationSchema: validationScheme
+    });
 
   const handleSearchFuncao = async (query: string) => {
     const results = await serviceFuncao.findFuncoesNome(query);
@@ -137,6 +149,50 @@ export const UsuariosForm: React.FC<UsuariosFormProps> = ({ onSubmit, usuarios }
             setModalVisivel(false);
         }, 1500);
     }
+  };
+
+  //VENDEDOR
+  const usuarioFuncionarioSelecionado = useMemo(() => {
+    return formik.values.usuarioFuncionario && formik.values.usuarioFuncionario?.funcionario?.id
+      ? formik.values.usuarioFuncionario
+      : null;
+  }, [formik.values.usuarioFuncionario]);
+  
+  // const usuarioFuncionarioSelecionado = useMemo(() => {
+  //   const funcionario = formik.values?.usuarioFuncionario?.funcionario;
+  //   return funcionario?.id ? formik.values.usuarioFuncionario : null;
+  // }, [formik.values.usuarioFuncionario]);
+
+  // const funcionarioSelecionado = useMemo(() => {
+  //   const funcionario = formik.values?.usuarioFuncionario?.funcionario;
+  //   return funcionario?.id && funcionario?.nome;
+  // }, [formik.values.usuarioFuncionario]);
+  
+  
+
+  const handleSearchFuncionario = async (query: string): Promise<{ id: string | number; nome: string | null }[]> => {
+    try {
+        const results = await serviceTerceiro.findFuncionarioAutoComplete(query);
+        setErroBuscarFuncionario('');
+        if (!results?.data) return []; // Retorna um array vazio se não houver dados
+
+        return results.data
+            .filter((item: FuncionarioDto) => item.id !== undefined && item.id !== null)
+            .map((item: FuncionarioDto) => ({
+                id: item.id ?? "", // Garante que o id nunca seja undefined
+                nome: item.nome ?? null, // Garante que descricao nunca seja undefined
+            }));
+    } catch (error) {
+        setErroBuscarFuncionario("Erro ao buscar Funcionário: " + error);
+        return []; // Retorna um array vazio em caso de erro
+    }
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleSelectFuncionario = (item: any) => {
+    // Atualiza o formulário com os valores do item selecionado
+    formik.setFieldValue('usuarioFuncionario.funcionario.id', item?.id); // Salva o ID no formik
+    formik.setFieldValue('usuarioFuncionario.funcionario.nome', item?.nome); // Salva o ID no formik
   };
 
   return (
@@ -216,20 +272,84 @@ export const UsuariosForm: React.FC<UsuariosFormProps> = ({ onSubmit, usuarios }
             </div>
         </div>
 
+        <div className="columns">
+          <AutoCompleteGenerico
+            id="usuarioFuncionario"
+            name="usuarioFuncionario"
+            autoComplete='off'
+            label="Funcionário:"
+            value={
+              usuarioFuncionarioSelecionado
+                ? `${usuarioFuncionarioSelecionado.funcionario?.id} - ${usuarioFuncionarioSelecionado.funcionario?.nome}`
+                : ''
+            } // Usa o valor formatado corretamente
+            onSearch={(query) => {
+              const trimmedQuery = query.trim();
+              return handleSearchFuncionario(trimmedQuery); // <- isso já retorna uma Promise
+            }}
+            // onBlur={() => {
+            //   const valorDigitado = formik.values.usuarioFuncionario;
+            //   if (!valorDigitado?.funcionario?.id) {
+            //     formik.setFieldValue('usuarioFuncionario', null);
+            //   }
+            // }}
+            onClear={() => formik.setFieldValue('usuarioFuncionario.funcionario', null)}
+            onSelect={(item) => handleSelectFuncionario(item)}
+            formatResult={(item) => `${item.id} - ${item.nome}`}
+            placeholder="Digite o nome do Funcionário"
+            erro={erroBuscarFuncionario !== '' ? erroBuscarFuncionario : ''}
+          />
+          {/* <AutoCompleteGenerico
+            id="usuarioFuncionario"
+            name="usuarioFuncionario"
+            autoComplete="off"
+            label="Funcionário:"
+            value={formik.values.usuarioFuncionario?.funcionario || ''}
+            onSearch={(query) => {
+              const trimmedQuery = query.trim();
+              if (!trimmedQuery) return Promise.resolve([]); // <- importante!
+              return handleSearchFuncionario(trimmedQuery);
+            }}
+            onSelect={(item) => {
+              formik.setFieldValue('usuarioFuncionario', {
+                id: null,
+                funcionario: {
+                  id: item.id,
+                  nome: item.nome
+                }
+              });
+            }}
+            onChange={(e) => {
+              const nomeDigitado = e.target.value;
+
+              // Atualiza apenas o nome do funcionário (sem zerar tudo)
+              formik.setFieldValue('usuarioFuncionario.funcionario.nome', nomeDigitado);
+
+              // Se apagar tudo, zera também o id
+              if (nomeDigitado === '') {
+                formik.setFieldValue('usuarioFuncionario.funcionario.id', null);
+              }
+            }}
+            formatResult={(item) => `${item.id} - ${item.nome}`}
+            placeholder="Digite o nome do Funcionário"
+            erro={erroBuscarFuncionario}
+          /> */}
+        </div>
+
         <div className="is-flex is-justify-content-space-between">
-        <ButtonType 
-            label={"Carregar Funções"}
-            className='button is-warning'
-            type='button'
-            onClick={() => carregarFuncoes()}
-        />
-        <ButtonType 
-            label={"Redefinir senha"}
-            className='button is-danger'
-            disabled={usuarios.id === ''}
-            type='button'
-            onClick={() => redefinirSenha(formik.values || usuarios)}
-        />
+          <ButtonType 
+              label={"Carregar Funções"}
+              className='button is-warning'
+              type='button'
+              onClick={() => carregarFuncoes()}
+          />
+          <ButtonType 
+              label={"Redefinir senha"}
+              className='button is-danger'
+              disabled={usuarios.id === ''}
+              type='button'
+              onClick={() => redefinirSenha(formik.values || usuarios)}
+          />
         </div>
         <br/>
         <div className="columns">

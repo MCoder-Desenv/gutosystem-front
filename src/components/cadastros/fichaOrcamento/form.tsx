@@ -32,7 +32,6 @@ const campoObrigatorio = 'Campo Obrigatório';
 const validationScheme = Yup.object().shape({
     responsavel: Yup.object().required(campoObrigatorio),
     status: Yup.string().trim().required(campoObrigatorio),
-    telefoneCliente: Yup.string().trim().required(campoObrigatorio),
     orcamento: Yup.string().trim().required(campoObrigatorio),
     dataSolicitacaoCliente: Yup.string()
         .trim()

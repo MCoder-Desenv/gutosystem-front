@@ -1,10 +1,24 @@
 export interface Usuarios {
-    id?: string;
+    id?: string | null;
     email?: string | null;
     password?: string | null;
     name?: string | null;
     role?: string | null;
+    usuarioFuncionario?: UsuarioFuncionario | null;
     usuariosFuncoes?: UsuarioFuncao[];
+}
+
+export interface UsuarioFuncionario {
+    id?: string | null;
+    userId?: string | null;
+    funcionario?: FuncionarioUsuario | null;
+    funcionarioId?: string | null;
+    funcionarioNome?: string | null;
+}
+
+export interface FuncionarioUsuario {
+    id?: string | null;
+    nome?: string | null;
 }
 
 export interface Perfil {

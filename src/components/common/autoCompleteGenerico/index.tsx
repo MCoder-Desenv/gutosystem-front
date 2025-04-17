@@ -8,6 +8,7 @@ interface AutoCompleteProps<T> extends Omit<InputHTMLAttributes<HTMLInputElement
   erro?: string;
   name: string;
   value: string;
+  onClear?: () => void; // 👉 Adiciona essa linha aqui
   onSearch: (query: string) => Promise<T[]>;
   onSelect: (item: T) => void; // Mantemos o onSelect correto
   formatResult?: (item: T) => string;
@@ -26,6 +27,7 @@ export const AutoCompleteGenerico = <T extends { id: string | number }>({
   formatResult,
   placeholder = "Digite para buscar...",
   disabled,
+  onClear,
   ...rest
 }: AutoCompleteProps<T>) => {
   const [searchResults, setSearchResults] = useState<T[]>([]);
@@ -90,9 +92,15 @@ export const AutoCompleteGenerico = <T extends { id: string | number }>({
           type="text"
           value={query}
           onChange={(e) => {
-            setQuery(e.target.value);
+            const newValue = e.target.value;
+            setQuery(newValue);
             setShowDropdown(true);
-          }}
+          
+            if (newValue.trim() === '') {
+              // Quando o usuário apaga tudo, notifica que limpou
+              onClear?.();
+            }
+          }}          
           placeholder={placeholder}
           className={`input ${erro ? "is-danger" : styles["autocomplete-input"]}`}
           disabled={disabled}

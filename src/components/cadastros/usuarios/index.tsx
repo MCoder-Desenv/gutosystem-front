@@ -11,12 +11,17 @@ export const CadastroUsuarios: React.FC = () => {
 
     const [usuarios, setUsuarios] = useState<Usuarios>({
         id: '',
-        email:'',
+        email: '',
         name: '',
         role: '',
         password: '',
+        usuarioFuncionario: {
+            id:'',
+            funcionario: {}
+        },
         usuariosFuncoes: []
     });
+    
     const service = useUsuarioService();
     const searchParams = useSearchParams();
     const queryId = searchParams.get('id'); // Obtém o ID da query
@@ -38,6 +43,11 @@ export const CadastroUsuarios: React.FC = () => {
                     email: userRetorna.data.email || null,
                     name: userRetorna.data.name || null,
                     role: userRetorna.data.role || null,
+                    usuarioFuncionario: userRetorna.data.usuarioFuncionario ? {
+                       ...userRetorna.data.usuarioFuncionario,
+                        funcionario: userRetorna.data.usuarioFuncionario.funcionario || null
+                    }
+                    : { id: '', funcionario: null },
                     usuariosFuncoes: userRetorna.data.usuariosFuncoes || []
                 });
             });
@@ -48,6 +58,9 @@ export const CadastroUsuarios: React.FC = () => {
         if (user.id) {
             exibirMensagem("Usuário sendo Atualizado, aguarde...", "loading");
             service.atualizar(user).then(() => {
+                service.carregarUsuario(parseInt(user.id || '0')).then((userAtualizado) => {
+                    setUsuarios(userAtualizado.data); // Atualiza o estado com a ficha atualizada
+                });
                 setModalVisivel(false);
                 exibirMensagem('Usuário Atualizado com Sucesso!!', 'success');
             })
