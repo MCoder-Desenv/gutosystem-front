@@ -4,15 +4,15 @@ import { jwtDecode } from "jwt-decode"; // ✅ Corrigido
 import { JwtPayload } from "jsonwebtoken"; // Mantém apenas o tipo
 import Router from "next/router";
 //https://backendgutosystem.eadescola.online:8080/auth/login
-// export const httpClient: AxiosInstance = Axios.create({
-//   baseURL: "https://backendgutosystem.eadescola.online/",
-//   withCredentials: true,
-// });
-
 export const httpClient: AxiosInstance = Axios.create({
-  baseURL: "http://localhost:8080/",
+  baseURL: "https://backendgutosystem.eadescola.online/",
   withCredentials: true,
 });
+
+// export const httpClient: AxiosInstance = Axios.create({
+//   baseURL: "http://localhost:8080/",
+//   withCredentials: true,
+// });
 
 // 🔥 Interceptor para adicionar o token automaticamente em todas as requisições
 httpClient.interceptors.request.use(
