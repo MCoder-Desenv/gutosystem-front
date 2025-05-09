@@ -168,8 +168,14 @@ export const usePedidoOrcamentoService = () => {
     };
 
     //relatórios
-    const gerarRelatorioInformacaoComplementar = async (idPedido: string, dataImpressao: string) : Promise<Blob> => {
-        const url = `${resourceURL}/relatorio/infoRastreamento?idPedido=${idPedido}&dataImpressao=${dataImpressao}`
+    const gerarRelatorioInformacaoComplementar = async (idPedido: string, dataImpressao: string | null) : Promise<Blob> => {
+        let url: string
+        if (dataImpressao === null) {
+            url = `${resourceURL}/relatorio/infoRastreamento?idPedido=${idPedido}`
+        }
+        else {
+            url = `${resourceURL}/relatorio/infoRastreamento?idPedido=${idPedido}&dataImpressao=${dataImpressao}`
+        }
         const response: AxiosResponse= await httpClient.get(url, {responseType: 'blob'})
         const bytes = response.data
         return new Blob([bytes], {type: 'application/pdf'})

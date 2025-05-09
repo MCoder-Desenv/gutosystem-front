@@ -157,18 +157,6 @@ export const UsuariosForm: React.FC<UsuariosFormProps> = ({ onSubmit, usuarios }
       ? formik.values.usuarioFuncionario
       : null;
   }, [formik.values.usuarioFuncionario]);
-  
-  // const usuarioFuncionarioSelecionado = useMemo(() => {
-  //   const funcionario = formik.values?.usuarioFuncionario?.funcionario;
-  //   return funcionario?.id ? formik.values.usuarioFuncionario : null;
-  // }, [formik.values.usuarioFuncionario]);
-
-  // const funcionarioSelecionado = useMemo(() => {
-  //   const funcionario = formik.values?.usuarioFuncionario?.funcionario;
-  //   return funcionario?.id && funcionario?.nome;
-  // }, [formik.values.usuarioFuncionario]);
-  
-  
 
   const handleSearchFuncionario = async (query: string): Promise<{ id: string | number; nome: string | null }[]> => {
     try {

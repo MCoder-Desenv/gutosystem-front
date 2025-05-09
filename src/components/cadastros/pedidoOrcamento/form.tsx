@@ -603,7 +603,7 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
   };
 
   //relatorio
-  const imprimirPedido = (idPedido: string, dataImpressao: string, tipoRelatorio: string) =>{
+  const imprimirPedido = (idPedido: string, dataImpressao: string | null, tipoRelatorio: string) =>{
       if (idPedido !== '' && idPedido !== null && idPedido !== undefined) {
           if (tipoRelatorio === 'informacoesRastreamento') {
               exibirMensagem("Relatório sendo gerado, aguarde...", "loading");
@@ -1557,7 +1557,7 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
                   <Input
                     id="dataImpressao"
                     label="Data Impressão: "
-                    value={variaveisRelatorio?.dataImpressao ?? new Date().toISOString().split("T")[0]}
+                    value={variaveisRelatorio?.dataImpressao ?? ''}
                     onChange={(e) => 
                       setVariaveisRelatorio({ 
                         ...variaveisRelatorio, 
@@ -1592,8 +1592,8 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
                     onMouseOver={(e) => e.currentTarget.style.background = '#ff3860'} 
                     onMouseOut={(e) => e.currentTarget.style.background = ''}  
                     onClick={() => imprimirPedido(
-                      formik.values.id || pedidoOrcamento.id || '', 
-                      variaveisRelatorio?.dataImpressao ? variaveisRelatorio.dataImpressao : new Date().toISOString().split("T")[0] || '', 
+                      formik.values.id || pedidoOrcamento.id || '',
+                      variaveisRelatorio?.dataImpressao ? variaveisRelatorio.dataImpressao : null, 
                       'informacoesRastreamento'
                     )}
                   />

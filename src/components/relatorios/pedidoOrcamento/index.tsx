@@ -25,7 +25,7 @@ export const RelatoriosPedidoOrcamento: React.FC = () => {
         if (formData?.pedido?.id !== '' && formData?.pedido?.id !== null && formData?.pedido?.id !== undefined) {
             if (tipoRelatorio === 'informacoesRastreamento') {
                 exibirMensagem("Relatório sendo gerado, aguarde...", "loading");
-                service.gerarRelatorioInformacaoComplementar(formData?.pedido?.id, formData?.dataRelatorio?.trim() ? formData.dataRelatorio : new Date().toISOString().split("T")[0]
+                service.gerarRelatorioInformacaoComplementar(formData?.pedido?.id, formData?.dataRelatorio?.trim() ? formData.dataRelatorio : null
             ).then(blob => {
                     const fileUrl = URL.createObjectURL(blob);
                     window.open(fileUrl);
@@ -142,7 +142,7 @@ export const RelatoriosPedidoOrcamento: React.FC = () => {
                             <Input
                                 id="dataImpressao"
                                 label="Data Impressão: "
-                                value={formik.values.dataRelatorio ?? new Date().toISOString().split("T")[0]}
+                                value={formik.values.dataRelatorio ?? ""}
                                 onChange={(e) => formik.setFieldValue("dataRelatorio", e.target.value)}
                                 autoComplete="off"
                                 type="date"
