@@ -1,3 +1,34 @@
+/* ====== DROPDOWN PRIORIDADE ====== */
+.p-dropdown.prioridade-Alta {
+    background-color: #edd4d4; /* Verde claro */
+    color: #fa0a0a; /* Texto verde escuro */
+}
+
+.dropdown-Alta .p-dropdown {
+  background-color: #edd4d4;
+  color: #fa0a0a;
+}
+
+.p-dropdown.prioridade-Normal {
+  background-color: #edecd4; /* Verde claro */
+  color: #fa8a0a; /* Texto verde escuro */
+}
+
+.dropdown-Normal .p-dropdown {
+background-color: #edecd4;
+color: #fa8a0a;
+}
+
+.p-dropdown.prioridade-Baixa {
+  background-color: #d4edec; /* Verde claro */
+  color: #1a0afa; /* Texto verde escuro */
+}
+
+.dropdown-Baixa .p-dropdown {
+background-color: #d4edec;
+color: #1a0afa;
+}
+
 /* ====== DROPDOWN STATUS ====== */
 .p-dropdown.status-Ativo, 
 .p-dropdown.status-Aberta {
@@ -61,6 +92,9 @@
   color: #721c24;
 }
 
+.dropdown-Alta .p-dropdown-label,
+.dropdown-Normal .p-dropdown-label,
+.dropdown-Baixa .p-dropdown-label,
 .dropdown-Aberta .p-dropdown-label,
 .dropdown-Aguardando-Resposta .p-dropdown-label,
 .dropdown-Em-Andamento .p-dropdown-label,
@@ -74,6 +108,31 @@
     background-color: #fff3cd;
     color: #856404;
 } */
+
+/* Status: Ativo */
+.prioridade-Alta {
+  background-color: #edd4d4 !important;
+  color: #fa0a0a !important;
+  font-weight: bold !important;
+  border-radius: 25px;
+  padding: 7px;
+}
+
+.prioridade-Normal {
+  background-color: #edecd4 !important;
+  color: #fa8a0a !important;
+  font-weight: bold !important;
+  border-radius: 25px;
+  padding: 7px;
+}
+
+.prioridade-Baixa {
+  background-color: #d4edec !important;
+  color: #1a0afa !important;
+  font-weight: bold !important;
+  border-radius: 25px;
+  padding: 7px;
+}
 
 /* ====== TELA DE CONSULTAS E OPTIONS ABERTA ====== */
 
@@ -151,6 +210,7 @@
 }
 
 /* Ajustes para alinhar o texto no centro */
+.prioridade-Alta, .prioridade-Normal, .prioridade-Baixa,
 .status-Ativo, .status-Inativo, .status-Primeiro-Contato, .status-Aberta, .status-Aguardando-Resposta, .status-Em-Andamento, .status-Encerrada, .status-Cancelada {
   display: inline-block;
   text-align: center;
@@ -369,4 +429,64 @@ input[type="number"]::-webkit-outer-spin-button {
 /* Remove setas no Firefox */
 input[type="number"] {
   -moz-appearance: textfield;
+}
+
+@media (max-width: 768px) {
+  .fileItem {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .thumbnail {
+        width: 100%;
+        height: auto;
+        max-height: 200px;
+        object-fit: contain;
+    }
+
+    .fileInfo {
+        width: 100%;
+        margin-top: 5px;
+    }
+
+    .fileName, .status {
+        margin-left: 0;
+    }
+
+    .upload-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    /* MODAL AJUSTADO PARA MOBILE */
+    .modal-card {
+        width: 95vw !important;
+        max-width: 95vw !important;
+        max-height: 90vh;
+        height: auto;
+        overflow-y: auto;
+        border-radius: 10px;
+        margin: auto;
+    }
+
+    .modal-card-head,
+    .modal-card-body,
+    .modal-card-foot {
+        padding: 1rem;
+    }
+
+    .modal-card-foot {
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+    }
+
+    .columns {
+        flex-direction: column;
+    }
+
+    .column {
+        width: 100%;
+    }
 }
