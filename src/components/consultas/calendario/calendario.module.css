@@ -1,0 +1,141 @@
+.fileList {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.fileItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background: #fff;
+}
+
+.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.tooLarge {
+    border: 1px solid red;
+    background: rgba(255, 0, 0, 0.1);
+}
+
+.thumbnail {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    margin-right: 10px;
+}
+
+.fileInfo {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.fileName {
+    font-weight: bold;
+    margin-left: 9px;
+}
+
+.status {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 15px; /* Deixa o fundo arredondado */
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: 10px; /* Afastar um pouco do arquivo */
+}
+
+.error {
+    color: red;
+    font-weight: bold;
+    background-color: #f8d7da; /* Vermelho claro */
+    margin-left: 7px;
+    width: fit-content;
+}
+
+.uploaded {
+    color: green;
+    background-color: #d4edda; /* Verde claro */
+    margin-left: 7px;
+    width: fit-content;
+}
+
+.removeButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.totalSize {
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+    .fileItem {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .thumbnail {
+        width: 100%;
+        height: auto;
+        max-height: 200px;
+        object-fit: contain;
+    }
+
+    .fileInfo {
+        width: 100%;
+        margin-top: 5px;
+    }
+
+    .fileName, .status {
+        margin-left: 0;
+    }
+
+    .upload-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    /* MODAL AJUSTADO PARA MOBILE */
+    .modal-card {
+        width: 95vw !important;
+        max-width: 95vw !important;
+        max-height: 90vh;
+        height: auto;
+        overflow-y: auto;
+        border-radius: 10px;
+        margin: auto;
+    }
+
+    .modal-card-head,
+    .modal-card-body,
+    .modal-card-foot {
+        padding: 1rem;
+    }
+
+    .modal-card-foot {
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+    }
+
+    .columns {
+        flex-direction: column;
+    }
+
+    .column {
+        width: 100%;
+    }
+}
+

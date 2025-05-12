@@ -12,7 +12,8 @@ export {
     CadastroFornecedores,
     CadastroFuncoes,
     CadastroUsuarios,
-    CadastroUnidadesMedida
+    CadastroUnidadesMedida,
+    CadastroTarefas
 } from './cadastros'
 export { 
     ListagemCategorias,
@@ -25,7 +26,8 @@ export {
     ListagemOrdemServicoManutencao,
     ListagemFornecedores,
     ListagemUsuarios,
-    ListagemUnidadesMedida
+    ListagemUnidadesMedida,
+    CalendarioView
 } from './consultas'
 
 export { 

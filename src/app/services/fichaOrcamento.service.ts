@@ -2,6 +2,7 @@ import { AxiosResponse } from "axios";
 import { httpClient } from "../http";
 import { FichaOrcamento, FichaOrcamentoDto } from "../models/fichaOrcamento";
 import { ApiResponse, Page } from "../models/common";
+import { TarefaFicha } from "../models/tarefa";
 
 const resourceURL: string = "/api/fichas-orcamento";
 
@@ -66,6 +67,17 @@ export const useFichaOrcamentoService = () => {
         }
     };   
 
+    const carregarFichaTarefa = async (nomeCliente: string = '', telefone: string = '') : Promise<ApiResponse<TarefaFicha[]>> => {
+        try {
+            const url: string = `${resourceURL}/buscarFichaTarefa?nomeCliente=${nomeCliente}&telefone=${telefone}`;
+            const response: AxiosResponse<ApiResponse<TarefaFicha[]>> = await httpClient.get(url);
+            return response.data
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+            throw error; // Ou tratar o erro de uma forma mais específica
+        }
+    }
+
     // Método para carregar uma ficha pelo ID (GET)
     const carregarFicha = async (id: string): Promise<ApiResponse<FichaOrcamento>> => {
         const url: string = `${resourceURL}/${id}/ficha`;
@@ -127,6 +139,7 @@ export const useFichaOrcamentoService = () => {
         findFichas,
         findFichasPedido,
         gerarRelatorioFichaOrcamento,
-        findFichasRelatorio
+        findFichasRelatorio,
+        carregarFichaTarefa
     };
 };

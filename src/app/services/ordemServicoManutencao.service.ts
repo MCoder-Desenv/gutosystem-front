@@ -2,6 +2,7 @@ import { AxiosResponse } from "axios";
 import { ApiResponse, Page } from "../models/common";
 import { OrdemServicoManutencao, OrdemServicoManutencaoDto } from "../models/ordemServicoManutencao";
 import { httpClient } from "../http";
+import { TarefaOrdem } from "../models/tarefa";
 
 const resourceURL: string = "/api/ordens-servico-manutencao"
 
@@ -42,6 +43,17 @@ export const useOrdemServicoManutencaoService = () => {
             }
         }
     };
+
+    const carregarOrdemTarefa = async (filtro: string = '') : Promise<ApiResponse<TarefaOrdem[]>> => {
+        try {
+            const url: string = `${resourceURL}/buscarOrdemTarefa?filtro=${filtro}`;
+            const response: AxiosResponse<ApiResponse<TarefaOrdem[]>> = await httpClient.get(url);
+            return response.data
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+            throw error; // Ou tratar o erro de uma forma mais específica
+        }
+    }
 
     const atualizar = async (ordem: OrdemServicoManutencao, arquivos?: File[]): Promise<ApiResponse<OrdemServicoManutencao>> => {
         const url: string = `${resourceURL}/atualizar/${ordem.id}`;
@@ -130,7 +142,8 @@ export const useOrdemServicoManutencaoService = () => {
         findOrdemServico,
         findOrdemServMntPedido,
         findOrdemServMntRelatorio,
-        gerarRelatorioOrdemServicoManutencao
+        gerarRelatorioOrdemServicoManutencao,
+        carregarOrdemTarefa
     }
 
 }

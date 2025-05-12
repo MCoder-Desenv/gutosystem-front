@@ -2,6 +2,7 @@ import { AxiosResponse } from "axios";
 import { ApiResponse, Page } from "../models/common";
 import { PedidoOrcamento, PedidoOrcamentoDto, PedidoOrcamentoRecuperacaoDto } from "../models/pedidoOrcamento";
 import { httpClient } from "../http";
+import { TarefaPedido } from "../models/tarefa";
 
 const resourceURL: string = "/api/pedidos-orcamento"
 
@@ -180,6 +181,17 @@ export const usePedidoOrcamentoService = () => {
         const bytes = response.data
         return new Blob([bytes], {type: 'application/pdf'})
     }
+
+    const carregarPedidoTarefa = async (filtro: string = '') : Promise<ApiResponse<TarefaPedido[]>> => {
+        try {
+            const url: string = `${resourceURL}/buscarPedidoTarefa?filtro=${filtro}`;
+            const response: AxiosResponse<ApiResponse<TarefaPedido[]>> = await httpClient.get(url);
+            return response.data
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+            throw error; // Ou tratar o erro de uma forma mais específica
+        }
+    }
     
     const gerarRelatorioPedidoOrcamento = async (idPedido: string) : Promise<Blob> => {
         const url = `${resourceURL}/relatorio/pedidoOrcamento?idPedido=${idPedido}`
@@ -200,7 +212,8 @@ export const usePedidoOrcamentoService = () => {
         findPedidosAutoCompleteRelatorio,
         gerarRelatorioInformacaoComplementar,
         gerarRelatorioPedidoOrcamento,
-        findPedidoCodigo
+        findPedidoCodigo,
+        carregarPedidoTarefa
     }
 
 }

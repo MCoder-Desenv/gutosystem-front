@@ -1,0 +1,10 @@
+.formListContainer {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .itemContainer {
+    padding: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+  }  

@@ -12,3 +12,5 @@ export { useMediaService } from './media.service';
 export { useFuncoesService } from './funcoes.service';
 export { useUsuarioService } from './usuarios.service';
 export { useUnidadeMedidaService } from './unidadeMedida.service';
+export { useTarefaService } from './tarefa.service';
+export { useUsuarioFuncionarioService } from './usuarioFuncionario.service'
