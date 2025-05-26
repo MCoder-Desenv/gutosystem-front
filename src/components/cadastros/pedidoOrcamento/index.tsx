@@ -26,6 +26,8 @@ export const CadastroPedidoOrcamento: React.FC = () => {
         infoComplementar: '',
         vendedor: {},
         observacoes: '',
+        observacoesInterna: '',
+        observacoesInternaInfoRastreamento: '',
         arquivos: [],
         novosArquivos: []
     });
@@ -57,6 +59,8 @@ export const CadastroPedidoOrcamento: React.FC = () => {
                     responsavelMedida: pedidoRetorna.data.responsavelMedida || {},
                     responsavelPedido: pedidoRetorna.data.responsavelPedido || {},
                     observacoes: pedidoRetorna.data.observacoes || '',
+                    observacoesInterna: pedidoRetorna.data.observacoesInterna || '',
+                    observacoesInternaInfoRastreamento: pedidoRetorna.data.observacoesInternaInfoRastreamento || '',
                     produtosPedido: pedidoRetorna.data.produtosPedido?.map(produto => ({
                         ...produto,
                         informacoesProduto: produto.informacoesProduto || [] // Garantindo que seja um array
@@ -73,7 +77,7 @@ export const CadastroPedidoOrcamento: React.FC = () => {
     }, [queryId]);
 
     const handleSubmit = (pedido: PedidoOrcamento) => {
-
+        console.log(pedido.observacoesInterna)
         const arquivosParaUpload = pedido.arquivos
                 ?.filter((arquivo) => arquivo.file) // Filtra apenas os objetos com `file` definido
                 .map((arquivo) => arquivo.file as File); // Garante que será do tipo File

@@ -12,8 +12,6 @@ import TabelaDinamica, { Column } from "../../common/tabelaDinamica";
 import { usePermissao } from "../../../app/hooks/usePermissoes";
 
 interface ConsultaClientesForm {
-  nome?: string;
-  celular?: string;
   tipoFiltro: string;
   valorFiltro: string;
 }
@@ -189,7 +187,7 @@ export const ListagemClientes: React.FC = () => {
             />
           </div>
         </div>
-        <div className="columns">
+        {/* <div className="columns">
           <Input
             label="Nome"
             id="nome"
@@ -200,7 +198,7 @@ export const ListagemClientes: React.FC = () => {
             onChange={handleChange}
             disabled={!podeConsultar}
           />
-        </div>
+        </div> */}
         <div className="field is-grouped">
           <ButtonType 
             label={"Consultar"}

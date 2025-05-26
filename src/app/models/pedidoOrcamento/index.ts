@@ -17,6 +17,8 @@ export interface PedidoOrcamento {
     fornecedor?: TerceiroPedidoOrcamento;
     formaDePagamento?: string | null;
     observacoes?: string | null;
+    observacoesInterna?: string | null;
+    observacoesInternaInfoRastreamento?: string | null;
     disServico?: string | null;
     total?: number | null;
     produtosPedido?: ProdutoPedidoOrcamento[];

@@ -3,7 +3,7 @@ import { getSession, signOut } from "next-auth/react";
 import { jwtDecode } from "jwt-decode"; // ✅ Corrigido
 import { JwtPayload } from "jsonwebtoken"; // Mantém apenas o tipo
 import Router from "next/router";
-//https://backendgutosystem.eadescola.online:8080/auth/login
+// https://backendgutosystem.eadescola.online:8080/auth/login
 export const httpClient: AxiosInstance = Axios.create({
   baseURL: "https://backendgutosystem.eadescola.online/",
   withCredentials: true,

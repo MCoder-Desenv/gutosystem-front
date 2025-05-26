@@ -1,7 +1,7 @@
 import { AxiosResponse } from "axios";
 import { httpClient } from "../http";
 import { TarefaCalendar, Tarefa, CadastroTarefa } from "../models/tarefa";
-import { ApiResponse } from "../models/common";
+import { ApiResponse, Page } from "../models/common";
 
 const resourceURL: string = "/api/tarefas"
 
@@ -98,34 +98,37 @@ export const useTarefaService = () => {
         }
     }
 
-    // const findProdutos = async (
-    //         descricao: string = '',
-    //         status: string = '',
-    //         categoriaId: string = '',
-    //         page: number = 0,
-    //         size: number = 10
-    //     ) : Promise<ApiResponse<Page<Produto>>> =>{
-    //         try {            
-    //             const url = `${resourceURL}/buscarProdutosDescricao?descricao=${descricao}&status=${status}&categoriaId=${categoriaId}&page=${page}&size=${size}`
-    //             const response: AxiosResponse<ApiResponse<Page<Produto>>> = await httpClient.get(url);
-    //             return response.data
-    //         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    //         } catch (error: any) {
-    //             throw error; // Ou tratar o erro de uma forma mais específica
-    //         }
-    // }
+    const findTarefa = async (
+        idFuncionario: number | null,
+        idCliente: number | null,
+        status: string | null,
+        titulo: string | null,
+        page: number = 0,
+        size: number = 10
+    ): Promise<ApiResponse<Page<Tarefa>>> => {
+        try {
+            const params = new URLSearchParams();
 
-    // const findProdutosPedido = async (descricao: string = '') : Promise<ApiResponse<Produto[]>> =>{
-    //     try{
-    //         const url = `${resourceURL}/produtosPedido?descricao=${descricao}`
-    //         const response: AxiosResponse<ApiResponse<Produto[]>> = await httpClient.get(url);
-    //         return response.data
-    //         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    //     } catch (error: any) {
-    //         throw error; // Ou tratar o erro de uma forma mais específica
-    //     }
-    // }
+            if (idFuncionario !== null) params.append('idFuncionario', idFuncionario.toString());
+            if (idCliente !== null) params.append('idCliente', idCliente.toString());
+            if (status) params.append('status', status);
+            if (titulo) params.append('titulo', titulo);
 
-    return { criarTarefas, carregarTarefasPorFuncionario, carregarTarefa, atualizarParcial }
+            // Sempre adiciona paginação
+            params.append('page', page.toString());
+            params.append('size', size.toString());
+
+            const url: string = `${resourceURL}/filtrar?${params.toString()}`;
+            const response: AxiosResponse<ApiResponse<Page<Tarefa>>> = await httpClient.get(url);
+            return response.data;
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+            throw error;
+        }
+    };
+
+
+    return { criarTarefas, carregarTarefasPorFuncionario, carregarTarefa, atualizarParcial, findTarefa }
 
 }

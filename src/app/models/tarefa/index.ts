@@ -26,6 +26,15 @@ export interface Tarefa {
     novosArquivos?: File[]; // Novos arquivos para upload
 }
 
+export interface TarefaProjection {
+    id?: number | null;
+    titulo?: string | null;
+    prioridade?: string | null;
+    descricao?: string | null;
+    dataHora?: string | null;
+    status?: string | null;
+}
+
 export interface FichaTarefaCalendar {
     id?: string | null;
     orcamento?: string | null;

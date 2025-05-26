@@ -601,15 +601,6 @@ export const OrdemServicoManutencaoForm: React.FC<OrdemServicoManutencaoFormProp
                         onSearch={(query) => {
                         const trimmedQuery = query.trim();
                         return handleSearchCliente(trimmedQuery);
-                        // if (/^\d{2}\.\d/.test(trimmedQuery)) {
-                        //     return handleSearchCliente(trimmedQuery, 'cnpj');
-                        // } 
-                        // else if (/^\d{3}\.\d/.test(trimmedQuery)) {
-                        //     return handleSearchCliente(trimmedQuery, 'cpf');
-                        // } 
-                        // else {
-                        //     return handleSearchCliente(trimmedQuery, 'nome');
-                        // }
                     }}                    
                     
                         // Chama a busca ao digitar
@@ -716,11 +707,26 @@ export const OrdemServicoManutencaoForm: React.FC<OrdemServicoManutencaoFormProp
                                     name={`produtosOrdemServicoMnt.${index}.produto`}
                                     disabled={!podeCadastrar}
                                     value={produto.produto || ""}
+                                    // onSearch={async (query) => {
+                                    //     if (produto.produto !== query) {
+                                    //         console.log('oi estou aqui ' + query)
+                                    //         const trimmedQuery = query.trim();
+                                    //         return handleSearchProduto(trimmedQuery);
+                                    //     }
+                                    //     return query
+                                    // }}
                                     onSearch={async (query) => {
                                         const trimmedQuery = query.trim();
-                                        return handleSearchProduto(trimmedQuery);
+                                        // Se o trimmedQuery for igual ao valor atual do produto, retorna array vazio (ou array com o próprio produto)
+                                        if (produto.produto === trimmedQuery) {
+                                            // Pode retornar [] para não mostrar lista (pois já está selecionado)
+                                            return [];
+                                        }
+                                        // Senão, faz a busca normalmente
+                                        return await handleSearchProduto(trimmedQuery);
                                     }}
                                     onSelect={(item) => {
+                                        console.log('oi estou aqui nesse momento')
                                         const selectedValue = typeof item === "string" ? item : item.label;
                                         formik.setFieldValue(`produtosOrdemServicoMnt.${index}.produto`, selectedValue);
                                     }}

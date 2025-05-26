@@ -22,7 +22,9 @@ import {
         FaPaperclip,
         FaUser,
         FaDesktop,
-        FaShoppingBag
+        FaShoppingBag,
+        FaTasks,
+        FaPencilAlt
 } from "react-icons/fa";
 import { useState } from "react";
 import { signOut } from "next-auth/react";
@@ -73,6 +75,14 @@ export const Menu: React.FC<MenuProps> = ({ expanded, setExpanded }) => {
                 permissoes["Tipos Características"]?.podeAcessar ? { label: "Tipos Info. Complementares", href: "/consultas/tiposCaracteristicas", icon: <FaTag /> } : null,
             ].filter(Boolean) as MenuItem[], // ✅ Garante que o array final tenha apenas MenuItem
         },
+        // {
+        //     label: "Atividades",
+        //     icon: <FaTasks />,
+        //     children: [
+        //         isMaster ? { label: "Cadastro", href: "/cadastros/tarefas", icon: <FaPencilAlt /> } : null,
+        //         isMaster ? { label: "Consulta", href: "/consultas/tarefas", icon: <FaPaperclip /> } : null,
+        //     ].filter(Boolean) as MenuItem[], // ✅ Garante que o array final tenha apenas MenuItem
+        // },
         {
             label: "Clientes",
             icon: <FaUserTie />,

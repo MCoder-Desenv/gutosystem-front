@@ -27,7 +27,8 @@ export {
     ListagemFornecedores,
     ListagemUsuarios,
     ListagemUnidadesMedida,
-    CalendarioView
+    CalendarioView,
+    ListagemTarefa
 } from './consultas'
 
 export { 

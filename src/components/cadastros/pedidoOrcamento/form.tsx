@@ -250,6 +250,8 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
       disServico: pedidoOrcamento.disServico || '',
       infoComplementar: pedidoOrcamento.infoComplementar || '',
       observacoes: pedidoOrcamento.observacoes || '',
+      observacoesInterna: pedidoOrcamento.observacoesInterna || null,
+      observacoesInternaInfoRastreamento: pedidoOrcamento.observacoesInternaInfoRastreamento || null,
       fornecedor: pedidoOrcamento.fornecedor || {},
       responsavelMedida: pedidoOrcamento.responsavelMedida || {},
       total: pedidoOrcamento.total || 0,
@@ -264,7 +266,10 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
         },
         ordemServicoManutencao: {
           id: values.ordemServicoManutencao?.id,
-        }
+        },
+        observacoes: values.observacoes || null,
+        observacoesInterna: values.observacoesInterna || null,
+        observacoesInternaInfoRastreamento: values.observacoesInternaInfoRastreamento || null,
       };
       onSubmit(formattedValues);
     },
@@ -1431,6 +1436,22 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
           </div>
       </div>
 
+      <div className="field">
+        <label htmlFor="observacoesInterna" className="label">
+          Observações Interna (Não aparecerá no relatório):
+        </label>
+        <textarea
+          className="textarea"
+          autoComplete='off'
+          id="observacoesInterna"
+          name="observacoesInterna"
+          value={formik.values.observacoesInterna || ''}
+          placeholder="Digite as Observações Internas"
+          onChange={formik.handleChange}
+          disabled={!podeCadastrar || pedidoCancelada}
+        ></textarea>
+      </div>
+
       {/* <h4>Arquivos Vinculados</h4> */}
       <Galleria
           ref={galleria}
@@ -1697,6 +1718,22 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
             {formik.errors.infoComplementar && (
               <p className="help is-danger">{formik.errors.infoComplementar}</p>
             )}
+          </div>
+
+          <div className="field">
+            <label htmlFor="observacoesInternaInfoRastreamento" className="label">
+              Observações Interna (Não aparecerá no relatório):
+            </label>
+            <textarea
+              className="textarea"
+              autoComplete='off'
+              id="observacoesInternaInfoRastreamento"
+              name="observacoesInternaInfoRastreamento"
+              value={formik.values.observacoesInternaInfoRastreamento || ''}
+              placeholder="Digite as Observações Interna"
+              onChange={formik.handleChange}
+              disabled={!podeCadastrar || pedidoCancelada}
+            ></textarea>
           </div>
 
           {/* Data e Teve Retorno */}
