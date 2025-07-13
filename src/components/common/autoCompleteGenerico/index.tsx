@@ -42,32 +42,60 @@ export const AutoCompleteGenerico = <T extends { id: string | number }>({
     setQuery(value);
   }, [value]);
 
+  // useEffect(() => {
+  //   if (isSelecting) {
+  //     setIsSelecting(false);
+  //     return;
+  //   }
+
+  //   const handler = setTimeout(() => {
+  //     const trimmedQuery = query?.trim();
+
+  //     if (trimmedQuery === previousQuery.current) return;
+
+  //     previousQuery.current = trimmedQuery;
+
+  //     if (!trimmedQuery) {
+  //       setSearchResults([]);
+  //       return;
+  //     }
+
+  //     setIsLoading(true);
+  //     onSearch(trimmedQuery)
+  //       .then((results) => setSearchResults(results))
+  //       .finally(() => setIsLoading(false));
+  //   }, 300);
+
+  //   return () => clearTimeout(handler);
+  // }, [query, onSearch, isSelecting]);
+
   useEffect(() => {
-    if (isSelecting) {
-      setIsSelecting(false);
+  if (isSelecting) {
+    setIsSelecting(false);
+    return;
+  }
+
+  const handler = setTimeout(() => {
+    const trimmedQuery = typeof query === 'string' ? query.trim() : '';
+
+    if (trimmedQuery === previousQuery.current) return;
+
+    previousQuery.current = trimmedQuery;
+
+    if (!trimmedQuery) {
+      setSearchResults([]);
       return;
     }
 
-    const handler = setTimeout(() => {
-      const trimmedQuery = query?.trim();
+    setIsLoading(true);
+    onSearch(trimmedQuery)
+      .then((results) => setSearchResults(results))
+      .finally(() => setIsLoading(false));
+  }, 300);
 
-      if (trimmedQuery === previousQuery.current) return;
+  return () => clearTimeout(handler);
+}, [query, onSearch, isSelecting]);
 
-      previousQuery.current = trimmedQuery;
-
-      if (!trimmedQuery) {
-        setSearchResults([]);
-        return;
-      }
-
-      setIsLoading(true);
-      onSearch(trimmedQuery)
-        .then((results) => setSearchResults(results))
-        .finally(() => setIsLoading(false));
-    }, 300);
-
-    return () => clearTimeout(handler);
-  }, [query, onSearch, isSelecting]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

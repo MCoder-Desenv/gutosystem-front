@@ -202,31 +202,6 @@ export const OrdemServicoManutencaoForm: React.FC<OrdemServicoManutencaoFormProp
     const osmCancelada = ordemServicoManutencao.status === 'Cancelada';
     const osmEncerrada = ordemServicoManutencao.status === 'Encerrada';
 
-    //FICHA CONTEXT - VEM DA TELA DE FICHA
-    //   const handleSearchFichaContext = async (query: string) => {
-    //     try {
-    //       if (query !== '') {
-        
-    //           const resultsFicha = await servicePedido.findPedidoCodigo(query);
-        
-    //           if (resultsFicha.id !== '') {
-    //             const formattedResult = resultsFicha; 
-    //             handleSelectPedido(formattedResult);
-    //           }
-    //           else {
-    //             handleSelectPedido({});
-    //           }
-    //       }
-    //       else {
-    //         alert('Não Existe o Pedido Orçamento informado');
-    //         throw new Error('Não Existe o Pedido Orçamento informado');
-    //       }
-    //     } catch (error) {
-    //         alert("Erro ao buscar Pedido Orçamento: " + error);
-    //       console.error("Erro ao buscar Pedido Orçamento: ", error);
-    //     }
-    //   };
-
     const irParaPedidoOrcamento = () => {
         const contexto = {
             idFichaVsIdOrdemMnt: formik.values.id ?? null,
@@ -264,19 +239,6 @@ export const OrdemServicoManutencaoForm: React.FC<OrdemServicoManutencaoFormProp
             exibirMensagem("Erro ao gerar o relatório, entre em contato com o suporte", "error");
         }
     };
-    
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    // const handleSelectPedido = (item: any) => {
-    // // Atualiza o formulário com os valores do item selecionado
-    //     formik.setFieldValue('pedidoOrcamento.id', item.id);
-    //     formik.setFieldValue('pedidoOrcamento.status', item.status);
-    //     formik.setFieldValue('pedidoOrcamento.identificador', item.identificador);
-    //     formik.setFieldTouched("pedidoOrcamento.identificador", true, false);
-    //     formik.setFieldValue('cliente.id', item.idCliente);
-    //     formik.setFieldValue('cliente.nome', item.nomeTerceiro);
-    //     formik.setFieldValue('telefoneCliente', item.telefoneCliente);
-    //     formik.setFieldValue('enderecoCliente', item.enderecoCliente);
-    // };
 
     const exibirMensagem = (texto: string, tipo: 'success' | 'error' | 'loading') => {
         setModalMensagem(texto);
@@ -308,16 +270,6 @@ export const OrdemServicoManutencaoForm: React.FC<OrdemServicoManutencaoFormProp
             return []; // Retorna um array vazio em caso de erro
         }
     };
-    
-
-    // const handleSearchProduto = async (query: string) => {
-    //     const prod = await serviceProduto.findProdutosPedido(query);
-    //     return prod.data.map(produto => ({
-    //       id: produto.id,
-    //       label: produto.descricao || "", // Adiciona 'label' para corresponder ao AutoCompleteLivre
-    //     }));
-    //   };
-      
     
     const adicionarProduto = () => {
         const novosProdutos: ProdutosOrdemServicoMnt[] = [
@@ -410,8 +362,6 @@ export const OrdemServicoManutencaoForm: React.FC<OrdemServicoManutencaoFormProp
             setErroBuscarEnderecos('🚨 Erro ao buscar endereços do Cliente: ' + error)
         }
     };
-    
-    
     
     //TELEFONES CLIENTE
 
@@ -707,14 +657,6 @@ export const OrdemServicoManutencaoForm: React.FC<OrdemServicoManutencaoFormProp
                                     name={`produtosOrdemServicoMnt.${index}.produto`}
                                     disabled={!podeCadastrar}
                                     value={produto.produto || ""}
-                                    // onSearch={async (query) => {
-                                    //     if (produto.produto !== query) {
-                                    //         console.log('oi estou aqui ' + query)
-                                    //         const trimmedQuery = query.trim();
-                                    //         return handleSearchProduto(trimmedQuery);
-                                    //     }
-                                    //     return query
-                                    // }}
                                     onSearch={async (query) => {
                                         const trimmedQuery = query.trim();
                                         // Se o trimmedQuery for igual ao valor atual do produto, retorna array vazio (ou array com o próprio produto)
@@ -861,6 +803,12 @@ export const OrdemServicoManutencaoForm: React.FC<OrdemServicoManutencaoFormProp
                                         onChange={formik.handleChange}
                                         placeholder="Digite a observação aqui..."
                                         disabled={!podeCadastrar || osmCancelada}
+                                        onKeyDown={(e) => {
+                                            if (e.key === "Enter") {
+                                                // Impede que o evento suba para o form e seja bloqueado
+                                                e.stopPropagation();
+                                            }
+                                        }}
                                     ></textarea>
                                 </td>
                             </tr>
@@ -891,6 +839,12 @@ export const OrdemServicoManutencaoForm: React.FC<OrdemServicoManutencaoFormProp
                                         onChange={formik.handleChange}
                                         placeholder="Digite a observação aqui..."
                                         disabled={!podeCadastrar || osmCancelada}
+                                        onKeyDown={(e) => {
+                                            if (e.key === "Enter") {
+                                                // Impede que o evento suba para o form e seja bloqueado
+                                                e.stopPropagation();
+                                            }
+                                        }}
                                     ></textarea>
                                 </td>
                             </tr>
@@ -921,6 +875,12 @@ export const OrdemServicoManutencaoForm: React.FC<OrdemServicoManutencaoFormProp
                                         onChange={formik.handleChange}
                                         placeholder="Digite a observação aqui..."
                                         disabled={!podeCadastrar || osmCancelada}
+                                        onKeyDown={(e) => {
+                                            if (e.key === "Enter") {
+                                                // Impede que o evento suba para o form e seja bloqueado
+                                                e.stopPropagation();
+                                            }
+                                        }}
                                     ></textarea>
                                 </td>
                             </tr>
@@ -951,6 +911,12 @@ export const OrdemServicoManutencaoForm: React.FC<OrdemServicoManutencaoFormProp
                                         onChange={formik.handleChange}
                                         placeholder="Digite a observação aqui..."
                                         disabled={!podeCadastrar || osmCancelada}
+                                        onKeyDown={(e) => {
+                                            if (e.key === "Enter") {
+                                                // Impede que o evento suba para o form e seja bloqueado
+                                                e.stopPropagation();
+                                            }
+                                        }}
                                     ></textarea>
                                 </td>
                             </tr>
@@ -981,6 +947,12 @@ export const OrdemServicoManutencaoForm: React.FC<OrdemServicoManutencaoFormProp
                                         onChange={formik.handleChange}
                                         placeholder="Digite a observação aqui..."
                                         disabled={!podeCadastrar || osmCancelada}
+                                        onKeyDown={(e) => {
+                                            if (e.key === "Enter") {
+                                                // Impede que o evento suba para o form e seja bloqueado
+                                                e.stopPropagation();
+                                            }
+                                        }}
                                     ></textarea>
                                 </td>
                             </tr>
@@ -1045,6 +1017,12 @@ export const OrdemServicoManutencaoForm: React.FC<OrdemServicoManutencaoFormProp
                 placeholder="Digite as Observações"
                 onChange={formik.handleChange}
                 disabled={!podeCadastrar}
+                onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                    // Impede que o evento suba para o form e seja bloqueado
+                    e.stopPropagation();
+                    }
+                }}
                 ></textarea>
             </div>
 
@@ -1061,6 +1039,12 @@ export const OrdemServicoManutencaoForm: React.FC<OrdemServicoManutencaoFormProp
                     placeholder="Digite os Serviços Executados"
                     onChange={formik.handleChange}
                     disabled={!podeCadastrar || osmCancelada}
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                        // Impede que o evento suba para o form e seja bloqueado
+                        e.stopPropagation();
+                        }
+                    }}
                 ></textarea>
                 {formik.errors.serviceExecutados && (
                     <p className="help is-danger">{formik.errors.serviceExecutados}</p>

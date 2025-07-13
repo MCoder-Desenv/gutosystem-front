@@ -139,7 +139,7 @@ export const ListagemTarefa: React.FC = () => {
   };
 
   const actionTemplate = (registro: Tarefa) => {
-    const url = `/cadastros/pedidoOrcamento?id=${registro.id}`;
+    const url = `/cadastros/tarefa?id=${registro.id}`;
     return (
       <ButtonType 
         label={!podeCadastrar ? "Visualizar" : "Editar"}

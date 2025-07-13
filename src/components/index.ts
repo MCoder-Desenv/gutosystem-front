@@ -13,7 +13,8 @@ export {
     CadastroFuncoes,
     CadastroUsuarios,
     CadastroUnidadesMedida,
-    CadastroTarefas
+    CadastroTarefas,
+    CadastroTarefa
 } from './cadastros'
 export { 
     ListagemCategorias,

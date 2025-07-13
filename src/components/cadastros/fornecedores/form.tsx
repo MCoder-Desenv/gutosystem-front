@@ -626,6 +626,12 @@ export const FornecedorForm: React.FC<TerceiroFormProps> = ({
                 placeholder="Digite as Observações"
                 onChange={formik.handleChange}
                 disabled={!podeCadastrar}
+                onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                        // Impede que o evento suba para o form e seja bloqueado
+                        e.stopPropagation();
+                    }
+                }}
                 ></textarea>
             </div>
 

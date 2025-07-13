@@ -99,6 +99,12 @@ const TabelaDinamica: React.FC<TabelaDinamicaProps> = ({
                         value={value}
                         onChange={(e) => handleChange(cellKey, e.target.value)}
                         placeholder={placeholder}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            // Impede que o evento suba para o form e seja bloqueado
+                            e.stopPropagation();
+                          }
+                        }}
                         disabled={col.disabled} // Aplicando disabled
                       />
                     ) : col.type === "text" ? (

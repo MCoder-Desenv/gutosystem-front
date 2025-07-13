@@ -16,6 +16,14 @@ export interface UsuarioFuncionario {
     funcionarioNome?: string | null;
 }
 
+export interface UsuarioFuncao {
+    id: string | null;
+    userId?: string | null;
+    funcao?: Funcao;
+    podeCadastrar?: boolean | null;
+    podeConsultar?: boolean | null;
+}
+
 export interface FuncionarioUsuario {
     id?: string | null;
     nome?: string | null;
@@ -34,14 +42,6 @@ export interface UsuarioProjection {
     email?: string;
     name?: string;
     role?: string;
-}
-
-export interface UsuarioFuncao {
-    id: string | null;
-    userId?: string | null;
-    funcao?: Funcao;
-    podeCadastrar?: boolean | null;
-    podeConsultar?: boolean | null;
 }
 
 export interface Funcao {

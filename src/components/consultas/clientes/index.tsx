@@ -187,18 +187,6 @@ export const ListagemClientes: React.FC = () => {
             />
           </div>
         </div>
-        {/* <div className="columns">
-          <Input
-            label="Nome"
-            id="nome"
-            name="nome"
-            value={filtro.nome}
-            columnClasses="column is-full"
-            autoComplete="off"
-            onChange={handleChange}
-            disabled={!podeConsultar}
-          />
-        </div> */}
         <div className="field is-grouped">
           <ButtonType 
             label={"Consultar"}

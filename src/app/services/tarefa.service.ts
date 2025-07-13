@@ -25,10 +25,10 @@ export const useTarefaService = () => {
         }
     };
 
-    // const atualizar = async (produto: Produto): Promise<ApiResponse<Produto>> => {
+    // const atualizar = async (tarefa: Tarefa): Promise<ApiResponse<Tarefa>> => {
     //     try {
-    //         const url: string = `${resourceURL}/atualizar/${produto.id}`;
-    //         const response: AxiosResponse<ApiResponse<Produto>> = await httpClient.put<ApiResponse<Produto>>(url, produto);
+    //         const url: string = `${resourceURL}/atualizar/${tarefa.id}`;
+    //         const response: AxiosResponse<ApiResponse<Tarefa>> = await httpClient.put<ApiResponse<Tarefa>>(url, tarefa);
     //         return response.data;
     //         // eslint-disable-next-line @typescript-eslint/no-explicit-any
     //     } catch (error: any) {
@@ -36,6 +36,38 @@ export const useTarefaService = () => {
     //     }
     // }
 
+    // Método para atualizar uma ficha (PUT)
+    const atualizar = async (ficha: Tarefa, arquivos?: File[]): Promise<ApiResponse<Tarefa>> => {
+        const url: string = `${resourceURL}/${ficha.id}`;
+        const formData = new FormData();
+    
+        formData.append("form", new Blob([JSON.stringify(ficha)], { type: "application/json" }));
+    
+        if (arquivos) {
+            arquivos.forEach((arquivo) => {
+                formData.append("arquivos", arquivo);
+            });
+        }
+    
+        try {
+            const response: AxiosResponse<ApiResponse<Tarefa>> = await httpClient.put<ApiResponse<Tarefa>>(
+                url,
+                formData,
+                { headers: { "Content-Type": "multipart/form-data" } }
+            );
+    
+            return response.data; // Retorna a resposta bem-sucedida
+    
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+            if (error.data) {
+                // Se o erro veio da API, extrai a mensagem e os detalhes
+                throw error; 
+            } else {
+                throw new Error("Erro de conexão ou inesperado ao atualizar ficha.");
+            }
+        }
+    };
 
     const atualizarParcial = async (
         id: number,
@@ -129,6 +161,6 @@ export const useTarefaService = () => {
     };
 
 
-    return { criarTarefas, carregarTarefasPorFuncionario, carregarTarefa, atualizarParcial, findTarefa }
+    return { criarTarefas, carregarTarefasPorFuncionario, carregarTarefa, atualizar, atualizarParcial, findTarefa }
 
 }

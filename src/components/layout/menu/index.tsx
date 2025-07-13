@@ -75,12 +75,39 @@ export const Menu: React.FC<MenuProps> = ({ expanded, setExpanded }) => {
                 permissoes["Tipos Características"]?.podeAcessar ? { label: "Tipos Info. Complementares", href: "/consultas/tiposCaracteristicas", icon: <FaTag /> } : null,
             ].filter(Boolean) as MenuItem[], // ✅ Garante que o array final tenha apenas MenuItem
         },
-        // {
+        // 👇 Aqui envolvemos em uma condicional dentro do array
+        ...(
+            permissoes["Tarefas"]?.podeAcessar
+                ? [{
+                    label: "Atividades",
+                    icon: <FaTasks />,
+                    children: [
+                        permissoes["Tarefas"]?.podeCadastrar && {
+                            label: "Cadastro",
+                            href: "/cadastros/tarefas",
+                            icon: <FaPencilAlt />,
+                        },
+                        permissoes["Tarefas"]?.podeConsultar && {
+                            label: "Consulta",
+                            href: "/consultas/tarefas",
+                            icon: <FaPaperclip />,
+                        },
+                    ].filter(Boolean) as MenuItem[],
+                }]
+                : []
+        ),
+        // { 
         //     label: "Atividades",
         //     icon: <FaTasks />,
         //     children: [
-        //         isMaster ? { label: "Cadastro", href: "/cadastros/tarefas", icon: <FaPencilAlt /> } : null,
-        //         isMaster ? { label: "Consulta", href: "/consultas/tarefas", icon: <FaPaperclip /> } : null,
+        //         //isMaster ? { label: "Cadastro", href: "/cadastros/tarefas", icon: <FaPencilAlt /> } : null,
+        //         //isMaster ? { label: "Consulta", href: "/consultas/tarefas", icon: <FaPaperclip /> } : null,
+        //          permissoes["Tarefas"]?.podeCadastrar ?
+        //                 { label: "Cadastro", href: "/cadastros/tarefas", icon: <FaPencilAlt /> } :
+        //             null,
+        //         permissoes["Tarefas"]?.podeAcessar && permissoes["Tarefas"]?.podeConsultar ?
+        //                 { label: "Tipos Info. Complementares", href: "/consultas/tarefas", icon: <FaPaperclip /> } :
+        //             null,
         //     ].filter(Boolean) as MenuItem[], // ✅ Garante que o array final tenha apenas MenuItem
         // },
         {

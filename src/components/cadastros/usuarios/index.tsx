@@ -15,11 +15,6 @@ export const CadastroUsuarios: React.FC = () => {
         name: '',
         role: '',
         password: '',
-        usuarioFuncionario: {
-            id:'',
-            funcionario: {}
-        },
-        usuariosFuncoes: []
     });
     
     const service = useUsuarioService();
@@ -55,6 +50,7 @@ export const CadastroUsuarios: React.FC = () => {
     }, [queryId]);
     
     const handleSubmit = (user: Usuarios) => {
+        console.log('teste user: ', user)
         if (user.id) {
             exibirMensagem("Usuário sendo Atualizado, aguarde...", "loading");
             service.atualizar(user).then(() => {

@@ -71,7 +71,7 @@ export const UsuariosForm: React.FC<UsuariosFormProps> = ({ onSubmit, usuarios }
         password: usuarios.password || null,
         usuarioFuncionario: usuarios.usuarioFuncionario ? {
           id: usuarios.usuarioFuncionario.id || null,
-          funcionario: usuarios.usuarioFuncionario.funcionario || {}
+          funcionario: usuarios.usuarioFuncionario.funcionario || null
           }:
           { funcionario: { id: null, nome: null } 
         },
@@ -80,9 +80,10 @@ export const UsuariosForm: React.FC<UsuariosFormProps> = ({ onSubmit, usuarios }
       onSubmit: (values) => {
         const formattedValues = {
           ...values,
-          usuarioFuncionario: (values.usuarioFuncionario?.funcionario || formik.values.usuarioFuncionario?.funcionario)
-          ? { userId: values.id, ...values.usuarioFuncionario }
-          : null
+          usuariosFuncoes: values.usuariosFuncoes || [],
+          usuarioFuncionario: (values.usuarioFuncionario?.funcionario?.id || formik.values.usuarioFuncionario?.funcionario?.id)
+           ? { userId: values.id, ...values.usuarioFuncionario }
+           : null
         };
         onSubmit(formattedValues);
       },
@@ -275,53 +276,12 @@ export const UsuariosForm: React.FC<UsuariosFormProps> = ({ onSubmit, usuarios }
               const trimmedQuery = query.trim();
               return handleSearchFuncionario(trimmedQuery); // <- isso já retorna uma Promise
             }}
-            // onBlur={() => {
-            //   const valorDigitado = formik.values.usuarioFuncionario;
-            //   if (!valorDigitado?.funcionario?.id) {
-            //     formik.setFieldValue('usuarioFuncionario', null);
-            //   }
-            // }}
             onClear={() => formik.setFieldValue('usuarioFuncionario.funcionario', null)}
             onSelect={(item) => handleSelectFuncionario(item)}
             formatResult={(item) => `${item.id} - ${item.nome}`}
             placeholder="Digite o nome do Funcionário"
             erro={erroBuscarFuncionario !== '' ? erroBuscarFuncionario : ''}
           />
-          {/* <AutoCompleteGenerico
-            id="usuarioFuncionario"
-            name="usuarioFuncionario"
-            autoComplete="off"
-            label="Funcionário:"
-            value={formik.values.usuarioFuncionario?.funcionario || ''}
-            onSearch={(query) => {
-              const trimmedQuery = query.trim();
-              if (!trimmedQuery) return Promise.resolve([]); // <- importante!
-              return handleSearchFuncionario(trimmedQuery);
-            }}
-            onSelect={(item) => {
-              formik.setFieldValue('usuarioFuncionario', {
-                id: null,
-                funcionario: {
-                  id: item.id,
-                  nome: item.nome
-                }
-              });
-            }}
-            onChange={(e) => {
-              const nomeDigitado = e.target.value;
-
-              // Atualiza apenas o nome do funcionário (sem zerar tudo)
-              formik.setFieldValue('usuarioFuncionario.funcionario.nome', nomeDigitado);
-
-              // Se apagar tudo, zera também o id
-              if (nomeDigitado === '') {
-                formik.setFieldValue('usuarioFuncionario.funcionario.id', null);
-              }
-            }}
-            formatResult={(item) => `${item.id} - ${item.nome}`}
-            placeholder="Digite o nome do Funcionário"
-            erro={erroBuscarFuncionario}
-          /> */}
         </div>
 
         <div className="is-flex is-justify-content-space-between">
@@ -391,8 +351,8 @@ export const UsuariosForm: React.FC<UsuariosFormProps> = ({ onSubmit, usuarios }
               formik.setValues((prevValues) => ({
                 ...prevValues,
                 usuariosFuncoes: (typeof newData === "function" ? newData(prevValues.usuariosFuncoes ?? []) : newData).map((item) => ({
-                  ...item,
-                  usuariosFuncoes: item || [], // ✅ GARANTE QUE `usuariosFuncoes` SEJA UM ARRAY
+                  ...item || [],
+                  //usuariosFuncoes: item || [], // ✅ GARANTE QUE `usuariosFuncoes` SEJA UM ARRAY
                 })),
               }));
             }}                    

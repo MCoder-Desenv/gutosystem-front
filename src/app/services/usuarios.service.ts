@@ -13,10 +13,12 @@ export const useUsuarioService = () => {
         return response.data; // Aqui você retorna a resposta completa da API
     }
 
-    const atualizar = async (user: Usuarios): Promise<void> => {
+    const atualizar = async (user: Usuarios): Promise<ApiResponse<Usuarios>> => {
         try {
+            console.log('console aqui: ', user)
             const url: string = `${resourceURL}/${user.id}/atualizar`;
-            await httpClient.put<Usuarios>(url, user);
+            const response: AxiosResponse<ApiResponse<Usuarios>> = await httpClient.put<ApiResponse<Usuarios>>(url, user);
+            return response.data; // Aqui você retorna a resposta completa da API
         } catch (error) {
             console.error("Erro ao atualizar Usuario", error);
             throw error; // Ou tratar o erro de uma forma mais específica

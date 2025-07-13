@@ -11,6 +11,7 @@ export interface TarefaCalendar {
 export interface Tarefa {
     id?: number | null;
     titulo?: string | null;
+    tarefaFuncionario?: FuncionariosTarefa[] | null;
     prioridade?: string | null;
     descricao?: string | null;
     observacoes?: string | null;
@@ -18,6 +19,7 @@ export interface Tarefa {
     local?: string | null;
     criadoPor?: string | null;
     status?: string | null;
+    cliente?: ClienteTarefaCalendar | null,
     pedido?: PedidoTarefaCalendar | null,
     ficha?: FichaTarefaCalendar | null,
     ordemManutencao?: OrdemManutencaoTarefaCalendar | null,

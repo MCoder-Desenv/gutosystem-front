@@ -1,0 +1,80 @@
+.fileList {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.fileItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background: #fff;
+}
+
+.tooLarge {
+    border: 1px solid red;
+    background: rgba(255, 0, 0, 0.1);
+}
+
+.thumbnail {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    margin-right: 10px;
+}
+
+.fileInfo {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.fileName {
+    font-weight: bold;
+    margin-left: 9px;
+}
+
+.status {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 15px; /* Deixa o fundo arredondado */
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: 10px; /* Afastar um pouco do arquivo */
+}
+
+.error {
+    color: red;
+    font-weight: bold;
+    background-color: #f8d7da; /* Vermelho claro */
+    margin-left: 7px;
+    width: fit-content;
+}
+
+.uploaded {
+    color: green;
+    background-color: #d4edda; /* Verde claro */
+    margin-left: 7px;
+    width: fit-content;
+}
+
+.removeButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.totalSize {
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+    cursor: not-allowed;
+}

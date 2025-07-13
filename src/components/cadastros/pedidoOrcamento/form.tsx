@@ -184,6 +184,8 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
 
   //BOTOES
   const [showModal, setShowModal] = useState(false); // Controle do modal
+  const [showModalDuplicado, setShowModalDuplicado] = useState(false);
+  const [showModalDuplicadoAviso, setShowModalDuplicadoAviso] = useState(false);
   const [nextTipoTela, setNextTipoTela] = useState<string | null>(null);
 
   const [isTrackingInfoVisible, setTrackingInfoVisible] = useState(false);
@@ -588,6 +590,53 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [idFichaVsIdOrdemMnt]);
 
+  //PEDIDO DUPLICADO
+  const handleDuplicarPedido = () => {
+    const pedidoOriginal = formik.values;
+
+    const novoPedido = {
+      id: undefined,
+      produtosPedido: (pedidoOriginal.produtosPedido || []).map((produto) => ({
+        id: undefined,
+        produto: produto.produto,
+        informacoesProduto: (produto.informacoesProduto || []).map((info) => ({
+          ...info,
+          id: undefined,
+          produtoPedidoOrcamentoId: undefined,
+        })),
+      })),
+      identificador: null,
+      fichaOrcamento: pedidoOriginal.fichaOrcamento,
+      ordemServicoManutencao: pedidoOriginal.ordemServicoManutencao,
+      formaDePagamento: null,
+      status: pedidoOriginal.status || '',
+      responsavelPedido: null,
+      disServico: null,
+      infoComplementar: null,
+      observacoes: null,
+      observacoesInterna: null,
+      observacoesInternaInfoRastreamento:  null,
+      fornecedor: null,
+      responsavelMedida: null,
+      total: pedidoOriginal.total || 0,
+      vendedor: pedidoOriginal.vendedor || {},
+      dataPedido: pedidoOriginal.dataPedido || dataFormatada
+    };
+    console.log('ouiodsfoihsdfiods')
+    formik.setValues({
+      ...formik.initialValues,
+      ...novoPedido,
+    });
+
+    // Redireciona para mesma página sem o ID (substituindo a URL atual)
+    router.replace('/cadastros/pedidoOrcamento');
+
+    setShowModalDuplicado(false)
+    setShowModalDuplicadoAviso(true)
+
+  };
+
+  console.log('sadasd ' + formik.values.identificador)
 
   const handleSearchProduto = async (query: string): Promise<{ id: string | number; descricao: string | null }[]> => {
     try {
@@ -648,18 +697,6 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
         }, 1500);
     }
   };
-
-  // const irParaOrdemServicoManutencao = () => {
-  //   const contexto = {
-  //       idPedido: formik.values?.id || pedidoOrcamento?.id,
-  //   };
-    
-  //   // Atualizar os dados no contexto, sem a necessidade de uma função de atualização completa
-  //   setManutencaoData(contexto);  // Passa o objeto direto, já que o setOrcamentoData agora aceita objetos parciais
-    
-  //   // Navegar para a tela de Ordem de Servico Manutencao
-  //   router.push('/cadastros/ordemServicoManutencao');
-  // };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const files = Array.from(event.target.files || []);
@@ -905,6 +942,80 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
         </div>
       )}
 
+      {showModalDuplicado && (
+        <div className="modal is-active">
+          <div className="modal-background"></div>
+          <div className="modal-card">
+              <header className="modal-card-head">
+                  <p className="modal-card-title">Atenção</p>
+                  <button
+                      className="delete"
+                      aria-label="close"
+                      onClick={() => setShowModalDuplicado(false)}
+                      type='button'
+                      disabled={!podeCadastrar}
+                  ></button>
+              </header>
+              <section className="modal-card-body">
+                  <p>
+                      Você está duplicando um Pedido, ele irá iniciar um novo Pedido em outra tela. Deseja continuar?
+                  </p>
+              </section>
+              <footer className="modal-card-foot">
+                  <button
+                      className="button is-info"
+                      type='button'
+                      disabled={!podeCadastrar}
+                      onClick={() => handleDuplicarPedido()}
+                  >
+                      Sim
+                  </button>
+                  <button
+                      className="button"
+                      type='button'
+                      disabled={!podeCadastrar}
+                      onClick={() => setShowModalDuplicado(false)}
+                  >
+                      Não
+                  </button>
+              </footer>
+          </div>
+      </div>
+      )}
+
+      {showModalDuplicadoAviso && (
+        <div className="modal is-active">
+          <div className="modal-background"></div>
+          <div className="modal-card">
+              <header className="modal-card-head">
+                  <p className="modal-card-title">Atenção</p>
+                  <button
+                      className="delete"
+                      aria-label="close"
+                      onClick={() => setShowModalDuplicadoAviso(false)}
+                      type='button'
+                      disabled={!podeCadastrar}
+                  ></button>
+              </header>
+              <section className="modal-card-body">
+                  <p>
+                      Pedido Duplicado
+                  </p>
+              </section>
+              <footer className="modal-card-foot">
+                  <button
+                      className="button is-success"
+                      type='button'
+                      disabled={!podeCadastrar}
+                      onClick={() => setShowModalDuplicadoAviso(false)}
+                  >
+                      Okay
+                  </button>
+              </footer>
+          </div>
+      </div>
+      )}
+
       <div className="columns">
         {formik.values.identificador && (
             <Input
@@ -1123,6 +1234,12 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
                     rows={10}
                     maxLength={950}
                     style={{ resize: "none", minHeight: "120px" }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        // Impede que o evento suba para o form e seja bloqueado
+                        e.stopPropagation();
+                      }
+                    }}
                   />
                   {(child.data.descricao === undefined || child.data.descricao === "") && (
                       <p
@@ -1274,129 +1391,6 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
       />
       <br/>
 
-      {/* Tabela Editável */}
-      {/* <div className="columns">
-          <div className="column is-full">
-          <table className="table is-bordered is-striped is-hoverable is-fullwidth">
-              <thead>
-              <tr>
-                  <th>Descrição</th>
-                  <th>Quantidade</th>
-                  <th>Valor Unitário R$</th>
-                  <th>Valor Total R$</th>
-                  <th>
-                  <button
-                      type="button"
-                      className="button is-small is-success"
-                      onClick={adicionarProduto}
-                      disabled={!podeCadastrar || pedidoCancelada}
-                  >
-                      +
-                  </button>
-                  </th>
-              </tr>
-              </thead>
-              <tbody>
-                {(formik.values.produtosPedido || []).map((produto, index) => (
-                  <tr key={produto.tempId || produto.id}>
-                    <td>
-                      <AutoCompleteInput
-                        id={`descricao-${index}`}
-                        name={`descricao-${index}`}
-                        disabled={!podeCadastrar || pedidoCancelada}
-                        value={produto.produto || ''}
-                        onSearch={async (query) => {
-                          const trimmedQuery = query.trim();
-                          return handleSearchProduto(trimmedQuery);
-                        }}
-                        onSelect={(item) => {
-                          atualizarDescricaoProduto(index, item.descricao || "");
-                        }}
-                        formatResult={(item) => `${item.id} - ${item.descricao}`}
-                        placeholder="Digite a Descrição do Produto"
-                        erro={produto?.produto === "" ? campoObrigatorio : ""}
-                      />
-                    </td>
-                    <td style={{ width: "15%" }}>
-                      <input
-                        type="number"
-                        name="quantidade"
-                        id="quantidade"
-                        className="input"
-                        disabled={!podeCadastrar || pedidoCancelada}
-                        value={produto.quantidade || ""}
-                        onChange={(e) =>
-                          atualizarProduto(produto.tempId || produto.id || "", "quantidade", Number(e.target.value))
-                        }
-                      />
-                    </td>
-                    <td style={{ width: "15%" }}>
-                      <input
-                        type="text"
-                        className="input"
-                        step="0.01"
-                        value={produto.vlrUnitario ? formatCurrency(produto.vlrUnitario) : ""}
-                        onChange={(e) => {
-                          const rawValue = e.target.value.replace(/\D/g, ""); // Remove tudo que não for número
-                          const formattedValue = Number(rawValue) / 100; // Ajusta para decimal
-                          atualizarProduto(produto.tempId || produto.id || "", "vlrUnitario", formattedValue);
-                        }}
-                        disabled={!podeCadastrar || pedidoCancelada}
-                      />
-                    </td>
-                    <td style={{ width: "20%" }}>
-                      <input
-                        type="text"
-                        className="input"
-                        name="vlrTotal"
-                        id="vlrTotal"
-                        disabled
-                        readOnly
-                        value={formatCurrency(produto.vlrTotal || 0)}
-                      />
-                    </td>
-                    <td>
-                      <button
-                        type="button"
-                        className="button is-small is-danger"
-                        onClick={() => removerProduto(produto)}
-                        disabled={!podeCadastrar || pedidoCancelada}
-                      >
-                        🗑️
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-              <tfoot>
-                  <tr>
-                  <td colSpan={3} className="has-text-right">
-                      <strong>Total:</strong>
-                  </td>
-                  <td>
-                      <input
-                      type="text"
-                      className="input"
-                      id='total'
-                      name='total'
-                      readOnly
-                      disabled
-                      value={
-                        formatCurrency(
-                          (formik.values.produtosPedido ?? []).reduce((acc, produto) => acc + (produto.vlrTotal ?? 0), 0) || 0
-                        )
-                      }
-                      
-                      onChange={formik.handleChange}
-                      />
-                  </td>
-                  <td></td>
-                  </tr>
-              </tfoot>
-          </table>
-          </div>
-      </div> */}
-
       <div className="field">
         <label htmlFor="observacoes" className="label">
           Observações:
@@ -1410,6 +1404,12 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
           placeholder="Digite as Observações"
           onChange={formik.handleChange}
           disabled={!podeCadastrar || pedidoCancelada}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              // Impede que o evento suba para o form e seja bloqueado
+              e.stopPropagation();
+            }
+          }}
         ></textarea>
       </div>
 
@@ -1428,6 +1428,12 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
                   placeholder="Digite a Forma de Pagamento"
                   onChange={formik.handleChange}
                   disabled={!podeCadastrar || pedidoCancelada}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      // Impede que o evento suba para o form e seja bloqueado
+                      e.stopPropagation();
+                    }
+                  }}
               ></textarea>
               {formik.errors.formaDePagamento && (
               <p className="help is-danger">{formik.errors.formaDePagamento}</p>
@@ -1449,6 +1455,12 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
           placeholder="Digite as Observações Internas"
           onChange={formik.handleChange}
           disabled={!podeCadastrar || pedidoCancelada}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              // Impede que o evento suba para o form e seja bloqueado
+              e.stopPropagation();
+            }
+          }}
         ></textarea>
       </div>
 
@@ -1714,6 +1726,12 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
               placeholder="Digite Informações Complementares"
               onChange={formik.handleChange}
               disabled={!podeCadastrar || pedidoCancelada}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  // Impede que o evento suba para o form e seja bloqueado
+                  e.stopPropagation();
+                }
+              }}
             ></textarea>
             {formik.errors.infoComplementar && (
               <p className="help is-danger">{formik.errors.infoComplementar}</p>
@@ -1733,101 +1751,14 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
               placeholder="Digite as Observações Interna"
               onChange={formik.handleChange}
               disabled={!podeCadastrar || pedidoCancelada}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  // Impede que o evento suba para o form e seja bloqueado
+                  e.stopPropagation();
+                }
+              }}
             ></textarea>
           </div>
-
-          {/* Data e Teve Retorno */}
-          {/* <div className="columns">
-            <div className="column is-one-fifth">
-              <div className="field">
-                <label htmlFor="dataPosVenda" className="label">
-                  Pós-Venda:
-                </label>
-                <input
-                  type="date"
-                  autoComplete='off'
-                  id="dataPosVenda"
-                  name="dataPosVenda"
-                  className="input"
-                  value={formik.values.dataPosVenda || ''}
-                  onChange={formik.handleChange}
-                  disabled={!podeCadastrar || pedidoCancelada}
-                />
-              </div>
-            </div>
-            <div className="column is-one-fifth">
-              <div className="field">
-                <label htmlFor="retorno" className="label">
-                  Teve Retorno:
-                </label>
-                <div className="control">
-                  <label className="checkbox">
-                    <input
-                      type="checkbox"
-                      id="retorno"
-                      autoComplete='off'
-                      name="retorno"
-                      checked={formik.values.retorno === 'Sim'}
-                        onChange={(e) =>
-                            formik.setFieldValue(
-                                'retorno',
-                                e.target.checked ? 'Sim' : 'Não'
-                            )
-                        }
-                      disabled={!podeCadastrar || pedidoCancelada}
-                    />
-                  </label>
-                </div>
-              </div>
-            </div>
-            <div className="column is-one-third">
-              <div className="field">
-                <label htmlFor="satisfacaoCheck" className="label">
-                  Satisfação:
-                </label>
-                <div className="control">
-                  <div className="select is-fullwidth">
-                    <select
-                      id="satisfacaoCheck"
-                      autoComplete='off'
-                      name="satisfacaoCheck"
-                      value={formik.values.satisfacaoCheck || ''}
-                      onChange={formik.handleChange}
-                      disabled={!podeCadastrar || pedidoCancelada}
-                    >
-                      <option value="">Selecione uma opção</option>
-                      <option value="Muito Satisfeito">Muito Satisfeito</option>
-                      <option value="Satisfeito">Satisfeito</option>
-                      <option value="Regular">Regular</option>
-                      <option value="Insatisfeito">Insatisfeito</option>
-                    </select>
-                  </div>
-                </div>
-                {formik.errors.satisfacaoCheck && (
-                  <p className="help is-danger">{formik.errors.satisfacaoCheck}</p>
-                )}
-              </div>
-            </div>
-          </div> */}
-          {/* Satisfação do Cliente */}
-          {/* <div className="field">
-            <label htmlFor="satisfacaoCliente" className="label">
-              Satisfação do Cliente:
-            </label>
-            <textarea
-              className="textarea"
-              id="satisfacaoCliente"
-              name="satisfacaoCliente"
-              value={formik.values.satisfacaoCliente || ''}
-              autoComplete='off'
-              placeholder="Digite a Satisfação do Cliente"
-              onChange={formik.handleChange}
-              disabled={!podeCadastrar || pedidoCancelada}
-            ></textarea>
-            {formik.errors.satisfacaoCliente && (
-              <p className="help is-danger">{formik.errors.satisfacaoCliente}</p>
-            )}
-          </div> */}
         </div>
       )}
 
@@ -1856,14 +1787,6 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
         />
         {formik.values?.id &&
           <>
-            {/* <ButtonType 
-                label={"Realizar Manutenção"}
-                type="button"
-                className='button'
-                style={{ padding: '10px 20px', fontSize: '1rem' }}
-                onClick={irParaOrdemServicoManutencao}
-                disabled={!podeCadastrar || !pedidoEncerrada}
-            /> */}
             <ButtonType 
               label={
                 <>
@@ -1887,6 +1810,15 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
             />
           </>
         }
+        <ButtonType 
+          label={'Duplicar'}
+          type="button"
+          className='button'
+          disabled={(pedidoOrcamento.id === '' || pedidoOrcamento.id === null || pedidoOrcamento.id === undefined) || 
+              formik.values.id === '' || formik.values.id === null || formik.values.id === undefined}
+          style={{ padding: '10px 20px', fontSize: '1rem' }}
+          onClick={() => setShowModalDuplicado(true)}
+        />
       </div>
 
     </form>

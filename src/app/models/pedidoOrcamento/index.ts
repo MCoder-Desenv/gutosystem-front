@@ -12,9 +12,9 @@ export interface PedidoOrcamento {
     vendedor?: TerceiroPedidoOrcamento;
     fichaOrcamento?: FichaOrcamentoPedido;
     ordemServicoManutencao?: OrdemServicoManutencaoPedido;
-    responsavelPedido?: TerceiroPedidoOrcamento;
-    responsavelMedida?: TerceiroPedidoOrcamento;
-    fornecedor?: TerceiroPedidoOrcamento;
+    responsavelPedido?: TerceiroPedidoOrcamento | null;
+    responsavelMedida?: TerceiroPedidoOrcamento | null;
+    fornecedor?: TerceiroPedidoOrcamento | null;
     formaDePagamento?: string | null;
     observacoes?: string | null;
     observacoesInterna?: string | null;
