@@ -33,7 +33,7 @@ const SelectList = <T,>({
   return (
     <div className="column">
       <label htmlFor={id} className="label">
-        {label}:
+        {label}
       </label>
       <div className="control">
         <div className="select is-fullwidth">

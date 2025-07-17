@@ -101,6 +101,7 @@ export interface TerceirosEnderecosClienteDto {
     bairro?: string | null;
     cidade?: string | null;
     numero?: string | null;
+    complemento?: string | null;
 }
 
 export interface TerceirosEnderecos {

@@ -329,7 +329,7 @@ export const OrdemServicoManutencaoForm: React.FC<OrdemServicoManutencaoFormProp
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const formatarEndereco = (enderecoObj: any): string => {
-        return `${enderecoObj.endereco}, ${enderecoObj.numero}, ${enderecoObj.bairro}, ${enderecoObj.cidade}`;
+        return `${enderecoObj.endereco}, ${enderecoObj.numero}, ${enderecoObj.bairro}, ${enderecoObj.complemento}, ${enderecoObj.cidade}`;
     };
     
     const buscarEnderecosTerceiro = async (idTerceiro: string): Promise<void> => {
@@ -352,7 +352,8 @@ export const OrdemServicoManutencaoForm: React.FC<OrdemServicoManutencaoFormProp
                     endereco: partes[0] ?? "",
                     numero: partes[1] ?? "",
                     bairro: partes[2] ?? "",
-                    cidade: partes[3] ?? "",
+                    complemento: partes[3] ?? "",
+                    cidade: partes[4] ?? "",
                 };
     
                 setListaEnderecos([enderecoDefault]);
@@ -619,7 +620,7 @@ export const OrdemServicoManutencaoForm: React.FC<OrdemServicoManutencaoFormProp
                     name="enderecoCliente"
                     options={listaEnderecos}
                     autoComplete='off'
-                    displayFields={["endereco", "numero", "bairro", "cidade"]}
+                    displayFields={["endereco", "numero", "bairro", "complemento", "cidade"]}
                     formik={formik}
                     disabled={!podeCadastrar}
                     label="Endereço:* "

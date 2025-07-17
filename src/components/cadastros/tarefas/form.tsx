@@ -204,7 +204,7 @@ export const TarefasForm: React.FC<TarefaFormProps> = ({ onSubmit, tarefas }) =>
 
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const formatarEndereco = (enderecoObj: any): string => {
-            return `${enderecoObj.endereco}, ${enderecoObj.numero}, ${enderecoObj.bairro}, ${enderecoObj.cidade}`;
+            return `${enderecoObj.endereco}, ${enderecoObj.numero}, ${enderecoObj.bairro}, ${enderecoObj.complemento}, ${enderecoObj.cidade}`;
           };
           console.log(clienteSelecionado)
           const handleSearchCliente = async (query: string) => {
@@ -509,8 +509,8 @@ export const TarefasForm: React.FC<TarefaFormProps> = ({ onSubmit, tarefas }) =>
                           {"Selecione um endereço"}
                         </option>
                         {listaEnderecos.map((item, i) => (
-                          <option key={i} value={`${item.endereco}, ${item.numero}, ${item.bairro}, ${item.cidade}`}>
-                            {item.endereco}, {item.numero}, {item.bairro}, {item.cidade}
+                          <option key={i} value={`${item.endereco}, ${item.numero}, ${item.bairro}, ${item.complemento}, ${item.cidade}`}>
+                            {item.endereco}, {item.numero}, {item.bairro}, {item.complemento}, {item.cidade}
                           </option>
                         ))}
                       </select>

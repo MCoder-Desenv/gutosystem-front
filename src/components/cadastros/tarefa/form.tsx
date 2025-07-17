@@ -42,7 +42,7 @@ export const TarefaForm: React.FC<TarefaFormProps> = ({
 }) => {
     const [listaEnderecos, setListaEnderecos] = useState<TerceirosEnderecosClienteDto[]>([]);
     const gerarValorEndereco = (item: TerceirosEnderecosClienteDto) =>
-      [item.endereco, item.numero, item.bairro, item.cidade].filter(Boolean).join(", ");
+      [item.endereco, item.numero, item.bairro, item.complemento, item.cidade].filter(Boolean).join(", ");
     //const [listaEnderecos, setListaEnderecos] = useState<TerceirosEnderecosClienteDto[]>([tarefa.local] || []);
 
     const galleria = useRef<Galleria | null>(null); // Define o tipo correto
@@ -171,7 +171,8 @@ export const TarefaForm: React.FC<TarefaFormProps> = ({
                 endereco: partes[0] ?? "",
                 numero: partes[1] ?? "",
                 bairro: partes[2] ?? "",
-                cidade: partes[3] ?? "",
+                complemento: partes[3] ?? "",
+                cidade: partes[4] ?? ""
             };
 
             setListaEnderecos([endereco]);
@@ -316,7 +317,7 @@ export const TarefaForm: React.FC<TarefaFormProps> = ({
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const formatarEndereco = (enderecoObj: any): string => {
-        return `${enderecoObj.endereco}, ${enderecoObj.numero}, ${enderecoObj.bairro}, ${enderecoObj.cidade}`;
+        return `${enderecoObj.endereco}, ${enderecoObj.numero}, ${enderecoObj.bairro}, ${enderecoObj.complemento}, ${enderecoObj.cidade}`;
      };
     
      // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -390,7 +391,8 @@ export const TarefaForm: React.FC<TarefaFormProps> = ({
                     endereco: partes[0] ?? "",
                     numero: partes[1] ?? "",
                     bairro: partes[2] ?? "",
-                    cidade: partes[3] ?? "",
+                    complemento: partes[3] ?? "",
+                    cidade: partes[4] ?? ""
                 };
     
                 setListaEnderecos([enderecoDefault]);
@@ -723,8 +725,8 @@ export const TarefaForm: React.FC<TarefaFormProps> = ({
                                         {"Selecione um endereço"}
                                     </option>
                                     {listaEnderecos.map((item, i) => (
-                                        <option key={i} value={`${item.endereco}, ${item.numero}, ${item.bairro}, ${item.cidade}`}>
-                                        {item.endereco}, {item.numero}, {item.bairro}, {item.cidade}
+                                        <option key={i} value={`${item.endereco}, ${item.numero}, ${item.bairro}, ${item.complemento}, ${item.cidade}`}>
+                                        {item.endereco}, {item.numero}, {item.bairro}, {item.complemento}, {item.cidade}
                                         </option>
                                     ))}
                                 </select>
