@@ -4,6 +4,7 @@ import Script from "next/script";
 
 // Estilos globais e fontes
 import 'bulma/css/bulma.css';
+import 'bulma/css/bulma.min.css';
 import '../components/common/loader/loader.css';
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import 'primereact/resources/primereact.min.css';

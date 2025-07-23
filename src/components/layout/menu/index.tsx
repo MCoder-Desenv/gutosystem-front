@@ -64,6 +64,11 @@ export const Menu: React.FC<MenuProps> = ({ expanded, setExpanded }) => {
             href: "/dashboard",
         },
         {
+            label: "Dashboard2",
+            icon: <FaHome/>,
+            href: "/dashVendas",
+        },
+        {
             label: "Administração",
             icon: <FaFileInvoice />,
             children: [
