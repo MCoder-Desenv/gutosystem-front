@@ -204,7 +204,7 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
 
   const statusOptions = [
     { label: 'Aberta', value: 'Aberta', className: 'status-Aberta' },
-    { label: 'Aguardando Resposta', value: 'Aguardando-Resposta', className: 'status-Aguardando-Resposta' },
+    { label: 'Aguardando Resposta/Venda a Resgatar', value: 'Aguardando-Resposta-Venda-a-Resgatar', className: 'status-Aguardando-Resposta-Venda-a-Resgatar' },
     { label: 'Em Andamento', value: 'Em-Andamento', className: 'status-Em-Andamento' },
     { label: 'Encerrada', value: 'Encerrada', className: 'status-Encerrada' },
     { label: 'Cancelada', value: 'Cancelada', className: 'status-Cancelada' },

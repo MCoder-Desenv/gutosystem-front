@@ -167,7 +167,7 @@ export const ListagemPedidoOrcamento: React.FC = () => {
     nomeTerceiro: ped.nomeTerceiro || '',
     telefoneCliente: ped.telefoneCliente || '',
     dataPedido: ped.dataPedido ? formatDateToBackend(ped.dataPedido) : '',
-    status: <span className={`has-text-centered ${getStatusClass(ped.status || '')}`}>{ped.status?.replace("-", " ") || "N/A"}</span>,
+    status: <span className={`has-text-centered ${getStatusClass(ped.status || '')}`}>{ped.status?.replace(/-/g, " ") || "N/A"}</span>,
     acoes: (actionTemplate(ped)),
   }));
 

@@ -173,9 +173,9 @@ const Dashboard = () => {
           label: "Total de Pedidos",
           data: data.map((d) => d.total),
           backgroundColor: selectedStatus === 'Aberta' ? "rgb(29, 129, 3)" : selectedStatus === 'Encerrada' ? "rgb(0, 0, 0)" :
-                           selectedStatus === 'Cancelada' ? "rgb(255, 21, 4)": selectedStatus === 'Aguardando-Resposta' ? "rgb(255, 125, 4)" : "rgb(214, 200, 7)",
+                           selectedStatus === 'Cancelada' ? "rgb(255, 21, 4)": selectedStatus === 'Aguardando-Resposta-Venda-a-Resgatar' ? "rgb(255, 125, 4)" : "rgb(214, 200, 7)",
           borderColor: selectedStatus === 'Aberta' ? "rgba(28, 129, 3, 0.59)" : selectedStatus === 'Encerrada' ? "rgba(0, 0, 0, 0.59)" :
-                       selectedStatus === 'Cancelada' ? "rgba(255, 21, 4, 0.59)" : selectedStatus === 'Aguardando-Resposta' ? "rgba(255, 125, 4, 0.27)" : "rgba(214, 200, 7, 0.59)",
+                       selectedStatus === 'Cancelada' ? "rgba(255, 21, 4, 0.59)" : selectedStatus === 'Aguardando-Resposta-Venda-a-Resgatar' ? "rgba(255, 125, 4, 0.27)" : "rgba(214, 200, 7, 0.59)",
           borderWidth: 2,
         },
         {
@@ -278,9 +278,9 @@ const Dashboard = () => {
           label: "Total de Pedidos",
           data: data.map((d) => d.total),
           backgroundColor: selectedStatus === 'Aberta' ? "rgb(29, 129, 3)" : selectedStatus === 'Encerrada' ? "rgb(0, 0, 0)" :
-                           selectedStatus === 'Cancelada' ? "rgb(255, 21, 4)" :  selectedStatus === 'Aguardando-Resposta' ? "rgb(255, 125, 4)" :  "rgb(214, 200, 7)",
+                           selectedStatus === 'Cancelada' ? "rgb(255, 21, 4)" :  selectedStatus === 'Aguardando-Resposta-Venda-a-Resgatar' ? "rgb(255, 125, 4)" :  "rgb(214, 200, 7)",
           borderColor: selectedStatus === 'Aberta' ? "rgba(28, 129, 3, 0.59)" : selectedStatus === 'Encerrada' ? "rgba(0, 0, 0, 0.59)" :
-                       selectedStatus === 'Cancelada' ? "rgba(255, 21, 4, 0.59)" : selectedStatus === 'Aguardando-Resposta' ? "rgba(255, 125, 4, 0.27)" : "rgba(214, 200, 7, 0.59)",
+                       selectedStatus === 'Cancelada' ? "rgba(255, 21, 4, 0.59)" : selectedStatus === 'Aguardando-Resposta-Venda-a-Resgatar' ? "rgba(255, 125, 4, 0.27)" : "rgba(214, 200, 7, 0.59)",
           borderWidth: 2,
         },
         {
@@ -465,11 +465,11 @@ const Dashboard = () => {
                   <input
                     type="checkbox"
                     name="status"
-                    value="Aguardando-Resposta"
+                    value="Aguardando-Resposta-Venda-a-Resgatar"
                     onChange={handleCheckboxChangeStatus}
-                    disabled={!!selectedStatus && selectedStatus !== "Aguardando-Resposta"}
+                    disabled={!!selectedStatus && selectedStatus !== "Aguardando-Resposta-Venda-a-Resgatar"}
                   />
-                  Aguardando Resposta
+                  Aguardando Resposta / Venda a Resgatar
                 </label>
               }
 

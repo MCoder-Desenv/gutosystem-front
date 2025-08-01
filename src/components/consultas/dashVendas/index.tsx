@@ -8,7 +8,7 @@ const statusList = [
   { key: 'Em-Andamento', label: 'Em Andamento', color: 'yellow', badgeBg: '#ffdd57', cardBg: 'has-background-warning-light', titleColor: 'has-text-warning-dark' },
   { key: 'Encerrada', label: 'Encerrados', color: 'black', badgeBg: '#222', cardBg: 'has-background-success-light', titleColor: 'has-text-success-dark' },
   { key: 'Cancelada', label: 'Cancelados', color: 'red', badgeBg: '#ff3860', cardBg: 'has-background-danger-light', titleColor: 'has-text-danger' },
-  { key: 'Aguardando-Resposta', label: 'Aguardando Resposta', color: 'orange', badgeBg: '#ff9900', cardBg: 'has-background-grey-lighter', titleColor: 'has-text-grey-dark' },
+  { key: 'Aguardando-Resposta-Venda-a-Resgatar', label: 'Aguardando Resposta/Venda a Resgatar', color: 'orange', badgeBg: '#ff9900', cardBg: 'has-background-grey-lighter', titleColor: 'has-text-grey-dark' },
 ];
 import { PieChart, Pie, Cell, Tooltip, Legend,ResponsiveContainer, } from 'recharts';
 

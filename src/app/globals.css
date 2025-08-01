@@ -47,7 +47,7 @@ color: #1a0afa;
   color: #856404;
 }
 
-.dropdown-Aguardando-Resposta .p-dropdown {
+.dropdown-Aguardando-Resposta-Venda-a-Resgatar .p-dropdown {
   background-color: #f88400;
   color: #000000;
 }
@@ -96,7 +96,7 @@ color: #1a0afa;
 .dropdown-Normal .p-dropdown-label,
 .dropdown-Baixa .p-dropdown-label,
 .dropdown-Aberta .p-dropdown-label,
-.dropdown-Aguardando-Resposta .p-dropdown-label,
+.dropdown-Aguardando-Resposta-Venda-a-Resgatar .p-dropdown-label,
 .dropdown-Em-Andamento .p-dropdown-label,
 .dropdown-Encerrada .p-dropdown-label,
 .dropdown-Cancelada .p-dropdown-label {
@@ -173,8 +173,8 @@ color: #1a0afa;
   padding: 7px; /* Opcional: espaço interno */
 }
 
-/* Status: Aguardando-Resposta */
-.status-Aguardando-Resposta {
+/* Status: Aguardando-Resposta-Venda-a-Resgatar */
+.status-Aguardando-Resposta-Venda-a-Resgatar {
   background-color: #f88400 !important; /* Amarelo claro */
   color: #000000 !important; /* Texto amarelo escuro */
   font-weight: bold !important;
@@ -211,7 +211,7 @@ color: #1a0afa;
 
 /* Ajustes para alinhar o texto no centro */
 .prioridade-Alta, .prioridade-Normal, .prioridade-Baixa,
-.status-Ativo, .status-Inativo, .status-Primeiro-Contato, .status-Aberta, .status-Aguardando-Resposta, .status-Em-Andamento, .status-Encerrada, .status-Cancelada {
+.status-Ativo, .status-Inativo, .status-Primeiro-Contato, .status-Aberta, .status-Aguardando-Resposta-Venda-a-Resgatar, .status-Em-Andamento, .status-Encerrada, .status-Cancelada {
   display: inline-block;
   text-align: center;
   min-width: 100%;
