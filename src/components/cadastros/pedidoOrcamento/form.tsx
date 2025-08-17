@@ -1224,7 +1224,7 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
           return (
             <>
               {/* Descrição com Textarea (maior e estilizado) */}
-              <td style={{ width: "30%" }}>
+              <td style={{ width: "25%" }}>
                 <div className="control">
                   <textarea
                     className="textarea"
@@ -1302,7 +1302,7 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
 
         
               {/* Quantidade */}
-              <td>
+              <td style={{ width: "5%" }}>
                 <div className="control">
                   <input
                     type="number"
@@ -1319,7 +1319,7 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
               </td>
 
               {/* Valor Unitário */}
-              <td>
+              <td style={{ width: "10%" }}>
                 <div className="control">
                   <input
                     type="text"
@@ -1345,7 +1345,7 @@ export const PedidoOrcamentoForm: React.FC<PedidoOrcamentoFormProps> = ({
               </td>
         
               {/* Valor Total (Somente leitura) */}
-              <td>
+              <td  style={{ width: "10%" }}>
                 <div className="control">
                   <input
                     type="text"

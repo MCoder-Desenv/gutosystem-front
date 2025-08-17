@@ -55,12 +55,12 @@ export default function GenericList<TItem, TChild>({
 
   const addItem = () => {
     setItems([
-      ...items,
       {
         id: "",
         data: Object.fromEntries(columns.map((col) => [col, ""])) as TItem,
         children: [],
       },
+      ...items
     ]);
   };
 
@@ -71,10 +71,10 @@ export default function GenericList<TItem, TChild>({
           ? {
               ...item,
               children: [
-                ...item.children,
                 {
                   data: Object.fromEntries(childColumns.map((col) => [col, ""])) as TChild, // <- Usa as colunas dinâmicas dos filhos
                 },
+                ...item.children,
               ],
             }
           : item
@@ -173,7 +173,7 @@ export default function GenericList<TItem, TChild>({
               </button>
             </th>
             {columns.map((col, index) => (
-              <th key={index} className="has-text-centered">{col}</th>
+              <th key={index} className="has-text-centered" style={{width: "40%"}}>{col}</th>
             ))}
             <th className="has-text-centered">Ações</th>
           </tr>
