@@ -58,11 +58,11 @@ export const Menu: React.FC<MenuProps> = ({ expanded, setExpanded }) => {
     const isMaster = role === "ROLE_MASTER" || role === "ROLE_MASTER_FULL";
     
     const rawMenuItems: (MenuItem | null)[] = [
-        {
-            label: "Dashboard",
-            icon: <FaHome/>,
-            href: "/dashboard",
-        },
+        // {
+        //     label: "Dashboard",
+        //     icon: <FaHome/>,
+        //     href: "/dashboard",
+        // },
         {
             label: "Dashboard2",
             icon: <FaHome/>,

@@ -50,7 +50,7 @@ export default function RootLayout({
           content="
             default-src 'self'; 
             script-src 'self' 'unsafe-inline' 'unsafe-eval'; 
-            connect-src 'self' http://localhost:3000 http://localhost:8080 https://backendgutosystem.eadescola.online https://viacep.com.br https://gutosystem.eadescola.online; 
+            connect-src 'self' http://localhost:3000 http://localhost:8080 https://backendteste.eadescola.online https://backendgutosystem.eadescola.online https://viacep.com.br https://gutosystem.eadescola.online; 
             style-src 'self' 'unsafe-inline'; 
             img-src 'self' blob: data:; 
             media-src 'self' blob:; 

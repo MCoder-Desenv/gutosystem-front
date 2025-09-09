@@ -10,6 +10,11 @@ export const httpClient: AxiosInstance = Axios.create({
 });
 
 // export const httpClient: AxiosInstance = Axios.create({
+//   baseURL: "https://backendteste.eadescola.online/",
+//   withCredentials: true,
+// });
+
+// export const httpClient: AxiosInstance = Axios.create({
 //   baseURL: "http://localhost:8080/",
 //   withCredentials: true,
 // });
